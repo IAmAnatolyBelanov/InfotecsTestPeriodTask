@@ -1,5 +1,7 @@
 using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
+using Infotecs.Monitoring.Bll.DeviceBizRules;
+using Infotecs.Monitoring.Bll.LoginBizRules;
 using Monitoring.Dal;
 
 namespace Infotecs.Monitoring.Api
@@ -21,6 +23,9 @@ namespace Infotecs.Monitoring.Api
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
+
+            builder.Services.AddTransient<IDeviceBizRule, DeviceBizRule>();
+            builder.Services.AddTransient<ILoginBizRule, LoginBizRule>();
 
             var app = builder.Build();
 

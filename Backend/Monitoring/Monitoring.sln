@@ -5,7 +5,9 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Api", "Source\Monitoring.Api\Monitoring.Api.csproj", "{B7A92374-F16A-4FFF-A1EA-7BB4733F00B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Dal", "Source\Monitoring.Dal\Monitoring.Dal.csproj", "{C68B0C60-0396-4CB7-AD41-19E1387BB351}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Dal", "Source\Monitoring.Dal\Monitoring.Dal.csproj", "{C68B0C60-0396-4CB7-AD41-19E1387BB351}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Bll", "Source\Monitoring.Bll\Monitoring.Bll.csproj", "{098EA75A-28CB-4158-992B-C6C6D1C932CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C68B0C60-0396-4CB7-AD41-19E1387BB351}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C68B0C60-0396-4CB7-AD41-19E1387BB351}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C68B0C60-0396-4CB7-AD41-19E1387BB351}.Release|Any CPU.Build.0 = Release|Any CPU
+		{098EA75A-28CB-4158-992B-C6C6D1C932CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{098EA75A-28CB-4158-992B-C6C6D1C932CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{098EA75A-28CB-4158-992B-C6C6D1C932CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{098EA75A-28CB-4158-992B-C6C6D1C932CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

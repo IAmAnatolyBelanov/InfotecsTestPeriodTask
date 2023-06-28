@@ -1,4 +1,5 @@
 using System.Threading;
+using Infotecs.Monitoring.Bll.LoginBizRules;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Monitoring.Dal;
@@ -10,25 +11,18 @@ namespace Infotecs.Monitoring.Api.Controllers;
 public class LoginController : ControllerBase
 {
     private readonly ILogger<LoginController> _logger;
-    private readonly MonitoringContext _context;
+    private readonly ILoginBizRule _loginBizRule;
 
-    public LoginController(ILogger<LoginController> logger, MonitoringContext context)
+    public LoginController(ILogger<LoginController> logger, ILoginBizRule loginBizRule)
     {
         _logger = logger;
-        _context = context;
+        _loginBizRule = loginBizRule;
     }
 
     [HttpPost]
     public async ValueTask<Guid> Login(LoginInfo login, CancellationToken cancellationToken)
     {
-        if (login.Id != default)
-            throw new Exception("Не клиент выдаёт айдишник!");
-
-        login.DateTime = DateTime.UtcNow;
-
-        await _context.Logins.AddAsync(login);
-        await _context.SaveChangesAsync();
-
-        return login.Id;
+        var result = await _loginBizRule.Login(login, cancellationToken);
+        return result;
     }
 }
