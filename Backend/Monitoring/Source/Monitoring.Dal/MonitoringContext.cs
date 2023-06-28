@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Monitoring.Dal;
+namespace Infotecs.Monitoring.Dal;
 public class MonitoringContext : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -28,6 +28,7 @@ public class DeviceInfo
     public Guid Id { get; set; }
     public OperationSystemType OperationSystemType { get; set; }
     public string OperationSystemInfo { get; set; } = default!;
+    public DateTimeOffset RegistrationDate { get; set; }
 }
 
 public enum OperationSystemType

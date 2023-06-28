@@ -1,9 +1,9 @@
 using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Monitoring.Shared.Exceptions;
+using Infotecs.Monitoring.Shared.Exceptions;
 
-namespace Monitoring.Api;
+namespace Infotecs.Monitoring.Api;
 
 public class ExceptionMiddleware
 {

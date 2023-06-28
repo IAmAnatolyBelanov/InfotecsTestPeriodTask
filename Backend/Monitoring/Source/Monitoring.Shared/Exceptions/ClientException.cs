@@ -1,4 +1,4 @@
-namespace Monitoring.Shared.Exceptions;
+namespace Infotecs.Monitoring.Shared.Exceptions;
 public class ClientException : Exception
 {
     public ClientException() : base() { }

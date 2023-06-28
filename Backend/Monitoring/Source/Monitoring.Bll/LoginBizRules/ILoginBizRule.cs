@@ -1,4 +1,4 @@
-using Monitoring.Dal;
+using Infotecs.Monitoring.Dal;
 
 namespace Infotecs.Monitoring.Bll.LoginBizRules;
 public interface ILoginBizRule

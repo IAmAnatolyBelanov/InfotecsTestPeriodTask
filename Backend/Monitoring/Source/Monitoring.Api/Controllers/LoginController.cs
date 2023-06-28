@@ -1,9 +1,7 @@
 using System.Threading;
 using Infotecs.Monitoring.Bll.LoginBizRules;
+using Infotecs.Monitoring.Dal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Monitoring.Api;
-using Monitoring.Dal;
 
 namespace Infotecs.Monitoring.Api.Controllers;
 

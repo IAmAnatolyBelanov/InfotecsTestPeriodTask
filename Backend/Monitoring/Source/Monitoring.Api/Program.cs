@@ -4,8 +4,9 @@ using System.Text.Json.Serialization;
 using Infotecs.Monitoring.Bll.DeviceBizRules;
 using Infotecs.Monitoring.Bll.LoginBizRules;
 using Microsoft.Extensions.Configuration;
-using Monitoring.Api;
-using Monitoring.Dal;
+using Infotecs.Monitoring.Api;
+using Infotecs.Monitoring.Dal;
+using Infotecs.Monitoring.Shared.DateTimeProviders;
 using Serilog;
 using Serilog.Events;
 
@@ -46,6 +47,8 @@ namespace Infotecs.Monitoring.Api
 
             builder.Services.AddTransient<IDeviceBizRule, DeviceBizRule>();
             builder.Services.AddTransient<ILoginBizRule, LoginBizRule>();
+
+            builder.Services.AddSingleton<IClock, Clock>();
 
             builder.Host.UseSerilog(logger);
 

@@ -1,5 +1,5 @@
 namespace Infotecs.Monitoring.Bll.DeviceBizRules;
-public class Statistics
+public class DeviceStatistics
 {
     public Guid DeviceId { get; set; }
     public int LoginCount { get; set; }

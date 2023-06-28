@@ -1,4 +1,4 @@
-namespace Monitoring.Api;
+namespace Infotecs.Monitoring.Api;
 
 public class BaseResponse<T>
 {
