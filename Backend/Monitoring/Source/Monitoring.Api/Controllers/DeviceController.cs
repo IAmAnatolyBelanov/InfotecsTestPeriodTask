@@ -21,30 +21,30 @@ public class DeviceController : ControllerBase
     }
 
     [HttpPost]
-    public async ValueTask<Guid> RegisterDevice(DeviceInfo device, CancellationToken cancellationToken)
+    public async ValueTask<BaseResponse<Guid>> RegisterDevice(DeviceInfo device, CancellationToken cancellationToken)
     {
         var result = await _deviceBizRule.RegisterDevice(device, cancellationToken);
-        return result;
+        return result.ToResponse();
     }
 
     [HttpGet]
-    public async ValueTask<IReadOnlyList<DeviceInfo>> GetAll(CancellationToken cancellationToken)
+    public async ValueTask<BaseResponse<IReadOnlyList<DeviceInfo>>> GetAll(CancellationToken cancellationToken)
     {
         var result = await _deviceBizRule.GetAll(cancellationToken);
-        return result;
+        return result.ToResponse();
     }
 
     [HttpGet]
-    public async ValueTask<Statistics> GetFullStatistics(Guid deviceId, CancellationToken cancellationToken)
+    public async ValueTask<BaseResponse<Statistics>> GetFullStatistics(Guid deviceId, CancellationToken cancellationToken)
     {
         var result = await _deviceBizRule.GetFullStatistics(deviceId, cancellationToken);
-        return result;
+        return result.ToResponse();
     }
 
     [HttpGet]
-    public async ValueTask<Statistics> GetStatistics(Guid deviceId, DateTimeOffset dateFrom, DateTimeOffset dateTo, CancellationToken cancellationToken)
+    public async ValueTask<BaseResponse<Statistics>> GetStatistics(Guid deviceId, DateTimeOffset dateFrom, DateTimeOffset dateTo, CancellationToken cancellationToken)
     {
         var result = await _deviceBizRule.GetStatistics(deviceId, dateFrom, dateTo, cancellationToken);
-        return result;
+        return result.ToResponse();
     }
 }

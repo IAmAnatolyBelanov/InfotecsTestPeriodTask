@@ -2,6 +2,7 @@ using System.Data.SqlTypes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Monitoring.Dal;
+using Monitoring.Shared.Exceptions;
 
 namespace Infotecs.Monitoring.Bll.DeviceBizRules;
 public class DeviceBizRule : IDeviceBizRule, IDisposable, IAsyncDisposable
@@ -49,7 +50,7 @@ public class DeviceBizRule : IDeviceBizRule, IDisposable, IAsyncDisposable
     public async ValueTask<Guid> RegisterDevice(DeviceInfo device, CancellationToken cancellationToken)
     {
         if (device.Id != default)
-            throw new Exception("Не клиент выдаёт айдишник!");
+            throw new ClientException("Не клиент выдаёт айдишник!");
 
         await _context.Devices.AddAsync(device, cancellationToken);
         await _context.SaveChangesAsync();

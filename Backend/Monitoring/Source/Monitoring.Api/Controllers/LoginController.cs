@@ -2,6 +2,7 @@ using System.Threading;
 using Infotecs.Monitoring.Bll.LoginBizRules;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Monitoring.Api;
 using Monitoring.Dal;
 
 namespace Infotecs.Monitoring.Api.Controllers;
@@ -20,9 +21,9 @@ public class LoginController : ControllerBase
     }
 
     [HttpPost]
-    public async ValueTask<Guid> Login(LoginInfo login, CancellationToken cancellationToken)
+    public async ValueTask<BaseResponse<Guid>> Login(LoginInfo login, CancellationToken cancellationToken)
     {
         var result = await _loginBizRule.Login(login, cancellationToken);
-        return result;
+        return result.ToResponse();
     }
 }
