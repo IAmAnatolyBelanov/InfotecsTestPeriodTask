@@ -11,12 +11,10 @@ namespace Infotecs.Monitoring.Api.Controllers;
 [Route("[controller]/[action]")]
 public class LoginController : ControllerBase
 {
-    private readonly ILogger<LoginController> _logger;
     private readonly ILoginBizRule _loginBizRule;
 
-    public LoginController(ILogger<LoginController> logger, ILoginBizRule loginBizRule)
+    public LoginController(ILoginBizRule loginBizRule)
     {
-        _logger = logger;
         _loginBizRule = loginBizRule;
     }
 

@@ -10,13 +10,11 @@ namespace Infotecs.Monitoring.Bll.DeviceBizRules;
 public class DeviceBizRule : IDeviceBizRule, IDisposable, IAsyncDisposable
 {
     private readonly IMonitoringContext _context;
-    private readonly ILogger<DeviceBizRule> _logger;
     private readonly IClock _clock;
 
-    public DeviceBizRule(IMonitoringContext monitoringContext, ILogger<DeviceBizRule> logger, IClock clock)
+    public DeviceBizRule(IMonitoringContext monitoringContext, IClock clock)
     {
         _context = monitoringContext;
-        _logger = logger;
         _clock = clock;
     }
 

@@ -7,13 +7,11 @@ namespace Infotecs.Monitoring.Bll.LoginBizRules;
 public class LoginBizRule : ILoginBizRule, IDisposable, IAsyncDisposable
 {
     private readonly MonitoringContext _context;
-    private readonly ILogger<LoginBizRule> _logger;
     private readonly IClock _clock;
 
-    public LoginBizRule(MonitoringContext context, ILogger<LoginBizRule> logger, IClock clock)
+    public LoginBizRule(MonitoringContext context, IClock clock)
     {
         _context = context;
-        _logger = logger;
         _clock = clock;
     }
 

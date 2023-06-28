@@ -15,12 +15,10 @@ namespace Infotecs.Monitoring.Api.Controllers;
 [Route("[controller]/[action]")]
 public class DeviceController : ControllerBase
 {
-    private readonly ILogger<DeviceController> _logger;
     private readonly IDeviceBizRule _deviceBizRule;
 
-    public DeviceController(ILogger<DeviceController> logger, IDeviceBizRule deviceBizRule)
+    public DeviceController(IDeviceBizRule deviceBizRule)
     {
-        _logger = logger;
         _deviceBizRule = deviceBizRule;
     }
 
