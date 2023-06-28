@@ -1,7 +1,6 @@
 using System.Data.SqlTypes;
 using Infotecs.Monitoring.Dal;
 using Infotecs.Monitoring.Shared.DateTimeProviders;
-using Infotecs.Monitoring.Shared.Exceptions;
 using Infotecs.Monitoring.Shared.Paginations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -48,7 +47,7 @@ public class DeviceBizRule : IDeviceBizRule, IDisposable, IAsyncDisposable
         var statistics = new DeviceStatistics
         {
             DeviceId = deviceId,
-            LastLogin = logins.First().DateTime,
+            LastLogin = logins.FirstOrDefault()?.DateTime,
             LoginCount = logins.Count,
             UniqueUserCount = logins.DistinctBy(l => l.UserName).Count(),
         };
@@ -58,9 +57,7 @@ public class DeviceBizRule : IDeviceBizRule, IDisposable, IAsyncDisposable
 
     public async ValueTask<Guid> RegisterDevice(DeviceInfo device, CancellationToken cancellationToken)
     {
-        if (device.Id != default)
-            throw new ClientException("Не клиент выдаёт айдишник!");
-
+        device.Id = Guid.NewGuid();
         device.RegistrationDate = _clock.UtcNow;
 
         await _context.Devices.AddAsync(device, cancellationToken);

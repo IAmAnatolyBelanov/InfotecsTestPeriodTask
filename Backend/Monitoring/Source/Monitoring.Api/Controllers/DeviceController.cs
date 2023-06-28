@@ -1,7 +1,9 @@
 using System.Data.SqlTypes;
 using Infotecs.Monitoring.Api.Controllers;
+using Infotecs.Monitoring.Api.Infrastructure;
 using Infotecs.Monitoring.Bll.DeviceBizRules;
 using Infotecs.Monitoring.Dal;
+using Infotecs.Monitoring.Shared.Exceptions;
 using Infotecs.Monitoring.Shared.Paginations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,21 +30,28 @@ public class DeviceController : ControllerBase
         return result.ToResponse();
     }
 
-    [HttpGet]
+    [HttpPost]
     public async ValueTask<BaseResponse<IReadOnlyList<DeviceInfo>>> GetAll(Pagination pagination, CancellationToken cancellationToken)
     {
+        if (pagination.PageIndex < 0)
+            throw new ClientException($"{nameof(pagination)}.{nameof(pagination.PageIndex)} must be >= 0.");
+        if (pagination.PageSize <= 0)
+            throw new ClientException($"{nameof(pagination)}.{nameof(pagination.PageSize)} must be > 0.");
+        if (pagination.PageSize > 100)
+            throw new ClientException($"{nameof(pagination)}.{nameof(pagination.PageSize)} must be <= 100.");
+
         var result = await _deviceBizRule.GetAll(pagination, cancellationToken);
         return result.ToResponse();
     }
 
-    [HttpGet]
+    [HttpPost]
     public async ValueTask<BaseResponse<DeviceStatistics>> GetFullStatistics(Guid deviceId, CancellationToken cancellationToken)
     {
         var result = await _deviceBizRule.GetFullStatistics(deviceId, cancellationToken);
         return result.ToResponse();
     }
 
-    [HttpGet]
+    [HttpPost]
     public async ValueTask<BaseResponse<DeviceStatistics>> GetStatistics(Guid deviceId, DateTimeOffset dateFrom, DateTimeOffset dateTo, CancellationToken cancellationToken)
     {
         var result = await _deviceBizRule.GetStatistics(deviceId, dateFrom, dateTo, cancellationToken);

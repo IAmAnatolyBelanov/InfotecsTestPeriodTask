@@ -9,6 +9,7 @@ using Infotecs.Monitoring.Dal;
 using Infotecs.Monitoring.Shared.DateTimeProviders;
 using Serilog;
 using Serilog.Events;
+using Infotecs.Monitoring.Api.Infrastructure;
 
 namespace Infotecs.Monitoring.Api
 {
@@ -18,39 +19,26 @@ namespace Infotecs.Monitoring.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var logger = new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .MinimumLevel.Debug()
-                .WriteTo.File(
-                    path: $"C:\\Logs\\{Assembly.GetExecutingAssembly().GetName().Name}\\log_.log",
-                    restrictedToMinimumLevel: LogEventLevel.Debug,
-                    fileSizeLimitBytes: 1024 * 1024 * 100,
-                    rollOnFileSizeLimit: true,
-                    rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 14,
-                    outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
-                .CreateLogger();
-
-            builder.Services.AddSingleton<Serilog.ILogger>(logger);
-
-            builder.Services.AddControllers();
-
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.AddDbContext<MonitoringContext>();
-
-            builder.Services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+            LoggerRegister.RegisterLogger(builder);
 
             builder.Services.AddTransient<IDeviceBizRule, DeviceBizRule>();
             builder.Services.AddTransient<ILoginBizRule, LoginBizRule>();
 
             builder.Services.AddSingleton<IClock, Clock>();
 
-            builder.Host.UseSerilog(logger);
+            builder.Services.AddDbContext<MonitoringContext>();
+
+
+            builder.Services.AddControllers();
+
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+
 
             var app = builder.Build();
 

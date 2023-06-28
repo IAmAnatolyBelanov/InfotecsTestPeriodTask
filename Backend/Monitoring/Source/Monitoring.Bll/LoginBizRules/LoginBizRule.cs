@@ -19,9 +19,7 @@ public class LoginBizRule : ILoginBizRule, IDisposable, IAsyncDisposable
 
     public async ValueTask<Guid> Login(LoginInfo login, CancellationToken cancellationToken)
     {
-        if (login.Id != default)
-            throw new ClientException("Не клиент выдаёт айдишник!");
-
+        login.Id = Guid.NewGuid();
         login.DateTime = _clock.UtcNow;
 
         await _context.Logins.AddAsync(login, cancellationToken);

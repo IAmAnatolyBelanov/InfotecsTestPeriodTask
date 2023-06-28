@@ -1,4 +1,5 @@
 using System.Threading;
+using Infotecs.Monitoring.Api.Infrastructure;
 using Infotecs.Monitoring.Bll.LoginBizRules;
 using Infotecs.Monitoring.Dal;
 using Microsoft.AspNetCore.Mvc;

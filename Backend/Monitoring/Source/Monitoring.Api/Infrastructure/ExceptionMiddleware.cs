@@ -2,8 +2,11 @@ using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Infotecs.Monitoring.Shared.Exceptions;
+using Infotecs;
+using Infotecs.Monitoring;
+using Infotecs.Monitoring.Api;
 
-namespace Infotecs.Monitoring.Api;
+namespace Infotecs.Monitoring.Api.Infrastructure;
 
 public class ExceptionMiddleware
 {
@@ -24,7 +27,7 @@ public class ExceptionMiddleware
         }
         catch (ClientException ex)
         {
-            _logger.LogError(ex, "Failed to execute request. Client exception");
+            _logger.LogError(ex, "Failed to execute request. Client exception.");
 
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             context.Response.ContentType = "application/json";
@@ -41,7 +44,7 @@ public class ExceptionMiddleware
             context.Response.ContentType = "application/json";
 
 #if DEBUG
-            var error = new { Info = "Unhandled exception", Message = ex.Message, StackTrace = ex.StackTrace };
+            var error = new { Info = "Unhandled exception", ex.Message, ex.StackTrace };
             var fail = new BaseResponse<object> { Error = error.ToString() };
 #else
             var fail = new BaseResponse<object> { Error = "Unknown error" };
