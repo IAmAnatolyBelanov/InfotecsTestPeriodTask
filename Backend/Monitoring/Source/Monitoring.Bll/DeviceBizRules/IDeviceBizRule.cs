@@ -1,4 +1,4 @@
-using Infotecs.Monitoring.Dal;
+using Infotecs.Monitoring.Dal.Models;
 using Infotecs.Monitoring.Shared.Paginations;
 
 namespace Infotecs.Monitoring.Bll.DeviceBizRules;

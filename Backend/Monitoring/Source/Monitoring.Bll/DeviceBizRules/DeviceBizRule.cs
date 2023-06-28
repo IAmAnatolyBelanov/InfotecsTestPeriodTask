@@ -1,5 +1,6 @@
 using System.Data.SqlTypes;
 using Infotecs.Monitoring.Dal;
+using Infotecs.Monitoring.Dal.Models;
 using Infotecs.Monitoring.Shared.DateTimeProviders;
 using Infotecs.Monitoring.Shared.Paginations;
 using Microsoft.EntityFrameworkCore;
@@ -8,11 +9,11 @@ using Microsoft.Extensions.Logging;
 namespace Infotecs.Monitoring.Bll.DeviceBizRules;
 public class DeviceBizRule : IDeviceBizRule, IDisposable, IAsyncDisposable
 {
-    private readonly MonitoringContext _context;
+    private readonly IMonitoringContext _context;
     private readonly ILogger<DeviceBizRule> _logger;
     private readonly IClock _clock;
 
-    public DeviceBizRule(MonitoringContext monitoringContext, ILogger<DeviceBizRule> logger, IClock clock)
+    public DeviceBizRule(IMonitoringContext monitoringContext, ILogger<DeviceBizRule> logger, IClock clock)
     {
         _context = monitoringContext;
         _logger = logger;

@@ -27,7 +27,7 @@ namespace Infotecs.Monitoring.Api
             builder.Services.AddSingleton<IClock, Clock>();
 
             builder.Services.AddDbContext<MonitoringContext>();
-
+            builder.Services.AddScoped<IMonitoringContext, MonitoringContext>();
 
             builder.Services.AddControllers();
 

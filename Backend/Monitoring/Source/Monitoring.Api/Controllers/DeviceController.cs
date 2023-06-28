@@ -3,6 +3,7 @@ using Infotecs.Monitoring.Api.Controllers;
 using Infotecs.Monitoring.Api.Infrastructure;
 using Infotecs.Monitoring.Bll.DeviceBizRules;
 using Infotecs.Monitoring.Dal;
+using Infotecs.Monitoring.Dal.Models;
 using Infotecs.Monitoring.Shared.Exceptions;
 using Infotecs.Monitoring.Shared.Paginations;
 using Microsoft.AspNetCore.Mvc;

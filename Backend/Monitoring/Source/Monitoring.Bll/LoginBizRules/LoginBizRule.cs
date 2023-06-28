@@ -1,6 +1,6 @@
 using Infotecs.Monitoring.Dal;
+using Infotecs.Monitoring.Dal.Models;
 using Infotecs.Monitoring.Shared.DateTimeProviders;
-using Infotecs.Monitoring.Shared.Exceptions;
 using Microsoft.Extensions.Logging;
 
 namespace Infotecs.Monitoring.Bll.LoginBizRules;
