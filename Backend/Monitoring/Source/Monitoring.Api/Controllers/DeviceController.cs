@@ -13,14 +13,17 @@ namespace Infotecs.Monitoring.Api.Controllers;
 public class DeviceController : ControllerBase
 {
     private readonly IDeviceService _deviceService;
+    private readonly ILogger<DeviceController> _logger;
 
     /// <summary>
     /// Конструктор класса <see cref="DeviceController"/>.
     /// </summary>
     /// <param name="deviceService">Бизнес-логика работы с девайсами.</param>
-    public DeviceController(IDeviceService deviceService)
+    /// <param name="logger">Логгер.</param>
+    public DeviceController(IDeviceService deviceService, ILogger<DeviceController> logger)
     {
         _deviceService = deviceService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -32,6 +35,7 @@ public class DeviceController : ControllerBase
     [HttpPost("Device/RegisterDevice")]
     public async ValueTask<BaseResponse<object>> RegisterDevice(DeviceInfo device, CancellationToken cancellationToken)
     {
+        _logger.LogInformation($"Start to register device {device.Id}.");
         await _deviceService.AddOrUpdateDevice(device, cancellationToken);
         return BaseResponseExtensions.EmptySuccess();
     }
@@ -45,6 +49,7 @@ public class DeviceController : ControllerBase
     [HttpPost("Device/GetAll")]
     public async ValueTask<BaseResponse<IReadOnlyList<DeviceInfo>>> GetAll(Pagination pagination, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Start to get info about all devices.");
         var result = await _deviceService.GetAll(pagination, cancellationToken);
         return result.ToResponse();
     }
@@ -58,6 +63,7 @@ public class DeviceController : ControllerBase
     [HttpPost("Device/GetStatistics")]
     public async ValueTask<BaseResponse<DeviceStatistics>> GetStatistics(Guid deviceId, CancellationToken cancellationToken)
     {
+        _logger.LogInformation($"Start to get statistics about device {deviceId}.");
         var result = await _deviceService.GetStatistics(deviceId, cancellationToken);
         return result.ToResponse();
     }
