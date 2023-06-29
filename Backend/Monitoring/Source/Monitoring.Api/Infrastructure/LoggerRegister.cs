@@ -4,9 +4,16 @@ using System.Reflection;
 
 namespace Infotecs.Monitoring.Api.Infrastructure;
 
+/// <summary>
+/// Класс для регистрации логгера в сервисе.
+/// </summary>
 public static class LoggerRegister
 {
-    public static void RegisterLogger(WebApplicationBuilder builder)
+    /// <summary>
+    /// Регистрирует логгер.
+    /// </summary>
+    /// <param name="builder">Builder сервиса, куда необходимо зарегистрировать логгер.</param>
+    public static void RegisterLogger(this WebApplicationBuilder builder)
     {
         var logger = new LoggerConfiguration()
             .Enrich.FromLogContext()

@@ -1,10 +1,18 @@
 namespace Infotecs.Monitoring.Shared.Paginations;
+
+/// <summary>
+/// Пагинация.
+/// </summary>
 public record Pagination
 {
     /// <summary>
-    /// Индекс страницы. Отсчёт начинается с 0.
+    /// Индекс страницы.
     /// </summary>
-    public int PageIndex { get; set; }
+    /// <remarks>Отсчёт начинается с 0.</remarks>
+    public int PageIndex { get; init; }
 
-    public int PageSize { get; set; }
+    /// <summary>
+    /// Размер страницы.
+    /// </summary>
+    public int PageSize { get; init; }
 }

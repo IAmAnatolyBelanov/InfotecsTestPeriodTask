@@ -1,59 +1,64 @@
-using System.Data.SqlTypes;
-using Infotecs.Monitoring.Api.Controllers;
 using Infotecs.Monitoring.Api.Infrastructure;
-using Infotecs.Monitoring.Bll.DeviceBizRules;
-using Infotecs.Monitoring.Dal;
 using Infotecs.Monitoring.Dal.Models;
-using Infotecs.Monitoring.Shared.Exceptions;
+using Infotecs.Monitoring.Domain.DeviceBizRules;
 using Infotecs.Monitoring.Shared.Paginations;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infotecs.Monitoring.Api.Controllers;
 
+/// <summary>
+/// Контроллер для работы с девайсами.
+/// </summary>
 [ApiController]
-[Route("[controller]/[action]")]
 public class DeviceController : ControllerBase
 {
-    private readonly IDeviceBizRule _deviceBizRule;
+    private readonly IDeviceService _deviceService;
 
-    public DeviceController(IDeviceBizRule deviceBizRule)
+    /// <summary>
+    /// Конструктор класса <see cref="DeviceController"/>.
+    /// </summary>
+    /// <param name="deviceService">Бизнес-логика работы с девайсами.</param>
+    public DeviceController(IDeviceService deviceService)
     {
-        _deviceBizRule = deviceBizRule;
+        _deviceService = deviceService;
     }
 
-    [HttpPost]
-    public async ValueTask<BaseResponse<Guid>> RegisterDevice(DeviceInfo device, CancellationToken cancellationToken)
+    /// <summary>
+    /// Регистрирует девайс в системе.
+    /// </summary>
+    /// <param name="device">Девайс, что нужно зарегистрировать в системе.</param>
+    /// <param name="cancellationToken">Токен для отмены запроса.</param>
+    /// <returns>Пустой ответ в случае успешной регистрации, или информацию об ошибке в случае её возникновения.</returns>
+    [HttpPost("Device/RegisterDevice")]
+    public async ValueTask<BaseResponse<object>> RegisterDevice(DeviceInfo device, CancellationToken cancellationToken)
     {
-        var result = await _deviceBizRule.RegisterDevice(device, cancellationToken);
-        return result.ToResponse();
+        await _deviceService.AddOrUpdateDevice(device, cancellationToken);
+        return BaseResponseExtensions.EmptySuccess();
     }
 
-    [HttpPost]
+    /// <summary>
+    /// Возвращает информацию о девайсах.
+    /// </summary>
+    /// <param name="pagination">Пагинация.</param>
+    /// <param name="cancellationToken">Токен для отмены запроса.</param>
+    /// <returns>Массив данных о девайсах или информацию об ошибке в случае её возникновения.</returns>
+    [HttpPost("Device/GetAll")]
     public async ValueTask<BaseResponse<IReadOnlyList<DeviceInfo>>> GetAll(Pagination pagination, CancellationToken cancellationToken)
     {
-        if (pagination.PageIndex < 0)
-            throw new ClientException($"{nameof(pagination)}.{nameof(pagination.PageIndex)} must be >= 0.");
-        if (pagination.PageSize <= 0)
-            throw new ClientException($"{nameof(pagination)}.{nameof(pagination.PageSize)} must be > 0.");
-        if (pagination.PageSize > 100)
-            throw new ClientException($"{nameof(pagination)}.{nameof(pagination.PageSize)} must be <= 100.");
-
-        var result = await _deviceBizRule.GetAll(pagination, cancellationToken);
+        var result = await _deviceService.GetAll(pagination, cancellationToken);
         return result.ToResponse();
     }
 
-    [HttpPost]
-    public async ValueTask<BaseResponse<DeviceStatistics>> GetFullStatistics(Guid deviceId, CancellationToken cancellationToken)
+    /// <summary>
+    /// Возвращает статистику по запрошенному девайсу.
+    /// </summary>
+    /// <param name="deviceId">Id девайса.</param>
+    /// <param name="cancellationToken">Токен для отмены запроса.</param>
+    /// <returns>Статистика по запрошенному девайсу или информация об ошибке в случае её возникновения.</returns>
+    [HttpPost("Device/GetStatistics")]
+    public async ValueTask<BaseResponse<DeviceStatistics>> GetStatistics(Guid deviceId, CancellationToken cancellationToken)
     {
-        var result = await _deviceBizRule.GetFullStatistics(deviceId, cancellationToken);
-        return result.ToResponse();
-    }
-
-    [HttpPost]
-    public async ValueTask<BaseResponse<DeviceStatistics>> GetStatistics(Guid deviceId, DateTimeOffset dateFrom, DateTimeOffset dateTo, CancellationToken cancellationToken)
-    {
-        var result = await _deviceBizRule.GetStatistics(deviceId, dateFrom, dateTo, cancellationToken);
+        var result = await _deviceService.GetStatistics(deviceId, cancellationToken);
         return result.ToResponse();
     }
 }

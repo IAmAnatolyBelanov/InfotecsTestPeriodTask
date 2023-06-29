@@ -1,28 +1,27 @@
-using System.Reflection;
-using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
-using Infotecs.Monitoring.Bll.DeviceBizRules;
-using Infotecs.Monitoring.Bll.LoginBizRules;
-using Microsoft.Extensions.Configuration;
-using Infotecs.Monitoring.Api;
-using Infotecs.Monitoring.Dal;
-using Infotecs.Monitoring.Shared.DateTimeProviders;
-using Serilog;
-using Serilog.Events;
 using Infotecs.Monitoring.Api.Infrastructure;
+using Infotecs.Monitoring.Dal;
+using Infotecs.Monitoring.Domain.DeviceBizRules;
+using Infotecs.Monitoring.Shared.DateTimeProviders;
 
 namespace Infotecs.Monitoring.Api
 {
+    /// <summary>
+    /// Входная точка приложения.
+    /// </summary>
     internal class Program
     {
+        /// <summary>
+        /// Запускает сервис.
+        /// </summary>
+        /// <param name="args">Аргументы для запуска сервиса.</param>
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            LoggerRegister.RegisterLogger(builder);
+            builder.RegisterLogger();
 
-            builder.Services.AddTransient<IDeviceBizRule, DeviceBizRule>();
-            builder.Services.AddTransient<ILoginBizRule, LoginBizRule>();
+            builder.Services.AddTransient<IDeviceService, DeviceService>();
 
             builder.Services.AddSingleton<IClock, Clock>();
 

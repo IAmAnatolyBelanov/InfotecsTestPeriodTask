@@ -8,13 +8,13 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <WarningLevel>0</WarningLevel>
-        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+        <WarningsAsErrors>$(WarningsAsErrors);NU1605;SA1623;</WarningsAsErrors>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <WarningLevel>4</WarningLevel>
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <WarningsAsErrors>$(WarningsAsErrors);NU1605;SA1623;</WarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>
@@ -29,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Monitoring.Bll\Monitoring.Bll.csproj" />
+      <ProjectReference Include="..\Monitoring.Domain\Monitoring.Domain.csproj" />
       <ProjectReference Include="..\Monitoring.Dal\Monitoring.Dal.csproj" />
       <ProjectReference Include="..\Monitoring.Shared\Monitoring.Shared.csproj" />
     </ItemGroup>

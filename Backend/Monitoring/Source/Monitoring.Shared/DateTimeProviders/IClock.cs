@@ -1,7 +1,12 @@
 namespace Infotecs.Monitoring.Shared.DateTimeProviders;
 
+/// <summary>
+/// Абстракция над <see cref="DateTimeOffset"/>.
+/// </summary>
 public interface IClock
 {
-    DateTimeOffset Now { get; }
+    /// <summary>
+    /// Текущие дата и время по UTC.
+    /// </summary>
     DateTimeOffset UtcNow { get; }
 }

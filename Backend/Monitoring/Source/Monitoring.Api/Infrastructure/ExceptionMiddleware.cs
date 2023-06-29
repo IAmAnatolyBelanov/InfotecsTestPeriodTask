@@ -8,6 +8,9 @@ using Infotecs.Monitoring.Api;
 
 namespace Infotecs.Monitoring.Api.Infrastructure;
 
+/// <summary>
+/// Middleware для глобального отлова исключений.
+/// </summary>
 public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
@@ -19,6 +22,11 @@ public class ExceptionMiddleware
         _logger = logger;
     }
 
+    /// <summary>
+    /// Входная точка middleware.
+    /// </summary>
+    /// <param name="context">Контекст запроса.</param>
+    /// <returns></returns>
     public async Task InvokeAsync(HttpContext context)
     {
         try
