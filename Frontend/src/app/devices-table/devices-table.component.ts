@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-table',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  templateUrl: './devices-table.component.html',
+  styleUrls: ['./devices-table.component.css']
 })
-export class TableComponent implements OnInit {
+export class DevicesTableComponent implements OnInit {
   data: any[] = [];
   columns: string[] = ['id', 'userName', 'operationSystemType', 'operationSystemInfo', 'lastUpdate'];
 

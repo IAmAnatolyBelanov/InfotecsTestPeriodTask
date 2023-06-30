@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { ProductListComponent } from './product-list/product-list.component';
-import { TableComponent } from './table/table.component';
+import { DevicesTableComponent } from './devices-table/devices-table.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
@@ -18,14 +18,14 @@ import { MatTableModule } from '@angular/material/table';
     HttpClientModule,
     MatTableModule,
     RouterModule.forRoot([
-      { path: '', component: TableComponent },
+      { path: '', component: DevicesTableComponent },
     ])
   ],
   declarations: [
     AppComponent,
     TopBarComponent,
     ProductListComponent,
-    TableComponent
+    DevicesTableComponent
   ],
   bootstrap: [
     AppComponent
