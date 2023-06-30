@@ -33,7 +33,7 @@ public class DeviceController : ControllerBase
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Пустой ответ в случае успешной регистрации, или информацию об ошибке в случае её возникновения.</returns>
     [HttpPost("Device/RegisterDevice")]
-    public async ValueTask<BaseResponse<object>> RegisterDevice(DeviceInfo device, CancellationToken cancellationToken)
+    public async Task<BaseResponse<object>> RegisterDevice(DeviceInfo device, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Start to register device {device.Id}.");
         await _deviceService.AddOrUpdateDevice(device, cancellationToken);
@@ -47,7 +47,7 @@ public class DeviceController : ControllerBase
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Массив данных о девайсах или информацию об ошибке в случае её возникновения.</returns>
     [HttpPost("Device/GetAll")]
-    public async ValueTask<BaseResponse<IReadOnlyList<DeviceInfo>>> GetAll(Pagination pagination, CancellationToken cancellationToken)
+    public async Task<BaseResponse<IReadOnlyList<DeviceInfo>>> GetAll(Pagination pagination, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Start to get info about all devices.");
         var result = await _deviceService.GetAll(pagination, cancellationToken);
@@ -61,7 +61,7 @@ public class DeviceController : ControllerBase
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Статистика по запрошенному девайсу или информация об ошибке в случае её возникновения.</returns>
     [HttpPost("Device/GetStatistics")]
-    public async ValueTask<BaseResponse<DeviceStatistics>> GetStatistics(Guid deviceId, CancellationToken cancellationToken)
+    public async Task<BaseResponse<DeviceStatistics>> GetStatistics(Guid deviceId, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Start to get statistics about device {deviceId}.");
         var result = await _deviceService.GetStatistics(deviceId, cancellationToken);

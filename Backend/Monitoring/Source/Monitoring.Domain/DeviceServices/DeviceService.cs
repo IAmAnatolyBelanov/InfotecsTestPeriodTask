@@ -24,7 +24,7 @@ public class DeviceService : IDeviceService
     }
 
     /// <inheritdoc/>
-    public async ValueTask<IReadOnlyList<DeviceInfo>> GetAll(Pagination pagination, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<DeviceInfo>> GetAll(Pagination pagination, CancellationToken cancellationToken)
     {
         var result = await _context.Devices
             .OrderByDescending(x => x.LastUpdate)
@@ -36,7 +36,7 @@ public class DeviceService : IDeviceService
     }
 
     /// <inheritdoc/>
-    public async ValueTask<DeviceStatistics> GetStatistics(Guid deviceId, CancellationToken cancellationToken)
+    public async Task<DeviceStatistics> GetStatistics(Guid deviceId, CancellationToken cancellationToken)
     {
         var device = await _context.Devices
             .FirstOrDefaultAsync(x => x.Id == deviceId);
@@ -51,7 +51,7 @@ public class DeviceService : IDeviceService
     }
 
     /// <inheritdoc/>
-    public async ValueTask AddOrUpdateDevice(DeviceInfo device, CancellationToken cancellationToken)
+    public async Task AddOrUpdateDevice(DeviceInfo device, CancellationToken cancellationToken)
     {
         device.LastUpdate = _clock.UtcNow;
 
