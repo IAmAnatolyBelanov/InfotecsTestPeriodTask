@@ -25,7 +25,10 @@
       <mat-cell *matCellDef="let item">{{ item.lastUpdate }}</mat-cell>
     </ng-container>
   
-    <!-- Add additional columns here -->
+    <ng-container matColumnDef="appVersion">
+      <mat-header-cell *matHeaderCellDef>App Version</mat-header-cell>
+      <mat-cell *matCellDef="let item">{{ item.appVersion }}</mat-cell>
+    </ng-container>
   
     <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: columns;"></mat-row>

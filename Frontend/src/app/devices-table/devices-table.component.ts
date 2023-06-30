@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DevicesTableComponent implements OnInit {
   data: any[] = [];
-  columns: string[] = ['id', 'userName', 'operationSystemType', 'operationSystemInfo', 'lastUpdate'];
+  columns: string[] = ['id', 'userName', 'operationSystemType', 'operationSystemInfo', 'lastUpdate', 'appVersion'];
 
   constructor(private http: HttpClient) { }
 
