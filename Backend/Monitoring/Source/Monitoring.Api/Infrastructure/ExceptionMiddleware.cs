@@ -1,10 +1,6 @@
 using System.Net;
 using System.Text.Json;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Infotecs.Monitoring.Shared.Exceptions;
-using Infotecs;
-using Infotecs.Monitoring;
-using Infotecs.Monitoring.Api;
 
 namespace Infotecs.Monitoring.Api.Infrastructure;
 
@@ -15,11 +11,19 @@ public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<ExceptionMiddleware> _logger;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+    /// <summary>
+    /// Конструктор класса <see cref="ExceptionMiddleware"/>.
+    /// </summary>
+    /// <param name="next">Следующий делегат запроса.</param>
+    /// <param name="logger">Логгер.</param>
+    /// <param name="webHostEnvironment">Переменные окружения.</param>
+    public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IWebHostEnvironment webHostEnvironment)
     {
         _next = next;
         _logger = logger;
+        _webHostEnvironment = webHostEnvironment;
     }
 
     /// <summary>
@@ -35,30 +39,45 @@ public class ExceptionMiddleware
         }
         catch (ClientException ex)
         {
-            _logger.LogError(ex, "Failed to execute request. Client exception.");
-
-            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            context.Response.ContentType = "application/json";
-
-            var fail = new BaseResponse<object> { Error = ex.Message };
-
-            await context.Response.WriteAsync(JsonSerializer.Serialize(fail));
+            await CatchClientException(context, ex);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to execute request. Unhandled exception.");
-
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            context.Response.ContentType = "application/json";
-
-#if DEBUG
-            var error = new { Info = "Unhandled exception", ex.Message, ex.StackTrace };
-            var fail = new BaseResponse<object> { Error = error.ToString() };
-#else
-            var fail = new BaseResponse<object> { Error = "Unknown error" };
-#endif
-
-            await context.Response.WriteAsync(JsonSerializer.Serialize(fail));
+            await CatchUnhandledException(context, ex);
         }
+    }
+
+    private async Task CatchClientException(HttpContext context, ClientException ex)
+    {
+        _logger.LogError(ex, "Failed to execute request. Client exception.");
+
+        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        context.Response.ContentType = "application/json";
+
+        var fail = new BaseResponse<object> { Error = ex.Message };
+
+        await context.Response.WriteAsync(JsonSerializer.Serialize(fail));
+    }
+
+    private async Task CatchUnhandledException(HttpContext context, Exception ex)
+    {
+        _logger.LogError(ex, "Failed to execute request. Unhandled exception.");
+
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        BaseResponse<object> fail;
+
+        if (_webHostEnvironment.IsDevelopment())
+        {
+            var error = new { Info = "Unhandled exception", ex.Message, ex.StackTrace };
+            fail = new BaseResponse<object> { Error = error.ToString() };
+        }
+        else
+        {
+            fail = new BaseResponse<object> { Error = "Unknown error" };
+        }
+
+        await context.Response.WriteAsync(JsonSerializer.Serialize(fail));
     }
 }
