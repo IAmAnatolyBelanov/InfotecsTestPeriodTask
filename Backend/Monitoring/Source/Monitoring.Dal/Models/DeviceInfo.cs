@@ -26,6 +26,11 @@ public class DeviceInfo
     public string OperationSystemInfo { get; set; } = default!;
 
     /// <summary>
+    /// Версия приложения.
+    /// </summary>
+    public string AppVersion { get; set; } = default!;
+
+    /// <summary>
     /// Дата и время последнего обновления информации о девайсе.
     /// </summary>
     public DateTimeOffset LastUpdate { get; set; }
