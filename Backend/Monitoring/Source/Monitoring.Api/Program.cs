@@ -38,8 +38,14 @@ namespace Infotecs.Monitoring.Api
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
+            builder.Services.AddCors();
 
             var app = builder.Build();
+
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             app.UseMiddleware<ExceptionMiddleware>();
 
