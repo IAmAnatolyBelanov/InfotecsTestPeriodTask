@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Device } from './models/device';
 import { map } from 'rxjs/operators';
+import { BaseResponse } from './models/base-response';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class DeviceService {
       pageSize: 100
     };
 
-    return this.http.post<any>(url, requestBody)
+    return this.http.post<BaseResponse<Device[]>>(url, requestBody)
       .pipe(map(response => response.data));
   }
 }
