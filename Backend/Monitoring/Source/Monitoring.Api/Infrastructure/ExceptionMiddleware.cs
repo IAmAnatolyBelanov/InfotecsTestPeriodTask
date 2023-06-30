@@ -37,7 +37,7 @@ public class ExceptionMiddleware
         {
             await _next(context);
         }
-        catch (ClientException ex)
+        catch (ServerException ex)
         {
             await CatchClientException(context, ex);
         }
@@ -47,7 +47,7 @@ public class ExceptionMiddleware
         }
     }
 
-    private async Task CatchClientException(HttpContext context, ClientException ex)
+    private async Task CatchClientException(HttpContext context, ServerException ex)
     {
         _logger.LogError(ex, "Failed to execute request. Client exception.");
 
