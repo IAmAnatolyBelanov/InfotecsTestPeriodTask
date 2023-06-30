@@ -4,8 +4,6 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { TopBarComponent } from './top-bar/top-bar.component';
-import { ProductListComponent } from './product-list/product-list.component';
 import { DevicesTableComponent } from './devices-table/devices-table.component';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -23,8 +21,6 @@ import { MatTableModule } from '@angular/material/table';
   ],
   declarations: [
     AppComponent,
-    TopBarComponent,
-    ProductListComponent,
     DevicesTableComponent
   ],
   bootstrap: [
