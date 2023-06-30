@@ -1,31 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { DeviceService } from './../device.service';
+import { Device } from './../models/device';
 
 @Component({
-  selector: 'app-table',
   templateUrl: './devices-table.component.html',
   styleUrls: ['./devices-table.component.css']
 })
 export class DevicesTableComponent implements OnInit {
-  data: any[] = [];
+  data: Device[] = [];
   columns: string[] = ['id', 'userName', 'operationSystemType', 'operationSystemInfo', 'lastUpdate', 'appVersion'];
 
-  constructor(private http: HttpClient) { }
+  constructor(private deviceService: DeviceService) { }
 
   ngOnInit(): void {
     this.getData();
   }
 
   getData(): void {
-    const url = 'http://localhost:44500/Device/GetAll';
-
-    const requestBody = {
-      pageIndex: 0,
-      pageSize: 100
-    };
-
-    this.http.post<any>(url, requestBody).subscribe(response => {
-      this.data = response.data;
+    this.deviceService.getAllDevices().subscribe(response => {
+      this.data = response;
     });
   }
 }
