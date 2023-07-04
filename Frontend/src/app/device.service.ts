@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Device } from './models/device';
 import { map } from 'rxjs/operators';
@@ -12,14 +12,13 @@ export class DeviceService {
   constructor(private http: HttpClient) { }
 
   getAllDevices(): Observable<Device[]> {
-    const url = 'http://localhost:44500/device/getall';
+    const url = 'http://localhost:44500/device';
 
-    const requestBody = {
-      pageIndex: 0,
-      pageSize: 100
-    };
+    const params = new HttpParams()
+      .set('PageIndex', '0')
+      .set('PageSize', '100');
 
-    return this.http.post<BaseResponse<Device[]>>(url, requestBody)
+    return this.http.get<BaseResponse<Device[]>>(url, { params })
       .pipe(map(response => response.data));
   }
 }

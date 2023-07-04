@@ -46,8 +46,8 @@ public class DeviceController : ControllerBase
     /// <param name="pagination">Пагинация.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Массив данных о девайсах или информацию об ошибке в случае её возникновения.</returns>
-    [HttpPost("Device/GetAll")]
-    public async Task<BaseResponse<IReadOnlyList<DeviceInfo>>> GetAll(Pagination pagination, CancellationToken cancellationToken)
+    [HttpGet("Device")]
+    public async Task<BaseResponse<IReadOnlyList<DeviceInfo>>> GetAll([FromQuery]Pagination pagination, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Start to get info about all devices.");
         var result = await _deviceService.GetAll(pagination, cancellationToken);
