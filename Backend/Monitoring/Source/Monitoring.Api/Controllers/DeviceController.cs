@@ -10,6 +10,7 @@ namespace Infotecs.Monitoring.Api.Controllers;
 /// Контроллер для работы с девайсами.
 /// </summary>
 [ApiController]
+[Route("Devices")]
 public class DeviceController : ControllerBase
 {
     private readonly IDeviceService _deviceService;
@@ -32,7 +33,7 @@ public class DeviceController : ControllerBase
     /// <param name="device">Девайс, что нужно зарегистрировать в системе.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Пустой ответ в случае успешной регистрации, или информацию об ошибке в случае её возникновения.</returns>
-    [HttpPost("Device/RegisterDevice")]
+    [HttpPost("RegisterDevice")]
     public async Task<BaseResponse<object>> RegisterDevice(DeviceInfo device, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Start to register device {device.Id}.");
@@ -46,7 +47,7 @@ public class DeviceController : ControllerBase
     /// <param name="pagination">Пагинация.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Массив данных о девайсах или информацию об ошибке в случае её возникновения.</returns>
-    [HttpGet("Device")]
+    [HttpGet]
     public async Task<BaseResponse<IReadOnlyList<DeviceInfo>>> GetAll([FromQuery]Pagination pagination, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Start to get info about all devices.");
@@ -60,7 +61,7 @@ public class DeviceController : ControllerBase
     /// <param name="deviceId">Id девайса.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Статистика по запрошенному девайсу или информация об ошибке в случае её возникновения.</returns>
-    [HttpPost("Device/GetStatistics")]
+    [HttpPost("GetStatistics")]
     public async Task<BaseResponse<DeviceStatistics>> GetStatistics(Guid deviceId, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Start to get statistics about device {deviceId}.");
