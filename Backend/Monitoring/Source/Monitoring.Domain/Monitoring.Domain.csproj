@@ -17,9 +17,18 @@
   <ItemGroup>
     <ProjectReference Include="..\Monitoring.Dal\Monitoring.Dal.csproj" />
     <ProjectReference Include="..\Monitoring.Shared\Monitoring.Shared.csproj" />
+    <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
       <ExcludeAssets>all</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
+
+  <Target Name="Mapster">
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet build" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tool restore" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster model -a &quot;$(TargetDir)$(ProjectName).dll&quot; -p" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster extension -a &quot;$(TargetDir)$(ProjectName).dll&quot; -p" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster mapper -a &quot;$(TargetDir)$(ProjectName).dll&quot; -p" />
+  </Target>
 
 </Project>
