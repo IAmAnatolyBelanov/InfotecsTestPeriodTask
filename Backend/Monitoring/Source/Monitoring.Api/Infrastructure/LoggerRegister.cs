@@ -1,6 +1,6 @@
-using Serilog.Events;
-using Serilog;
 using System.Reflection;
+using Serilog;
+using Serilog.Events;
 
 namespace Infotecs.Monitoring.Api.Infrastructure;
 
@@ -26,6 +26,7 @@ public static class LoggerRegister
                 rollingInterval: RollingInterval.Day,
                 retainedFileCountLimit: 14,
                 outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
+            .WriteTo.Seq("http://localhost:5341")
             .CreateLogger();
         builder.Host.UseSerilog(logger);
     }
