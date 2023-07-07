@@ -1,0 +1,35 @@
+<mat-table [dataSource]="data">
+    <!-- Define the columns using matColumnDef -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+      <mat-cell *matCellDef="let item">{{ item.id }}</mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="userName">
+      <mat-header-cell *matHeaderCellDef>User Name</mat-header-cell>
+      <mat-cell *matCellDef="let item">{{ item.userName }}</mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="operationSystemType">
+      <mat-header-cell *matHeaderCellDef>Operation System Type</mat-header-cell>
+      <mat-cell *matCellDef="let item">{{ item.operationSystemType }}</mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="operationSystemInfo">
+      <mat-header-cell *matHeaderCellDef>Operation System Info</mat-header-cell>
+      <mat-cell *matCellDef="let item">{{ item.operationSystemInfo }}</mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="lastUpdate">
+      <mat-header-cell *matHeaderCellDef>Last Update</mat-header-cell>
+      <mat-cell *matCellDef="let item">{{ item.lastUpdate }}</mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="appVersion">
+      <mat-header-cell *matHeaderCellDef>App Version</mat-header-cell>
+      <mat-cell *matCellDef="let item">{{ item.appVersion }}</mat-cell>
+    </ng-container>
+  
+    <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+  </mat-table>
