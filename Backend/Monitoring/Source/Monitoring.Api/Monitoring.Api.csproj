@@ -9,7 +9,7 @@
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-        <WarningsAsErrors>$(WarningsAsErrors);NU1605;SA1623;</WarningsAsErrors>
+        <WarningsAsErrors>$(WarningsAsErrors);NU1605;</WarningsAsErrors>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
