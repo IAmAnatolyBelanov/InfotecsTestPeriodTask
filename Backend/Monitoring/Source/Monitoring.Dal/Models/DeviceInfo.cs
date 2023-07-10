@@ -1,3 +1,5 @@
+using Infotecs.Monitoring.Shared.OperationSystem;
+
 namespace Infotecs.Monitoring.Dal.Models;
 
 /// <summary>

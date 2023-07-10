@@ -1,7 +1,7 @@
 using Infotecs.Monitoring.Api.Infrastructure;
+using Infotecs.Monitoring.Contracts.DeviceInfo;
 using Infotecs.Monitoring.Domain.DeviceBizRules;
 using Infotecs.Monitoring.Domain.Mappers;
-using Infotecs.Monitoring.Domain.Mappers.Models;
 using Infotecs.Monitoring.Shared.Paginations;
 using Microsoft.AspNetCore.Mvc;
 

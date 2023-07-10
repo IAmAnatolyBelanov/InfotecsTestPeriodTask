@@ -1,5 +1,5 @@
+using Infotecs.Monitoring.Contracts.DeviceInfo;
 using Infotecs.Monitoring.Dal.Models;
-using Infotecs.Monitoring.Domain.Mappers.Models;
 using Mapster;
 
 namespace Infotecs.Monitoring.Domain.Mappers;

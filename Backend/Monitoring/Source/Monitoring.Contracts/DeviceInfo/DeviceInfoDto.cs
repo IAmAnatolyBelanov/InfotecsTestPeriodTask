@@ -1,6 +1,6 @@
-using Infotecs.Monitoring.Dal.Models;
+using Infotecs.Monitoring.Shared.OperationSystem;
 
-namespace Infotecs.Monitoring.Domain.Mappers.Models;
+namespace Infotecs.Monitoring.Contracts.DeviceInfo;
 
 /// <summary>
 /// Dto информации о девайсе.

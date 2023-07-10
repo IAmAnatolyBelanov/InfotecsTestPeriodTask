@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Monitoring.Contracts\Monitoring.Contracts.csproj" />
     <ProjectReference Include="..\Monitoring.Dal\Monitoring.Dal.csproj" />
     <ProjectReference Include="..\Monitoring.Shared\Monitoring.Shared.csproj" />
     <PackageReference Include="Mapster" Version="7.3.0" />

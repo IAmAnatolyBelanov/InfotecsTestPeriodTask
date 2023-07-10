@@ -2,9 +2,9 @@ namespace Infotecs.Monitoring.Domain.Mappers
 {
     public partial class DeviceInfoMapper : Infotecs.Monitoring.Domain.Mappers.IDeviceInfoMapper
     {
-        public Infotecs.Monitoring.Domain.Mappers.Models.DeviceInfoDto MapToDto(Infotecs.Monitoring.Dal.Models.DeviceInfo p1)
+        public Infotecs.Monitoring.Contracts.DeviceInfo.DeviceInfoDto MapToDto(Infotecs.Monitoring.Dal.Models.DeviceInfo p1)
         {
-            return p1 == null ? null : new Infotecs.Monitoring.Domain.Mappers.Models.DeviceInfoDto()
+            return p1 == null ? null : new Infotecs.Monitoring.Contracts.DeviceInfo.DeviceInfoDto()
             {
                 Id = p1.Id,
                 UserName = p1.UserName,
@@ -14,13 +14,13 @@ namespace Infotecs.Monitoring.Domain.Mappers
                 LastUpdate = p1.LastUpdate
             };
         }
-        public Infotecs.Monitoring.Domain.Mappers.Models.DeviceInfoDto MapToDto(Infotecs.Monitoring.Dal.Models.DeviceInfo p2, Infotecs.Monitoring.Domain.Mappers.Models.DeviceInfoDto p3)
+        public Infotecs.Monitoring.Contracts.DeviceInfo.DeviceInfoDto MapToDto(Infotecs.Monitoring.Dal.Models.DeviceInfo p2, Infotecs.Monitoring.Contracts.DeviceInfo.DeviceInfoDto p3)
         {
             if (p2 == null)
             {
                 return null;
             }
-            Infotecs.Monitoring.Domain.Mappers.Models.DeviceInfoDto result = p3 ?? new Infotecs.Monitoring.Domain.Mappers.Models.DeviceInfoDto();
+            Infotecs.Monitoring.Contracts.DeviceInfo.DeviceInfoDto result = p3 ?? new Infotecs.Monitoring.Contracts.DeviceInfo.DeviceInfoDto();
             
             result.Id = p2.Id;
             result.UserName = p2.UserName;
@@ -31,7 +31,7 @@ namespace Infotecs.Monitoring.Domain.Mappers
             return result;
             
         }
-        public Infotecs.Monitoring.Dal.Models.DeviceInfo MapFromDto(Infotecs.Monitoring.Domain.Mappers.Models.DeviceInfoDto p4)
+        public Infotecs.Monitoring.Dal.Models.DeviceInfo MapFromDto(Infotecs.Monitoring.Contracts.DeviceInfo.DeviceInfoDto p4)
         {
             return p4 == null ? null : new Infotecs.Monitoring.Dal.Models.DeviceInfo()
             {
@@ -43,7 +43,7 @@ namespace Infotecs.Monitoring.Domain.Mappers
                 LastUpdate = p4.LastUpdate
             };
         }
-        public Infotecs.Monitoring.Dal.Models.DeviceInfo MapFromDto(Infotecs.Monitoring.Domain.Mappers.Models.DeviceInfoDto p5, Infotecs.Monitoring.Dal.Models.DeviceInfo p6)
+        public Infotecs.Monitoring.Dal.Models.DeviceInfo MapFromDto(Infotecs.Monitoring.Contracts.DeviceInfo.DeviceInfoDto p5, Infotecs.Monitoring.Dal.Models.DeviceInfo p6)
         {
             if (p5 == null)
             {
