@@ -6,6 +6,7 @@ using Infotecs.Monitoring.Shared.DateTimeProviders;
 using Infotecs.Monitoring.Dal.Sessions;
 using Microsoft.Extensions.Options;
 using Infotecs.Monitoring.Dal.Repositories;
+using Infotecs.Monitoring.Domain.Migrations;
 
 namespace Infotecs.Monitoring.Api
 {
@@ -32,6 +33,8 @@ namespace Infotecs.Monitoring.Api
             builder.Services.Configure<SessionFactoryConfig>(builder.Configuration.GetSection(SessionFactoryConfig.Position));
             builder.Services.AddSingleton<ISessionFactoryConfig>(provider =>
                 provider.GetRequiredService<IOptions<SessionFactoryConfig>>().Value);
+
+            builder.Services.RegisterFluentMigrator();
 
             builder.RegisterLogger();
 
