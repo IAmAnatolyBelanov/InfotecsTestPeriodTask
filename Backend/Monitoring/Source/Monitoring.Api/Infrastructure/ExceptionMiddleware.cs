@@ -30,7 +30,7 @@ public class ExceptionMiddleware
     /// Входная точка middleware.
     /// </summary>
     /// <param name="context">Контекст запроса.</param>
-    /// <returns></returns>
+    /// <returns><see cref="Task"/>.</returns>
     public async Task InvokeAsync(HttpContext context)
     {
         try
