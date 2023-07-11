@@ -1,7 +1,7 @@
-using Infotecs.Monitoring.Dal.Models;
+using Monitoring.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infotecs.Monitoring.Dal;
+namespace Monitoring.Dal;
 /// <summary>
 /// Контекст для работы с БД.
 /// </summary>

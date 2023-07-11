@@ -1,10 +1,10 @@
-using Infotecs.Monitoring.Dal;
-using Infotecs.Monitoring.Dal.Models;
-using Infotecs.Monitoring.Shared.DateTimeProviders;
-using Infotecs.Monitoring.Shared.Paginations;
+using Monitoring.Dal;
+using Monitoring.Dal.Models;
+using Monitoring.Shared.DateTimeProviders;
+using Monitoring.Shared.Paginations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infotecs.Monitoring.Domain.DeviceBizRules;
+namespace Monitoring.Domain.DeviceBizRules;
 
 /// <inheritdoc cref="IDeviceService"/>
 public class DeviceService : IDeviceService

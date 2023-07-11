@@ -1,6 +1,6 @@
 using Serilog;
 
-namespace Infotecs.Monitoring.Api.Infrastructure;
+namespace Monitoring.Api.Infrastructure;
 
 /// <summary>
 /// Класс для регистрации логгера в сервисе.

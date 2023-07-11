@@ -1,6 +1,6 @@
-using Infotecs.Monitoring.Shared.OperationSystem;
+using Monitoring.Shared.OperationSystem;
 
-namespace Infotecs.Monitoring.Dal.Models;
+namespace Monitoring.Dal.Models;
 
 /// <summary>
 /// Информация о девайсе.
