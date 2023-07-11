@@ -3,6 +3,7 @@ using Infotecs.Monitoring.Api.Infrastructure;
 using Infotecs.Monitoring.Dal;
 using Infotecs.Monitoring.Domain.DeviceBizRules;
 using Infotecs.Monitoring.Shared.DateTimeProviders;
+using Microsoft.Extensions.Options;
 using Monitoring.Dal.Repositories;
 using Monitoring.Dal.Sessions;
 
@@ -21,13 +22,21 @@ namespace Infotecs.Monitoring.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Configuration
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json")
+                .AddEnvironmentVariables();
+
+            builder.Services.Configure<SessionFactoryConfig>(builder.Configuration.GetSection(SessionFactoryConfig.Position));
+            builder.Services.AddSingleton<ISessionFactoryConfig>(provider =>
+                provider.GetRequiredService<IOptions<SessionFactoryConfig>>().Value);
+
             builder.RegisterLogger();
 
             builder.Services.AddTransient<IDeviceService, DeviceService>();
 
             builder.Services.AddSingleton<IClock, Clock>();
 
-            builder.Services.AddSingleton<ISessionFactoryConfig, SessionFactoryConfig>();
             builder.Services.AddSingleton<ISessionFactory, SessionFactory>();
 
             builder.Services.AddSingleton<IDeviceRepository, DeviceRepository>();
