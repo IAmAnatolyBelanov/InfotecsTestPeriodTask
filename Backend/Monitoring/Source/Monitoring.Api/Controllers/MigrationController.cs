@@ -1,8 +1,8 @@
-using Infotecs.Monitoring.Api.Infrastructure;
-using Infotecs.Monitoring.Domain.Migrations;
+using Monitoring.Api.Infrastructure;
+using Monitoring.Domain.Migrations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Infotecs.Monitoring.Api.Controllers;
+namespace Monitoring.Api.Controllers;
 
 /// <summary>
 /// Контроллер для работы с миграциями.

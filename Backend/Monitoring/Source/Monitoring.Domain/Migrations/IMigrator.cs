@@ -1,4 +1,4 @@
-namespace Infotecs.Monitoring.Domain.Migrations;
+namespace Monitoring.Domain.Migrations;
 
 /// <summary>
 /// Мигратор. Управляет миграциями в проекте.

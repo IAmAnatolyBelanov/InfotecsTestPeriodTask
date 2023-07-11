@@ -1,9 +1,9 @@
 using FluentMigrator.Runner;
-using Infotecs.Monitoring.Dal.Migrations;
-using Infotecs.Monitoring.Dal.Sessions;
+using Monitoring.Dal.Migrations;
+using Monitoring.Dal.Sessions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infotecs.Monitoring.Domain.Migrations;
+namespace Monitoring.Domain.Migrations;
 
 /// <summary>
 /// Регистратор мигратора.

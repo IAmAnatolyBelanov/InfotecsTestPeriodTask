@@ -1,6 +1,6 @@
 using FluentMigrator.Runner;
 
-namespace Infotecs.Monitoring.Domain.Migrations;
+namespace Monitoring.Domain.Migrations;
 
 /// <inheritdoc cref="IMigrator"/>
 public class Migrator : IMigrator

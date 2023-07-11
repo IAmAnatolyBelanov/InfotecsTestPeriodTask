@@ -5,6 +5,7 @@ using Monitoring.Dal.Repositories;
 using Monitoring.Dal.Sessions;
 using Monitoring.Domain.DeviceServices;
 using Monitoring.Domain.Mappers;
+using Monitoring.Domain.Migrations;
 using Monitoring.Shared.DateTimeProviders;
 
 namespace Monitoring.Api

@@ -1,6 +1,6 @@
 using FluentMigrator;
 
-namespace Infotecs.Monitoring.Dal.Migrations;
+namespace Monitoring.Dal.Migrations;
 
 /// <summary>
 /// Первичная миграция.
