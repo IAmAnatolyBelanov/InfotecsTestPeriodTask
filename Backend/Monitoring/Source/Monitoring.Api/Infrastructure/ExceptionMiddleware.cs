@@ -1,8 +1,8 @@
 using System.Net;
 using System.Text.Json;
-using Infotecs.Monitoring.Shared.Exceptions;
+using Monitoring.Shared.Exceptions;
 
-namespace Infotecs.Monitoring.Api.Infrastructure;
+namespace Monitoring.Api.Infrastructure;
 
 /// <summary>
 /// Middleware для глобального отлова исключений.

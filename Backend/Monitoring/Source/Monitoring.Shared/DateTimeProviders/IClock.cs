@@ -1,4 +1,4 @@
-namespace Infotecs.Monitoring.Shared.DateTimeProviders;
+namespace Monitoring.Shared.DateTimeProviders;
 
 /// <summary>
 /// Абстракция над <see cref="DateTimeOffset"/>.

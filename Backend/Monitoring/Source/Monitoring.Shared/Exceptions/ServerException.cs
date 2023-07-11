@@ -1,4 +1,4 @@
-namespace Infotecs.Monitoring.Shared.Exceptions;
+namespace Monitoring.Shared.Exceptions;
 
 /// <summary>
 /// Исключение, которое можно показывать клиенту.

@@ -1,8 +1,8 @@
-using Infotecs.Monitoring.Contracts.DeviceInfo;
-using Infotecs.Monitoring.Dal.Models;
+using Monitoring.Contracts.DeviceInfo;
+using Monitoring.Dal.Models;
 using Mapster;
 
-namespace Infotecs.Monitoring.Domain.Mappers;
+namespace Monitoring.Domain.Mappers;
 
 /// <summary>
 /// Регистратор мапперов. Необходим для работы автогенерации кода Mapster'а.
