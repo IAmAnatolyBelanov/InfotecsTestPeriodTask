@@ -36,9 +36,33 @@ public class PgSession : IPgSession
     }
 
     /// <inheritdoc/>
+    public Task<int> ExecuteAsync(string commandText, CancellationToken cancellationToken)
+    {
+        return ExecuteAsync(new CommandDefinition(commandText: commandText, cancellationToken: cancellationToken));
+    }
+
+    /// <inheritdoc/>
+    public Task<int> ExecuteAsync(string commandText, object parameters, CancellationToken cancellationToken)
+    {
+        return ExecuteAsync(new CommandDefinition(commandText: commandText, parameters: parameters, cancellationToken: cancellationToken));
+    }
+
+    /// <inheritdoc/>
     public async Task<int> ExecuteAsync(CommandDefinition commandDefinition)
     {
         return await _connection.ExecuteAsync(commandDefinition);
+    }
+
+    /// <inheritdoc/>
+    public Task<IEnumerable<T>> QueryAsync<T>(string commandText, CancellationToken cancellationToken)
+    {
+        return QueryAsync<T>(new CommandDefinition(commandText: commandText, cancellationToken: cancellationToken));
+    }
+
+    /// <inheritdoc/>
+    public Task<IEnumerable<T>> QueryAsync<T>(string commandText, object parameters, CancellationToken cancellationToken)
+    {
+        return QueryAsync<T>(new CommandDefinition(commandText: commandText, parameters: parameters, cancellationToken: cancellationToken));
     }
 
     /// <inheritdoc/>

@@ -1,3 +1,4 @@
+using System.Threading;
 using Dapper;
 
 namespace Infotecs.Monitoring.Dal.Sessions;
@@ -24,8 +25,42 @@ public interface IPgSession : IDisposable, IAsyncDisposable
     /// <summary>
     /// Исполняет команду.
     /// </summary>
+    /// <param name="commandText">SQL запрос.</param>
+    /// <param name="cancellationToken">Токен для отмены запроса.</param>
+    /// <returns>Количество изменённых строк.</returns>
+    Task<int> ExecuteAsync(string commandText, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Исполняет команду.
+    /// </summary>
+    /// <param name="commandText">SQL запрос.</param>
+    /// <param name="parameters">Парметры запроса.</param>
+    /// <param name="cancellationToken">Токен для отмены запроса.</param>
+    /// <returns>Количество изменённых строк.</returns>
+    Task<int> ExecuteAsync(string commandText, object parameters, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Исполняет команду.
+    /// </summary>
     /// <typeparam name="T">Тип возвращаемых объектов.</typeparam>
     /// <param name="commandDefinition">Команда для выполнения.</param>
     /// <returns>Коллекция объектов типа T, полученных из БД в соответствии с переданной командой.</returns>
     Task<IEnumerable<T>> QueryAsync<T>(CommandDefinition commandDefinition);
+
+    /// <summary>
+    /// Исполняет команду.
+    /// </summary>
+    /// <param name="commandText">SQL запрос.</param>
+    /// <param name="cancellationToken">Токен для отмены запроса.</param>
+    /// <returns>Коллекция объектов типа T, полученных из БД в соответствии с переданной командой.</returns>
+    Task<IEnumerable<T>> QueryAsync<T>(string commandText, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Исполняет команду.
+    /// </summary>
+    /// <param name="commandText">SQL запрос.</param>
+    /// <param name="parameters">Парметры запроса.</param>
+    /// <param name="cancellationToken">Токен для отмены запроса.</param>
+    /// <returns>Коллекция объектов типа T, полученных из БД в соответствии с переданной командой.</returns>
+    Task<IEnumerable<T>> QueryAsync<T>(string commandText, object parameters, CancellationToken cancellationToken);
 }

@@ -50,9 +50,7 @@ VALUES
     @{nameof(parameters.AppVersion)},
     NOW());";
 
-        var command = new CommandDefinition(commandText: Query, parameters: parameters, cancellationToken: cancellationToken);
-
-        await session.ExecuteAsync(command);
+        await session.ExecuteAsync(Query, parameters, cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -81,9 +79,7 @@ LIMIT
 OFFSET
     @{nameof(parameters.Offset)};";
 
-        var command = new CommandDefinition(commandText: Query, parameters: parameters, cancellationToken: cancellationToken);
-
-        var result = await session.QueryAsync<DeviceInfo>(command);
+        var result = await session.QueryAsync<DeviceInfo>(Query, parameters, cancellationToken);
         return result.AsList();
     }
 
@@ -108,9 +104,8 @@ FROM
 WHERE
     ""{nameof(DeviceInfo.Id)}"" = @{nameof(parameters.Id)};";
 
-        var command = new CommandDefinition(commandText: Query, parameters: parameters, cancellationToken: cancellationToken);
+        var devices = await session.QueryAsync<DeviceInfo>(Query, parameters, cancellationToken);
 
-        var devices = await session.QueryAsync<DeviceInfo>(command);
         var result = devices.FirstOrDefault();
         return result;
     }
