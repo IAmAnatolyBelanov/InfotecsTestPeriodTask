@@ -1,9 +1,9 @@
-using Monitoring.Dal;
 using Monitoring.Dal.Models;
-using Monitoring.Shared.DateTimeProviders;
+using Monitoring.Dal.Repositories;
+using Monitoring.Dal.Sessions;
 using Monitoring.Shared.Paginations;
 
-namespace Monitoring.Domain.DeviceBizRules;
+namespace Monitoring.Domain.DeviceServices;
 
 /// <inheritdoc cref="IDeviceService"/>
 public class DeviceService : IDeviceService

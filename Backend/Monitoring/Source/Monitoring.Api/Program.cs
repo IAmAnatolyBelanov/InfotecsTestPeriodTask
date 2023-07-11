@@ -1,8 +1,9 @@
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
 using Monitoring.Api.Infrastructure;
-using Monitoring.Dal;
-using Monitoring.Domain.DeviceBizRules;
+using Monitoring.Dal.Repositories;
+using Monitoring.Dal.Sessions;
+using Monitoring.Domain.DeviceServices;
 using Monitoring.Domain.Mappers;
 using Monitoring.Shared.DateTimeProviders;
 

@@ -1,4 +1,4 @@
-namespace Infotecs.Monitoring.Dal.Sessions;
+namespace Monitoring.Dal.Sessions;
 
 /// <summary>
 /// Фабрика создания сессий.

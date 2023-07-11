@@ -1,9 +1,9 @@
 using Dapper;
-using Infotecs.Monitoring.Dal.Models;
-using Infotecs.Monitoring.Shared.Paginations;
-using Infotecs.Monitoring.Dal.Sessions;
+using Monitoring.Dal.Models;
+using Monitoring.Shared.Paginations;
+using Monitoring.Dal.Sessions;
 
-namespace Infotecs.Monitoring.Dal.Repositories;
+namespace Monitoring.Dal.Repositories;
 
 /// <inheritdoc cref="IPgDeviceRepository"/>
 public class PgDeviceRepository : IPgDeviceRepository

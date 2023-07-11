@@ -1,6 +1,6 @@
 using Monitoring.Api.Infrastructure;
 using Monitoring.Contracts.DeviceInfo;
-using Monitoring.Domain.DeviceBizRules;
+using Monitoring.Domain.DeviceServices;
 using Monitoring.Domain.Mappers;
 using Monitoring.Shared.Paginations;
 using Microsoft.AspNetCore.Mvc;
