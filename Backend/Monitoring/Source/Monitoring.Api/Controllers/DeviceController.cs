@@ -1,6 +1,7 @@
 using Infotecs.Monitoring.Api.Infrastructure;
-using Infotecs.Monitoring.Dal.Models;
+using Infotecs.Monitoring.Contracts.DeviceInfo;
 using Infotecs.Monitoring.Domain.DeviceBizRules;
+using Infotecs.Monitoring.Domain.Mappers;
 using Infotecs.Monitoring.Shared.Paginations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,16 +16,19 @@ public class DeviceController : ControllerBase
 {
     private readonly IDeviceService _deviceService;
     private readonly ILogger<DeviceController> _logger;
+    private readonly IDeviceInfoMapper _deviceInfoMapper;
 
     /// <summary>
     /// Конструктор класса <see cref="DeviceController"/>.
     /// </summary>
     /// <param name="deviceService">Бизнес-логика работы с девайсами.</param>
     /// <param name="logger">Логгер.</param>
-    public DeviceController(IDeviceService deviceService, ILogger<DeviceController> logger)
+    /// <param name="deviceInfoMapper">Маппер для DeviceInfo.</param>
+    public DeviceController(IDeviceService deviceService, ILogger<DeviceController> logger, IDeviceInfoMapper deviceInfoMapper)
     {
         _deviceService = deviceService;
         _logger = logger;
+        _deviceInfoMapper = deviceInfoMapper;
     }
 
     /// <summary>
@@ -34,10 +38,13 @@ public class DeviceController : ControllerBase
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Пустой ответ в случае успешной регистрации, или информацию об ошибке в случае её возникновения.</returns>
     [HttpPost("RegisterDevice")]
-    public async Task<BaseResponse<object>> RegisterDevice(DeviceInfo device, CancellationToken cancellationToken)
+    public async Task<BaseResponse<object>> RegisterDevice(DeviceInfoDto device, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Start to register device {device.Id}.");
-        await _deviceService.AddOrUpdateDevice(device, cancellationToken);
+        var internalDevice = _deviceInfoMapper.MapFromDto(device);
+
+        await _deviceService.AddOrUpdateDevice(internalDevice, cancellationToken);
+
         return BaseResponseExtensions.EmptySuccess();
     }
 
@@ -48,11 +55,14 @@ public class DeviceController : ControllerBase
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Массив данных о девайсах или информацию об ошибке в случае её возникновения.</returns>
     [HttpGet]
-    public async Task<BaseResponse<IReadOnlyList<DeviceInfo>>> GetAll([FromQuery]Pagination pagination, CancellationToken cancellationToken)
+    public async Task<BaseResponse<IReadOnlyList<DeviceInfoDto>>> GetAll([FromQuery]Pagination pagination, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Start to get info about all devices.");
         var result = await _deviceService.GetAll(pagination, cancellationToken);
-        return result.ToResponse();
+
+        IReadOnlyList<DeviceInfoDto> resultDto = result.Select(_deviceInfoMapper.MapToDto).ToArray();
+
+        return resultDto.ToResponse();
     }
 
     /// <summary>

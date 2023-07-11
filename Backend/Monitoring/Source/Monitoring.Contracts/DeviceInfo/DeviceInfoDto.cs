@@ -1,11 +1,11 @@
 using Infotecs.Monitoring.Shared.OperationSystem;
 
-namespace Infotecs.Monitoring.Dal.Models;
+namespace Infotecs.Monitoring.Contracts.DeviceInfo;
 
 /// <summary>
-/// Информация о девайсе.
+/// Dto информации о девайсе.
 /// </summary>
-public class DeviceInfo
+public class DeviceInfoDto
 {
     /// <summary>
     /// Id.

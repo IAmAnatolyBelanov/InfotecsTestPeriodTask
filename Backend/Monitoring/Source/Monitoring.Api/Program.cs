@@ -2,7 +2,10 @@ using System.Text.Json.Serialization;
 using Infotecs.Monitoring.Api.Infrastructure;
 using Infotecs.Monitoring.Dal;
 using Infotecs.Monitoring.Domain.DeviceBizRules;
+using Infotecs.Monitoring.Domain.Mappers;
 using Infotecs.Monitoring.Shared.DateTimeProviders;
+using Mapster;
+using MapsterMapper;
 
 namespace Infotecs.Monitoring.Api
 {
@@ -27,6 +30,7 @@ namespace Infotecs.Monitoring.Api
 
             builder.Services.AddDbContext<MonitoringContext>();
             builder.Services.AddScoped<IMonitoringContext, MonitoringContext>();
+            builder.Services.AddSingleton<IDeviceInfoMapper, DeviceInfoMapper>();
 
             builder.Services.AddControllers();
 
