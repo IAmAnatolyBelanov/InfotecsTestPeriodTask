@@ -1,6 +1,6 @@
-using Infotecs.Monitoring.Shared.OperationSystem;
+using Monitoring.Shared.OperationSystem;
 
-namespace Infotecs.Monitoring.Contracts.DeviceInfo;
+namespace Monitoring.Contracts.DeviceInfo;
 
 /// <summary>
 /// Dto информации о девайсе.

@@ -1,4 +1,4 @@
-namespace Infotecs.Monitoring.Shared.Paginations;
+namespace Monitoring.Shared.Paginations;
 
 /// <summary>
 /// Пагинация.
