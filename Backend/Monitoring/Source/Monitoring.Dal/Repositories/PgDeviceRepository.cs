@@ -26,22 +26,22 @@ public class PgDeviceRepository : IPgDeviceRepository
         const string Query = $@"
 MERGE INTO {DbName} AS TARGET
 USING (SELECT @{nameof(parameters.Id)} AS {nameof(parameters.Id)}) AS SOURCE
-ON SOURCE.{nameof(parameters.Id)} = TARGET.""{nameof(DeviceInfo.Id)}""
+ON SOURCE.{nameof(parameters.Id)} = TARGET.id
 WHEN MATCHED THEN
 UPDATE SET
-    ""{nameof(DeviceInfo.UserName)}"" = @{nameof(parameters.UserName)},
-    ""{nameof(DeviceInfo.OperationSystemType)}"" = @{nameof(parameters.OperationSystemType)},
-    ""{nameof(DeviceInfo.OperationSystemInfo)}"" = @{nameof(parameters.OperationSystemInfo)},
-    ""{nameof(DeviceInfo.AppVersion)}"" = @{nameof(parameters.AppVersion)},
-    ""{nameof(DeviceInfo.LastUpdate)}"" = NOW()
+    user_name = @{nameof(parameters.UserName)},
+    operation_system_type = @{nameof(parameters.OperationSystemType)},
+    operation_system_info = @{nameof(parameters.OperationSystemInfo)},
+    app_version = @{nameof(parameters.AppVersion)},
+    last_update = NOW()
 WHEN NOT MATCHED THEN
 INSERT
-    (""{nameof(DeviceInfo.Id)}"",
-    ""{nameof(DeviceInfo.UserName)}"",
-    ""{nameof(DeviceInfo.OperationSystemType)}"",
-    ""{nameof(DeviceInfo.OperationSystemInfo)}"",
-    ""{nameof(DeviceInfo.AppVersion)}"",
-    ""{nameof(DeviceInfo.LastUpdate)}"")
+    (id,
+    user_name,
+    operation_system_type,
+    operation_system_info,
+    app_version,
+    last_update)
 VALUES
     (@{nameof(parameters.Id)},
     @{nameof(parameters.UserName)},
@@ -64,16 +64,16 @@ VALUES
 
         const string Query = $@"
 SELECT
-    ""{nameof(DeviceInfo.Id)}"",
-    ""{nameof(DeviceInfo.UserName)}"",
-    ""{nameof(DeviceInfo.OperationSystemType)}"",
-    ""{nameof(DeviceInfo.OperationSystemInfo)}"",
-    ""{nameof(DeviceInfo.AppVersion)}"",
-    ""{nameof(DeviceInfo.LastUpdate)}""
+    id,
+    user_name,
+    operation_system_type,
+    operation_system_info,
+    app_version,
+    last_update
 FROM
     {DbName}
 ORDER BY
-    ""{nameof(DeviceInfo.LastUpdate)}"" DESC
+    last_update DESC
 LIMIT
     @{nameof(parameters.Limit)}
 OFFSET
@@ -93,16 +93,16 @@ OFFSET
 
         const string Query = $@"
 SELECT
-    ""{nameof(DeviceInfo.Id)}"",
-    ""{nameof(DeviceInfo.UserName)}"",
-    ""{nameof(DeviceInfo.OperationSystemType)}"",
-    ""{nameof(DeviceInfo.OperationSystemInfo)}"",
-    ""{nameof(DeviceInfo.AppVersion)}"",
-    ""{nameof(DeviceInfo.LastUpdate)}""
+    id,
+    user_name,
+    operation_system_type,
+    operation_system_info,
+    app_version,
+    last_update
 FROM
     {DbName}
 WHERE
-    ""{nameof(DeviceInfo.Id)}"" = @{nameof(parameters.Id)};";
+    id = @{nameof(parameters.Id)};";
 
         var devices = await session.QueryAsync<DeviceInfo>(Query, parameters, cancellationToken);
 

@@ -27,6 +27,8 @@ namespace Infotecs.Monitoring.Api
                 .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json")
                 .AddEnvironmentVariables();
 
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
             builder.Services.Configure<SessionFactoryConfig>(builder.Configuration.GetSection(SessionFactoryConfig.Position));
             builder.Services.AddSingleton<ISessionFactoryConfig>(provider =>
                 provider.GetRequiredService<IOptions<SessionFactoryConfig>>().Value);
