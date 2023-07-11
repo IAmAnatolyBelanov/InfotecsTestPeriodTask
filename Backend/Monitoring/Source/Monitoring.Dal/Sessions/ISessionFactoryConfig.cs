@@ -1,4 +1,4 @@
-namespace Infotecs.Monitoring.Dal.Sessions;
+namespace Monitoring.Dal.Sessions;
 
 /// <summary>
 /// Конфигурация для <see cref="ISessionFactory"/>.

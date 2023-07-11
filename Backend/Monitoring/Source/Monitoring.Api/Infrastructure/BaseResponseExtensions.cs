@@ -1,4 +1,4 @@
-namespace Infotecs.Monitoring.Api.Infrastructure;
+namespace Monitoring.Api.Infrastructure;
 
 /// <summary>
 /// Расширения для работы с классом BaseResponse.

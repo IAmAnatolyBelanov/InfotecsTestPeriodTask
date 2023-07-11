@@ -1,7 +1,7 @@
-using Infotecs.Monitoring.Dal.Models;
-using Infotecs.Monitoring.Shared.Paginations;
+using Monitoring.Dal.Models;
+using Monitoring.Shared.Paginations;
 
-namespace Infotecs.Monitoring.Domain.DeviceBizRules;
+namespace Monitoring.Domain.DeviceServices;
 
 /// <summary>
 /// Бизнес-логика работы с девайсами.

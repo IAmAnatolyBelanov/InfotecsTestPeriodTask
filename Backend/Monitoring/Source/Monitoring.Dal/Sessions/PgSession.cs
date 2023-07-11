@@ -1,7 +1,7 @@
 using Dapper;
 using Npgsql;
 
-namespace Infotecs.Monitoring.Dal.Sessions;
+namespace Monitoring.Dal.Sessions;
 
 /// <inheritdoc cref="IPgSession"/>
 public class PgSession : IPgSession

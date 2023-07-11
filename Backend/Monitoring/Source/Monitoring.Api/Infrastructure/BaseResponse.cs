@@ -1,4 +1,4 @@
-namespace Infotecs.Monitoring.Api.Infrastructure;
+namespace Monitoring.Api.Infrastructure;
 
 /// <summary>
 /// Класс-обёртка для ответов, возвращаемых на API запросы.

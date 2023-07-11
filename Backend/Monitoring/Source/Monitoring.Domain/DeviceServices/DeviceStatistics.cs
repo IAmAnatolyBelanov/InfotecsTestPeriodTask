@@ -1,4 +1,4 @@
-namespace Infotecs.Monitoring.Domain.DeviceBizRules;
+namespace Monitoring.Domain.DeviceServices;
 
 /// <summary>
 /// Статистика по девайсу.

@@ -1,8 +1,8 @@
-using Infotecs.Monitoring.Contracts.DeviceInfo;
-using Infotecs.Monitoring.Dal.Models;
+using Monitoring.Contracts.DeviceInfo;
+using Monitoring.Dal.Models;
 using Mapster;
 
-namespace Infotecs.Monitoring.Domain.Mappers;
+namespace Monitoring.Domain.Mappers;
 
 /// <summary>
 /// Маппер между <see cref="DeviceInfo"/> и <see cref="DeviceInfoDto"/>.

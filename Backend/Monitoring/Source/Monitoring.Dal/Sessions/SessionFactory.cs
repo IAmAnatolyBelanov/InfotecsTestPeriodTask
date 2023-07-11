@@ -1,4 +1,4 @@
-namespace Infotecs.Monitoring.Dal.Sessions;
+namespace Monitoring.Dal.Sessions;
 
 /// <inheritdoc cref="ISessionFactory"/>
 public class SessionFactory : ISessionFactory

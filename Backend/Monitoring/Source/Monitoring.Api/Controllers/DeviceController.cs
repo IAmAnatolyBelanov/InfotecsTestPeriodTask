@@ -1,11 +1,11 @@
-using Infotecs.Monitoring.Api.Infrastructure;
-using Infotecs.Monitoring.Contracts.DeviceInfo;
-using Infotecs.Monitoring.Domain.DeviceBizRules;
-using Infotecs.Monitoring.Domain.Mappers;
-using Infotecs.Monitoring.Shared.Paginations;
+using Monitoring.Api.Infrastructure;
+using Monitoring.Contracts.DeviceInfo;
+using Monitoring.Domain.DeviceServices;
+using Monitoring.Domain.Mappers;
+using Monitoring.Shared.Paginations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Infotecs.Monitoring.Api.Controllers;
+namespace Monitoring.Api.Controllers;
 
 /// <summary>
 /// Контроллер для работы с девайсами.

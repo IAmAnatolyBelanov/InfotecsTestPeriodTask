@@ -1,9 +1,9 @@
-using Infotecs.Monitoring.Dal.Models;
-using Infotecs.Monitoring.Dal.Repositories;
-using Infotecs.Monitoring.Dal.Sessions;
-using Infotecs.Monitoring.Shared.Paginations;
+using Monitoring.Dal.Models;
+using Monitoring.Dal.Repositories;
+using Monitoring.Dal.Sessions;
+using Monitoring.Shared.Paginations;
 
-namespace Infotecs.Monitoring.Domain.DeviceBizRules;
+namespace Monitoring.Domain.DeviceServices;
 
 /// <inheritdoc cref="IDeviceService"/>
 public class DeviceService : IDeviceService

@@ -1,14 +1,13 @@
 using System.Text.Json.Serialization;
-using Infotecs.Monitoring.Api.Infrastructure;
-using Infotecs.Monitoring.Domain.DeviceBizRules;
-using Infotecs.Monitoring.Domain.Mappers;
-using Infotecs.Monitoring.Shared.DateTimeProviders;
-using Infotecs.Monitoring.Dal.Sessions;
 using Microsoft.Extensions.Options;
-using Infotecs.Monitoring.Dal.Repositories;
-using Infotecs.Monitoring.Domain.Migrations;
+using Monitoring.Api.Infrastructure;
+using Monitoring.Dal.Repositories;
+using Monitoring.Dal.Sessions;
+using Monitoring.Domain.DeviceServices;
+using Monitoring.Domain.Mappers;
+using Monitoring.Shared.DateTimeProviders;
 
-namespace Infotecs.Monitoring.Api
+namespace Monitoring.Api
 {
     /// <summary>
     /// Входная точка приложения.

@@ -1,7 +1,7 @@
 using System.Threading;
 using Dapper;
 
-namespace Infotecs.Monitoring.Dal.Sessions;
+namespace Monitoring.Dal.Sessions;
 
 /// <summary>
 /// Сессия для работы с БД PostgreSQL.
