@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using Infotecs.Monitoring.Api.Infrastructure;
-using Infotecs.Monitoring.Api.Infrastructure.Logger;
 using Infotecs.Monitoring.Dal;
 using Infotecs.Monitoring.Domain.DeviceBizRules;
 using Infotecs.Monitoring.Shared.DateTimeProviders;
