@@ -1,4 +1,4 @@
-namespace Infotecs.Monitoring.Dal.Models;
+namespace Infotecs.Monitoring.Shared.OperationSystem;
 
 /// <summary>
 /// Типы операционных систем.
