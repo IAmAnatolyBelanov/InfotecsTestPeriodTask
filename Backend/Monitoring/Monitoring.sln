@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Dal", "Source\Mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Domain", "Source\Monitoring.Domain\Monitoring.Domain.csproj", "{098EA75A-28CB-4158-992B-C6C6D1C932CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Shared", "Source\Monitoring.Shared\Monitoring.Shared.csproj", "{C564B50B-DC57-459D-BFD5-EB8E01AF0183}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Shared", "Source\Monitoring.Shared\Monitoring.Shared.csproj", "{C564B50B-DC57-459D-BFD5-EB8E01AF0183}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Contracts", "Source\Monitoring.Contracts\Monitoring.Contracts.csproj", "{CA87110F-4B4A-4C44-ACF8-75B67582E829}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{C564B50B-DC57-459D-BFD5-EB8E01AF0183}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C564B50B-DC57-459D-BFD5-EB8E01AF0183}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C564B50B-DC57-459D-BFD5-EB8E01AF0183}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA87110F-4B4A-4C44-ACF8-75B67582E829}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA87110F-4B4A-4C44-ACF8-75B67582E829}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA87110F-4B4A-4C44-ACF8-75B67582E829}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA87110F-4B4A-4C44-ACF8-75B67582E829}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

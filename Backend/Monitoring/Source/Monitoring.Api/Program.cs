@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Infotecs.Monitoring.Api.Infrastructure;
 using Infotecs.Monitoring.Domain.DeviceBizRules;
+using Infotecs.Monitoring.Domain.Mappers;
 using Infotecs.Monitoring.Shared.DateTimeProviders;
 using Infotecs.Monitoring.Dal.Sessions;
 using Microsoft.Extensions.Options;
@@ -39,6 +40,8 @@ namespace Infotecs.Monitoring.Api
             builder.Services.AddSingleton<ISessionFactory, SessionFactory>();
 
             builder.Services.AddSingleton<IPgDeviceRepository, PgDeviceRepository>();
+
+            builder.Services.AddSingleton<IDeviceInfoMapper, DeviceInfoMapper>();
 
             builder.Services.AddControllers();
 
