@@ -3,6 +3,8 @@ using Infotecs.Monitoring.Api.Infrastructure;
 using Infotecs.Monitoring.Dal;
 using Infotecs.Monitoring.Domain.DeviceBizRules;
 using Infotecs.Monitoring.Shared.DateTimeProviders;
+using Monitoring.Dal.Repositories;
+using Monitoring.Dal.Sessions;
 
 namespace Infotecs.Monitoring.Api
 {
@@ -24,6 +26,11 @@ namespace Infotecs.Monitoring.Api
             builder.Services.AddTransient<IDeviceService, DeviceService>();
 
             builder.Services.AddSingleton<IClock, Clock>();
+
+            builder.Services.AddSingleton<ISessionFactoryConfig, SessionFactoryConfig>();
+            builder.Services.AddSingleton<ISessionFactory, SessionFactory>();
+
+            builder.Services.AddSingleton<IDeviceRepository, DeviceRepository>();
 
             builder.Services.AddDbContext<MonitoringContext>();
             builder.Services.AddScoped<IMonitoringContext, MonitoringContext>();
