@@ -1,14 +1,17 @@
 using Dapper;
 using Infotecs.Monitoring.Dal.Models;
 using Infotecs.Monitoring.Shared.Paginations;
-using Monitoring.Dal.Sessions;
+using Infotecs.Monitoring.Dal.Sessions;
 
-namespace Monitoring.Dal.Repositories;
+namespace Infotecs.Monitoring.Dal.Repositories;
 
-public class DeviceRepository : IDeviceRepository
+/// <inheritdoc cref="IPgDeviceRepository"/>
+public class PgDeviceRepository : IPgDeviceRepository
 {
-    private const string _dbName = "public.devices";
+    private const string DbName = "public.devices";
 
+
+    /// <inheritdoc/>
     public async Task MergeDevice(IPgSession session, DeviceInfo device, CancellationToken cancellationToken)
     {
         var parameters = new
@@ -20,8 +23,8 @@ public class DeviceRepository : IDeviceRepository
             device.AppVersion,
         };
 
-        const string query = $@"
-MERGE INTO {_dbName} AS TARGET
+        const string Query = $@"
+MERGE INTO {DbName} AS TARGET
 USING (SELECT @{nameof(parameters.Id)} AS {nameof(parameters.Id)}) AS SOURCE
 ON SOURCE.{nameof(parameters.Id)} = TARGET.""{nameof(DeviceInfo.Id)}""
 WHEN MATCHED THEN
@@ -47,11 +50,12 @@ VALUES
     @{nameof(parameters.AppVersion)},
     NOW());";
 
-        var command = new CommandDefinition(commandText: query, parameters: parameters, cancellationToken: cancellationToken);
+        var command = new CommandDefinition(commandText: Query, parameters: parameters, cancellationToken: cancellationToken);
 
         await session.ExecuteAsync(command);
     }
 
+    /// <inheritdoc/>
     public async Task<IReadOnlyList<DeviceInfo>> GetDevices(IPgSession session, Pagination pagination, CancellationToken cancellationToken)
     {
         var parameters = new
@@ -60,7 +64,7 @@ VALUES
             Offset = pagination.PageIndex * pagination.PageSize,
         };
 
-        const string query = $@"
+        const string Query = $@"
 SELECT
     ""{nameof(DeviceInfo.Id)}"",
     ""{nameof(DeviceInfo.UserName)}"",
@@ -69,7 +73,7 @@ SELECT
     ""{nameof(DeviceInfo.AppVersion)}"",
     ""{nameof(DeviceInfo.LastUpdate)}""
 FROM
-    {_dbName}
+    {DbName}
 ORDER BY
     ""{nameof(DeviceInfo.LastUpdate)}"" DESC
 LIMIT
@@ -77,12 +81,13 @@ LIMIT
 OFFSET
     @{nameof(parameters.Offset)};";
 
-        var command = new CommandDefinition(commandText: query, parameters: parameters, cancellationToken: cancellationToken);
+        var command = new CommandDefinition(commandText: Query, parameters: parameters, cancellationToken: cancellationToken);
 
         var result = await session.QueryAsync<DeviceInfo>(command);
         return result.AsList();
     }
 
+    /// <inheritdoc/>
     public async Task<DeviceInfo?> GetDevice(IPgSession session, Guid id, CancellationToken cancellationToken)
     {
         var parameters = new
@@ -90,7 +95,7 @@ OFFSET
             Id = id,
         };
 
-        const string query = $@"
+        const string Query = $@"
 SELECT
     ""{nameof(DeviceInfo.Id)}"",
     ""{nameof(DeviceInfo.UserName)}"",
@@ -99,11 +104,11 @@ SELECT
     ""{nameof(DeviceInfo.AppVersion)}"",
     ""{nameof(DeviceInfo.LastUpdate)}""
 FROM
-    {_dbName}
+    {DbName}
 WHERE
     ""{nameof(DeviceInfo.Id)}"" = @{nameof(parameters.Id)};";
 
-        var command = new CommandDefinition(commandText: query, parameters: parameters, cancellationToken: cancellationToken);
+        var command = new CommandDefinition(commandText: Query, parameters: parameters, cancellationToken: cancellationToken);
 
         var devices = await session.QueryAsync<DeviceInfo>(command);
         var result = devices.FirstOrDefault();

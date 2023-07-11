@@ -1,11 +1,10 @@
 using System.Text.Json.Serialization;
 using Infotecs.Monitoring.Api.Infrastructure;
-using Infotecs.Monitoring.Dal;
 using Infotecs.Monitoring.Domain.DeviceBizRules;
 using Infotecs.Monitoring.Shared.DateTimeProviders;
+using Infotecs.Monitoring.Dal.Sessions;
 using Microsoft.Extensions.Options;
-using Monitoring.Dal.Repositories;
-using Monitoring.Dal.Sessions;
+using Infotecs.Monitoring.Dal.Repositories;
 
 namespace Infotecs.Monitoring.Api
 {
@@ -39,10 +38,7 @@ namespace Infotecs.Monitoring.Api
 
             builder.Services.AddSingleton<ISessionFactory, SessionFactory>();
 
-            builder.Services.AddSingleton<IDeviceRepository, DeviceRepository>();
-
-            builder.Services.AddDbContext<MonitoringContext>();
-            builder.Services.AddScoped<IMonitoringContext, MonitoringContext>();
+            builder.Services.AddSingleton<IPgDeviceRepository, PgDeviceRepository>();
 
             builder.Services.AddControllers();
 

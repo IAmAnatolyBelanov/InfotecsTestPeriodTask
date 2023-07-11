@@ -1,29 +1,23 @@
-using Infotecs.Monitoring.Dal;
 using Infotecs.Monitoring.Dal.Models;
-using Infotecs.Monitoring.Shared.DateTimeProviders;
+using Infotecs.Monitoring.Dal.Repositories;
+using Infotecs.Monitoring.Dal.Sessions;
 using Infotecs.Monitoring.Shared.Paginations;
-using Monitoring.Dal.Repositories;
-using Monitoring.Dal.Sessions;
 
 namespace Infotecs.Monitoring.Domain.DeviceBizRules;
 
 /// <inheritdoc cref="IDeviceService"/>
 public class DeviceService : IDeviceService
 {
-    private readonly IMonitoringContext _context;
-    private readonly IClock _clock;
     private readonly ISessionFactory _sessionFactory;
-    private readonly IDeviceRepository _deviceRepository;
+    private readonly IPgDeviceRepository _deviceRepository;
 
     /// <summary>
     /// Конструктор класса <see cref="DeviceService"/>.
     /// </summary>
-    /// <param name="monitoringContext">Контекст работы с БД.</param>
-    /// <param name="clock">Абстракция над <see cref="DateTimeOffset"/>.</param>
-    public DeviceService(IMonitoringContext monitoringContext, IClock clock, ISessionFactory sessionFactory, IDeviceRepository deviceRepository)
+    /// <param name="sessionFactory"><see cref="ISessionFactory"/>.</param>
+    /// <param name="deviceRepository"><see cref="IPgDeviceRepository"/></param>
+    public DeviceService(ISessionFactory sessionFactory, IPgDeviceRepository deviceRepository)
     {
-        _context = monitoringContext;
-        _clock = clock;
         _sessionFactory = sessionFactory;
         _deviceRepository = deviceRepository;
     }
