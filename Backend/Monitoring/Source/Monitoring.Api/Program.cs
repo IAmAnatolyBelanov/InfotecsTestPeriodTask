@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using Monitoring.Api.Infrastructure;
 using Monitoring.Dal;
 using Monitoring.Domain.DeviceServices;
@@ -35,7 +34,7 @@ namespace Monitoring.Api
 
             builder.Services.AddSingleton<IDeviceInfoMapper, DeviceInfoMapper>();
 
-            SetupControllers(builder.Services);
+            builder.Services.RegisterControllers();
 
             builder.Services.AddCors();
 
@@ -61,19 +60,6 @@ namespace Monitoring.Api
             app.MapControllers();
 
             app.Run();
-        }
-
-        private static void SetupControllers(IServiceCollection services)
-        {
-            services.AddControllers();
-
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
-
-            services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
         }
     }
 }
