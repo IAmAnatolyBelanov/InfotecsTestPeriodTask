@@ -3,18 +3,18 @@ using Npgsql;
 
 namespace Monitoring.Dal.Sessions;
 
-/// <inheritdoc cref="IPgSession"/>
-public class PgSession : IPgSession
+/// <inheritdoc cref="ISession"/>
+public class Session : ISession
 {
     private readonly NpgsqlConnection _connection;
     private readonly NpgsqlTransaction? _transaction;
 
     /// <summary>
-    /// Конструктор класса <see cref="PgSession"/>.
+    /// Конструктор класса <see cref="Session"/>.
     /// </summary>
     /// <param name="connectionString">Строка подключения к БД PostgreSQL.</param>
     /// <param name="beginTransaction">Необходимо ли открывать транзакцию.</param>
-    internal PgSession(string connectionString, bool beginTransaction = false)
+    internal Session(string connectionString, bool beginTransaction = false)
     {
         _connection = new NpgsqlConnection(connectionString);
         _connection.Open();

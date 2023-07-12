@@ -9,5 +9,5 @@ public class SessionFactoryConfig : ISessionFactoryConfig
     public const string Position = "DbConnections";
 
     /// <inheritdoc/>
-    public string PgConnectionString { get; set; } = default!;
+    public string DbConnectionString { get; set; } = default!;
 }

@@ -1,12 +1,11 @@
-using System.Threading;
 using Dapper;
 
 namespace Monitoring.Dal.Sessions;
 
 /// <summary>
-/// Сессия для работы с БД PostgreSQL.
+/// Сессия для работы с БД.
 /// </summary>
-public interface IPgSession : IDisposable, IAsyncDisposable
+public interface ISession : IDisposable, IAsyncDisposable
 {
     /// <summary>
     /// Коммитит изменения в БД в пределах открытой транзакции.

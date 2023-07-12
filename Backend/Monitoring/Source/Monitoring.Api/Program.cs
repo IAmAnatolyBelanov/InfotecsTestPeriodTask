@@ -1,8 +1,6 @@
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.Options;
 using Monitoring.Api.Infrastructure;
-using Monitoring.Dal.Repositories;
-using Monitoring.Dal.Sessions;
+using Monitoring.Dal;
 using Monitoring.Domain.DeviceServices;
 using Monitoring.Domain.Mappers;
 using Monitoring.Shared.DateTimeProviders;
@@ -27,33 +25,17 @@ namespace Monitoring.Api
                 .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json")
                 .AddEnvironmentVariables();
 
-            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-
-            builder.Services.Configure<SessionFactoryConfig>(builder.Configuration.GetSection(SessionFactoryConfig.Position));
-            builder.Services.AddSingleton<ISessionFactoryConfig>(provider =>
-                provider.GetRequiredService<IOptions<SessionFactoryConfig>>().Value);
+            DbSetupWizard.SetupDbConnection(builder.Services, builder.Configuration);
 
             builder.RegisterLogger();
 
-            builder.Services.AddTransient<IDeviceService, DeviceService>();
+            builder.Services.AddSingleton<IDeviceService, DeviceService>();
 
             builder.Services.AddSingleton<IClock, Clock>();
 
-            builder.Services.AddSingleton<ISessionFactory, SessionFactory>();
-
-            builder.Services.AddSingleton<IPgDeviceRepository, PgDeviceRepository>();
-
             builder.Services.AddSingleton<IDeviceInfoMapper, DeviceInfoMapper>();
 
-            builder.Services.AddControllers();
-
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+            SetupControllers(builder.Services);
 
             builder.Services.AddCors();
 
@@ -79,6 +61,19 @@ namespace Monitoring.Api
             app.MapControllers();
 
             app.Run();
+        }
+
+        private static void SetupControllers(IServiceCollection services)
+        {
+            services.AddControllers();
+
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
         }
     }
 }

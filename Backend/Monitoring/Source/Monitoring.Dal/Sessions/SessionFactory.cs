@@ -15,9 +15,9 @@ public class SessionFactory : ISessionFactory
     }
 
     /// <inheritdoc/>
-    public IPgSession CreateForPostgres(bool beginTransaction = false)
+    public ISession CreateSession(bool beginTransaction = false)
     {
-        var session = new PgSession(_config.PgConnectionString, beginTransaction);
+        var session = new Session(_config.DbConnectionString, beginTransaction);
         return session;
     }
 }

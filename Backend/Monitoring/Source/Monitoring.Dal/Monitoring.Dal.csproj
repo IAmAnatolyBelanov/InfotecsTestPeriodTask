@@ -8,9 +8,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Monitoring.Shared\Monitoring.Shared.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Monitoring.Shared\Monitoring.Shared.csproj" />
-  </ItemGroup>
 
 </Project>
