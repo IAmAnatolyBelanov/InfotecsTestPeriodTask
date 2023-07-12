@@ -25,7 +25,7 @@ namespace Monitoring.Api
                 .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json")
                 .AddEnvironmentVariables();
 
-            DbSetupWizard.SetupDbConnection(builder.Services, builder.Configuration);
+            builder.Services.SetupDbConnection(builder.Configuration);
 
             builder.RegisterLogger();
 

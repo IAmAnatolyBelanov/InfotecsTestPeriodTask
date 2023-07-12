@@ -6,9 +6,17 @@ using Monitoring.Dal.Sessions;
 
 namespace Monitoring.Dal;
 
+/// <summary>
+/// Мастер настройки подключения к БД.
+/// </summary>
 public static class DbSetupWizard
 {
-    public static void SetupDbConnection(IServiceCollection services, IConfiguration configuration)
+    /// <summary>
+    /// Настраивает работу с БД.
+    /// </summary>
+    /// <param name="services"><see cref="IServiceCollection"/>.</param>
+    /// <param name="configuration"><see cref="IConfiguration"/>.</param>
+    public static void SetupDbConnection(this IServiceCollection services, IConfiguration configuration)
     {
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
