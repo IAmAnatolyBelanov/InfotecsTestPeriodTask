@@ -1,8 +1,5 @@
-using System.Text.Json.Serialization;
-using Microsoft.Extensions.Options;
 using Monitoring.Api.Infrastructure;
-using Monitoring.Dal.Repositories;
-using Monitoring.Dal.Sessions;
+using Monitoring.Dal;
 using Monitoring.Domain.DeviceServices;
 using Monitoring.Domain.Mappers;
 using Monitoring.Domain.Migrations;
@@ -28,35 +25,19 @@ namespace Monitoring.Api
                 .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json")
                 .AddEnvironmentVariables();
 
-            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-
-            builder.Services.Configure<SessionFactoryConfig>(builder.Configuration.GetSection(SessionFactoryConfig.Position));
-            builder.Services.AddSingleton<ISessionFactoryConfig>(provider =>
-                provider.GetRequiredService<IOptions<SessionFactoryConfig>>().Value);
+            builder.Services.SetupDbConnection(builder.Configuration);
 
             builder.Services.RegisterFluentMigrator();
 
             builder.RegisterLogger();
 
-            builder.Services.AddTransient<IDeviceService, DeviceService>();
+            builder.Services.AddSingleton<IDeviceService, DeviceService>();
 
             builder.Services.AddSingleton<IClock, Clock>();
 
-            builder.Services.AddSingleton<ISessionFactory, SessionFactory>();
-
-            builder.Services.AddSingleton<IPgDeviceRepository, PgDeviceRepository>();
-
             builder.Services.AddSingleton<IDeviceInfoMapper, DeviceInfoMapper>();
 
-            builder.Services.AddControllers();
-
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+            builder.Services.RegisterControllers();
 
             builder.Services.AddCors();
 

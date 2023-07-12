@@ -5,9 +5,9 @@ using Monitoring.Dal.Sessions;
 namespace Monitoring.Dal.Repositories;
 
 /// <summary>
-/// Репозиторий для работы с DeviceInfo в БД PostgreSQL.
+/// Репозиторий для работы с <see cref="DeviceInfo"/>.
 /// </summary>
-public interface IPgDeviceRepository
+public interface IDeviceRepository
 {
     /// <summary>
     /// Возвращает DeviceInfo с запрошенным Id.
@@ -17,7 +17,7 @@ public interface IPgDeviceRepository
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>DeviceInfo с запрошенным Id.</returns>
     /// <remarks>Если девайса с указанным Id не найдено, вернёт null.</remarks>
-    Task<DeviceInfo?> GetDevice(IPgSession session, Guid id, CancellationToken cancellationToken);
+    Task<DeviceInfo?> GetDevice(ISession session, Guid id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Возвращает коллекцию девайсов.
@@ -26,7 +26,7 @@ public interface IPgDeviceRepository
     /// <param name="pagination">Пагинация.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Коллекция девайсов.</returns>
-    Task<IReadOnlyList<DeviceInfo>> GetDevices(IPgSession session, Pagination pagination, CancellationToken cancellationToken);
+    Task<IReadOnlyList<DeviceInfo>> GetDevices(ISession session, Pagination pagination, CancellationToken cancellationToken);
 
     /// <summary>
     /// Добавляет новый девайс либо обновляет существующий.
@@ -35,5 +35,5 @@ public interface IPgDeviceRepository
     /// <param name="device">Девайс.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns><see cref="Task"/>.</returns>
-    Task MergeDevice(IPgSession session, DeviceInfo device, CancellationToken cancellationToken);
+    Task InsertOrUpdateDevice(ISession session, DeviceInfo device, CancellationToken cancellationToken);
 }

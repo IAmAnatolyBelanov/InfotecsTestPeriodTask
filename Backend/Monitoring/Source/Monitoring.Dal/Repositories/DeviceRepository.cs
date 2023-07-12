@@ -5,14 +5,14 @@ using Monitoring.Dal.Sessions;
 
 namespace Monitoring.Dal.Repositories;
 
-/// <inheritdoc cref="IPgDeviceRepository"/>
-public class PgDeviceRepository : IPgDeviceRepository
+/// <inheritdoc cref="IDeviceRepository"/>
+public class DeviceRepository : IDeviceRepository
 {
     private const string DbName = "public.devices";
 
 
     /// <inheritdoc/>
-    public async Task MergeDevice(IPgSession session, DeviceInfo device, CancellationToken cancellationToken)
+    public async Task InsertOrUpdateDevice(ISession session, DeviceInfo device, CancellationToken cancellationToken)
     {
         var parameters = new
         {
@@ -24,18 +24,7 @@ public class PgDeviceRepository : IPgDeviceRepository
         };
 
         const string Query = $@"
-MERGE INTO {DbName} AS TARGET
-USING (SELECT @{nameof(parameters.Id)} AS {nameof(parameters.Id)}) AS SOURCE
-ON SOURCE.{nameof(parameters.Id)} = TARGET.id
-WHEN MATCHED THEN
-UPDATE SET
-    user_name = @{nameof(parameters.UserName)},
-    operation_system_type = @{nameof(parameters.OperationSystemType)},
-    operation_system_info = @{nameof(parameters.OperationSystemInfo)},
-    app_version = @{nameof(parameters.AppVersion)},
-    last_update = NOW()
-WHEN NOT MATCHED THEN
-INSERT
+INSERT INTO {DbName}
     (id,
     user_name,
     operation_system_type,
@@ -48,13 +37,19 @@ VALUES
     @{nameof(parameters.OperationSystemType)},
     @{nameof(parameters.OperationSystemInfo)},
     @{nameof(parameters.AppVersion)},
-    NOW());";
+    NOW())
+ON CONFLICT (id) DO UPDATE SET
+    user_name = @{nameof(parameters.UserName)},
+    operation_system_type = @{nameof(parameters.OperationSystemType)},
+    operation_system_info = @{nameof(parameters.OperationSystemInfo)},
+    app_version = @{nameof(parameters.AppVersion)},
+    last_update = NOW();";
 
         await session.ExecuteAsync(Query, parameters, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<DeviceInfo>> GetDevices(IPgSession session, Pagination pagination, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<DeviceInfo>> GetDevices(ISession session, Pagination pagination, CancellationToken cancellationToken)
     {
         var parameters = new
         {
@@ -84,7 +79,7 @@ OFFSET
     }
 
     /// <inheritdoc/>
-    public async Task<DeviceInfo?> GetDevice(IPgSession session, Guid id, CancellationToken cancellationToken)
+    public async Task<DeviceInfo?> GetDevice(ISession session, Guid id, CancellationToken cancellationToken)
     {
         var parameters = new
         {

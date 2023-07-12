@@ -6,9 +6,9 @@ namespace Monitoring.Dal.Sessions;
 public interface ISessionFactory
 {
     /// <summary>
-    /// Создаёт сессию для работы с PostgreSQL.
+    /// Создаёт сессию.
     /// </summary>
     /// <param name="beginTransaction">Необходимо ли открывать транзакцию.</param>
-    /// <returns>Новая сессия для работы с БД PostgreSQL.</returns>
-    IPgSession CreateForPostgres(bool beginTransaction = false);
+    /// <returns>Новая сессия для работы с БД.</returns>
+    ISession CreateSession(bool beginTransaction = false);
 }

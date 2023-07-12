@@ -6,7 +6,7 @@ namespace Monitoring.Dal.Sessions;
 public interface ISessionFactoryConfig
 {
     /// <summary>
-    /// Строка подключения к БД PostgreSQL.
+    /// Строка подключения к БД.
     /// </summary>
-    string PgConnectionString { get; }
+    string DbConnectionString { get; }
 }

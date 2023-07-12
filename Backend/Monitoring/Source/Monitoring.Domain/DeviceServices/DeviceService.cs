@@ -9,14 +9,14 @@ namespace Monitoring.Domain.DeviceServices;
 public class DeviceService : IDeviceService
 {
     private readonly ISessionFactory _sessionFactory;
-    private readonly IPgDeviceRepository _deviceRepository;
+    private readonly IDeviceRepository _deviceRepository;
 
     /// <summary>
     /// Конструктор класса <see cref="DeviceService"/>.
     /// </summary>
     /// <param name="sessionFactory"><see cref="ISessionFactory"/>.</param>
-    /// <param name="deviceRepository"><see cref="IPgDeviceRepository"/></param>
-    public DeviceService(ISessionFactory sessionFactory, IPgDeviceRepository deviceRepository)
+    /// <param name="deviceRepository"><see cref="IDeviceRepository"/></param>
+    public DeviceService(ISessionFactory sessionFactory, IDeviceRepository deviceRepository)
     {
         _sessionFactory = sessionFactory;
         _deviceRepository = deviceRepository;
@@ -25,7 +25,7 @@ public class DeviceService : IDeviceService
     /// <inheritdoc/>
     public async Task<IReadOnlyList<DeviceInfo>> GetAll(Pagination pagination, CancellationToken cancellationToken)
     {
-        await using (var session = _sessionFactory.CreateForPostgres())
+        await using (var session = _sessionFactory.CreateSession())
         {
             var result = await _deviceRepository.GetDevices(session, pagination, cancellationToken);
             return result;
@@ -35,7 +35,7 @@ public class DeviceService : IDeviceService
     /// <inheritdoc/>
     public async Task<DeviceStatistics> GetStatistics(Guid deviceId, CancellationToken cancellationToken)
     {
-        await using (var session = _sessionFactory.CreateForPostgres())
+        await using (var session = _sessionFactory.CreateSession())
         {
             var device = await _deviceRepository.GetDevice(session, deviceId, cancellationToken);
 
@@ -52,9 +52,9 @@ public class DeviceService : IDeviceService
     /// <inheritdoc/>
     public async Task AddOrUpdateDevice(DeviceInfo device, CancellationToken cancellationToken)
     {
-        await using(var session = _sessionFactory.CreateForPostgres(beginTransaction: true))
+        await using(var session = _sessionFactory.CreateSession(beginTransaction: true))
         {
-            await _deviceRepository.MergeDevice(session, device, cancellationToken);
+            await _deviceRepository.InsertOrUpdateDevice(session, device, cancellationToken);
             await session.CommitAsync(cancellationToken);
         }
     }
