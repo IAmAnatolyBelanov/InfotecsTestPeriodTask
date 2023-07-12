@@ -19,7 +19,7 @@ public static class MigratorRegister
         services.AddFluentMigratorCore()
             .ConfigureRunner(rb => rb
                 .AddPostgres()
-                .WithGlobalConnectionString(x => x.GetRequiredService<ISessionFactoryConfig>().PgConnectionString)
+                .WithGlobalConnectionString(x => x.GetRequiredService<ISessionFactoryConfig>().DbConnectionString)
                 .ScanIn(typeof(InitialMigration).Assembly).For.Migrations());
 
         services.AddTransient<IMigrator, Migrator>();
