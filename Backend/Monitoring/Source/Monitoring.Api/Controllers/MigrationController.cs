@@ -23,7 +23,7 @@ public class MigrationController
     /// Накатывает все найденные и ещё не накаченные миграции.
     /// </summary>
     /// <returns>Пустой <see cref="BaseResponse{T}"/> в случае успешного выполнения миграций, либо ошибки в случае их возникновения.</returns>
-    [HttpPost("migrateUp")]
+    [HttpPost("migrate-up")]
     public BaseResponse<object> MigrateUp()
     {
         _migrator.MigrateUp();
