@@ -11,7 +11,7 @@ namespace Monitoring.Api.Controllers;
 /// Контроллер для работы с девайсами.
 /// </summary>
 [ApiController]
-[Route("Devices")]
+[Route("devices")]
 public class DeviceController : ControllerBase
 {
     private readonly IDeviceService _deviceService;
@@ -37,7 +37,7 @@ public class DeviceController : ControllerBase
     /// <param name="device">Девайс, что нужно зарегистрировать в системе.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Пустой ответ в случае успешной регистрации, или информацию об ошибке в случае её возникновения.</returns>
-    [HttpPost("RegisterDevice")]
+    [HttpPost("register-device")]
     public async Task<BaseResponse<object>> RegisterDevice(DeviceInfoDto device, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Start to register device {device.Id}.");
@@ -71,7 +71,7 @@ public class DeviceController : ControllerBase
     /// <param name="deviceId">Id девайса.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Статистика по запрошенному девайсу или информация об ошибке в случае её возникновения.</returns>
-    [HttpPost("GetStatistics")]
+    [HttpPost("get-statistics")]
     public async Task<BaseResponse<DeviceStatistics>> GetStatistics(Guid deviceId, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Start to get statistics about device {deviceId}.");

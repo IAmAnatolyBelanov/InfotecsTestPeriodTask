@@ -2,6 +2,7 @@ using Monitoring.Api.Infrastructure;
 using Monitoring.Dal;
 using Monitoring.Domain.DeviceServices;
 using Monitoring.Domain.Mappers;
+using Monitoring.Domain.Migrations;
 using Monitoring.Shared.DateTimeProviders;
 
 namespace Monitoring.Api
@@ -25,6 +26,8 @@ namespace Monitoring.Api
                 .AddEnvironmentVariables();
 
             builder.Services.SetupDbConnection(builder.Configuration);
+
+            builder.Services.AddFluentMigrator();
 
             builder.RegisterLogger();
 
@@ -58,6 +61,8 @@ namespace Monitoring.Api
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.Services.RunMigrations();
 
             app.Run();
         }
