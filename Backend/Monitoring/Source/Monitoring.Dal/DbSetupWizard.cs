@@ -27,5 +27,6 @@ public static class DbSetupWizard
         services.AddSingleton<ISessionFactory, SessionFactory>();
 
         services.AddSingleton<IDeviceRepository, DeviceRepository>();
+        services.AddSingleton<IEventRepository, EventRepository>();
     }
 }

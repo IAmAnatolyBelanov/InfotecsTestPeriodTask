@@ -31,4 +31,14 @@ public interface IDeviceService
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns><see cref="Task"/>.</returns>
     Task AddOrUpdateDevice(DeviceInfo device, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Возвращает <see cref="DeviceInfo"/> с запрошенным Id.
+    /// </summary>
+    /// <param name="session">Сессия.</param>
+    /// <param name="id">Id девайса.</param>
+    /// <param name="cancellationToken">Токен для отмены запроса.</param>
+    /// <returns><see cref="DeviceInfo"/> с запрошенным Id.</returns>
+    /// <remarks>Если девайса с указанным Id не найдено, вернёт null.</remarks>
+    Task<DeviceInfo?> Get(Guid id, CancellationToken cancellationToken);
 }

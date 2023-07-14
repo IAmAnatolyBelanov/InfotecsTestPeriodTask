@@ -23,6 +23,16 @@ public class DeviceService : IDeviceService
     }
 
     /// <inheritdoc/>
+    public async Task<DeviceInfo?> Get(Guid id, CancellationToken cancellationToken)
+    {
+        await using (var session = _sessionFactory.CreateSession())
+        {
+            var result = await _deviceRepository.GetDevice(session, id, cancellationToken);
+            return result;
+        }
+    }
+
+    /// <inheritdoc/>
     public async Task<IReadOnlyList<DeviceInfo>> GetAll(Pagination pagination, CancellationToken cancellationToken)
     {
         await using (var session = _sessionFactory.CreateSession())

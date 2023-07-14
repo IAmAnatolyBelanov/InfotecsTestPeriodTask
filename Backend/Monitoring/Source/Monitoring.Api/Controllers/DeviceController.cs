@@ -66,6 +66,24 @@ public class DeviceController : ControllerBase
     }
 
     /// <summary>
+    /// Возвращает информацию о девайсе.
+    /// </summary>
+    /// <param name="id">Id девайса.</param>
+    /// <param name="cancellationToken">Токен для отмены запроса.</param>
+    /// <returns>Информацию о девайсе.</returns>
+    /// <remarks>Если девайса не существует, вернёт null.</remarks>
+    [HttpGet("{id?}")]
+    public async Task<BaseResponse<DeviceInfoDto>> GetDevice(Guid id, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation($"Start to get info about device {id}.");
+        var device = await _deviceService.Get(id, cancellationToken);
+
+        var result = _deviceInfoMapper.MapToDto(device);
+
+        return result.ToResponse();
+    }
+
+    /// <summary>
     /// Возвращает статистику по запрошенному девайсу.
     /// </summary>
     /// <param name="deviceId">Id девайса.</param>

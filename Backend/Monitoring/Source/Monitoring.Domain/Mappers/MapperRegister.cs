@@ -1,6 +1,7 @@
+using Mapster;
+using Monitoring.Contracts.DeviceEvents;
 using Monitoring.Contracts.DeviceInfo;
 using Monitoring.Dal.Models;
-using Mapster;
 
 namespace Monitoring.Domain.Mappers;
 
@@ -16,5 +17,11 @@ public class MapperRegister : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<DeviceInfo, DeviceInfoDto>();
+
+        config.NewConfig<DeviceEvent, DeviceEventDto>()
+            .Map(dst => dst.Date, src => src.Date.ToUniversalTime());
+
+        config.NewConfig<DeviceEvent, DeviceEventDtoLight>()
+            .Map(dst => dst.Date, src => src.Date.ToUniversalTime());
     }
 }
