@@ -7,7 +7,7 @@ namespace Monitoring.Domain.Mappers
             return p1 == null ? null : new Monitoring.Contracts.DeviceEvents.DeviceEventDtoLight()
             {
                 Name = p1.Name,
-                Date = p1.Date.ToUniversalTime()
+                Date = p1.Date
             };
         }
         public Monitoring.Contracts.DeviceEvents.DeviceEventDtoLight MapToDto(Monitoring.Dal.Models.DeviceEvent p2, Monitoring.Contracts.DeviceEvents.DeviceEventDtoLight p3)
@@ -19,7 +19,7 @@ namespace Monitoring.Domain.Mappers
             Monitoring.Contracts.DeviceEvents.DeviceEventDtoLight result = p3 ?? new Monitoring.Contracts.DeviceEvents.DeviceEventDtoLight();
             
             result.Name = p2.Name;
-            result.Date = p2.Date.ToUniversalTime();
+            result.Date = p2.Date;
             return result;
             
         }
@@ -28,7 +28,7 @@ namespace Monitoring.Domain.Mappers
             return p4 == null ? null : new Monitoring.Dal.Models.DeviceEvent()
             {
                 Name = p4.Name,
-                Date = p4.Date
+                Date = p4.Date.ToUniversalTime()
             };
         }
         public Monitoring.Dal.Models.DeviceEvent MapFromDto(Monitoring.Contracts.DeviceEvents.DeviceEventDtoLight p5, Monitoring.Dal.Models.DeviceEvent p6)
@@ -40,7 +40,7 @@ namespace Monitoring.Domain.Mappers
             Monitoring.Dal.Models.DeviceEvent result = p6 ?? new Monitoring.Dal.Models.DeviceEvent();
             
             result.Name = p5.Name;
-            result.Date = p5.Date;
+            result.Date = p5.Date.ToUniversalTime();
             return result;
             
         }

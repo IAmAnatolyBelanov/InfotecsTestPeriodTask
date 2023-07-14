@@ -10,12 +10,16 @@ using Testcontainers.PostgreSql;
 
 namespace Monitoring.IntegrationTests;
 
+/// <summary>
+/// Контейнер для работы интеграционных тестов.
+/// </summary>
 public class AppFactory : WebApplicationFactory<Monitoring.Api.Program>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder()
         .WithImage("postgres:15.3")
         .Build();
 
+    /// <inheritdoc/>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureTestServices(services =>
@@ -35,12 +39,9 @@ public class AppFactory : WebApplicationFactory<Monitoring.Api.Program>, IAsyncL
         });
     }
 
-    public static int InitializesCount = 0;
-
+    /// <inheritdoc/>
     public async Task InitializeAsync()
     {
-        Interlocked.Increment(ref InitializesCount);
-
         await _postgreSqlContainer.StartAsync();
 
         using var client = CreateClient();
@@ -48,6 +49,7 @@ public class AppFactory : WebApplicationFactory<Monitoring.Api.Program>, IAsyncL
         await client.PostAsJsonAsync<object>("/Migrations/MigrateUp", null, CancellationToken.None);
     }
 
+    /// <inheritdoc/>
     public new async Task DisposeAsync()
     {
         await _postgreSqlContainer.StopAsync();

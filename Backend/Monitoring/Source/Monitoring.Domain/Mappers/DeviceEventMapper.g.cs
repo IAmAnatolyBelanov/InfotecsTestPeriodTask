@@ -8,7 +8,7 @@ namespace Monitoring.Domain.Mappers
             {
                 DeviceId = p1.DeviceId,
                 Name = p1.Name,
-                Date = p1.Date.ToUniversalTime()
+                Date = p1.Date
             };
         }
         public Monitoring.Contracts.DeviceEvents.DeviceEventDto MapToDto(Monitoring.Dal.Models.DeviceEvent p2, Monitoring.Contracts.DeviceEvents.DeviceEventDto p3)
@@ -21,7 +21,7 @@ namespace Monitoring.Domain.Mappers
             
             result.DeviceId = p2.DeviceId;
             result.Name = p2.Name;
-            result.Date = p2.Date.ToUniversalTime();
+            result.Date = p2.Date;
             return result;
             
         }
@@ -31,7 +31,7 @@ namespace Monitoring.Domain.Mappers
             {
                 DeviceId = p4.DeviceId,
                 Name = p4.Name,
-                Date = p4.Date
+                Date = p4.Date.ToUniversalTime()
             };
         }
         public Monitoring.Dal.Models.DeviceEvent MapFromDto(Monitoring.Contracts.DeviceEvents.DeviceEventDto p5, Monitoring.Dal.Models.DeviceEvent p6)
@@ -44,7 +44,7 @@ namespace Monitoring.Domain.Mappers
             
             result.DeviceId = p5.DeviceId;
             result.Name = p5.Name;
-            result.Date = p5.Date;
+            result.Date = p5.Date.ToUniversalTime();
             return result;
             
         }

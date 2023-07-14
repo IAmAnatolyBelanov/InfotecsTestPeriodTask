@@ -18,10 +18,10 @@ public class MapperRegister : IRegister
     {
         config.NewConfig<DeviceInfo, DeviceInfoDto>();
 
-        config.NewConfig<DeviceEvent, DeviceEventDto>()
+        config.NewConfig<DeviceEventDto, DeviceEvent>()
             .Map(dst => dst.Date, src => src.Date.ToUniversalTime());
 
-        config.NewConfig<DeviceEvent, DeviceEventDtoLight>()
+        config.NewConfig<DeviceEventDtoLight, DeviceEvent>()
             .Map(dst => dst.Date, src => src.Date.ToUniversalTime());
     }
 }
