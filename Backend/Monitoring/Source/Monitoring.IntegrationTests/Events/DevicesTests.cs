@@ -52,8 +52,6 @@ public class DevicesTests : IClassFixture<AppFactory>
     [Fact]
     public async Task GetDevice_Correct_Success()
     {
-        var start = DateTimeOffset.UtcNow;
-
         var device = new DeviceInfoDto
         {
             Id = Guid.Parse("00000000-0000-0000-0002-000000000001"),
@@ -61,6 +59,7 @@ public class DevicesTests : IClassFixture<AppFactory>
             OperationSystemInfo = "Windows 9",
             OperationSystemType = Shared.OperationSystem.OperationSystemType.Windows,
             UserName = "00000000-0000-0000-0002-000000000001",
+            LastUpdate = DateTimeOffset.UtcNow,
         };
 
         var client = _factory.CreateClient();
@@ -77,9 +76,7 @@ public class DevicesTests : IClassFixture<AppFactory>
         Assert.Equal(device.OperationSystemInfo, result.Data.OperationSystemInfo);
         Assert.Equal(device.OperationSystemType, result.Data.OperationSystemType);
         Assert.Equal(device.UserName, result.Data.UserName);
-
-        Assert.True(result.Data.LastUpdate > start);
-        Assert.True(result.Data.LastUpdate < DateTimeOffset.UtcNow);
+        Assert.Equal(device.LastUpdate.ToUnixTimeSeconds(), result.Data.LastUpdate.ToUnixTimeSeconds());
     }
 
     /// <summary>
@@ -98,6 +95,7 @@ public class DevicesTests : IClassFixture<AppFactory>
             OperationSystemInfo = "Windows 9",
             OperationSystemType = Shared.OperationSystem.OperationSystemType.Windows,
             UserName = "00000000-0000-0000-0003-000000000002",
+            LastUpdate = DateTimeOffset.UtcNow,
         };
 
         var secondVariantDevice = new DeviceInfoDto
@@ -107,6 +105,7 @@ public class DevicesTests : IClassFixture<AppFactory>
             OperationSystemInfo = "MacOs Home Edition",
             OperationSystemType = Shared.OperationSystem.OperationSystemType.MacOs,
             UserName = "00000000-0000-0000-0003-000000000003",
+            LastUpdate = DateTimeOffset.UtcNow,
         };
 
         var client = _factory.CreateClient();
@@ -127,12 +126,14 @@ public class DevicesTests : IClassFixture<AppFactory>
         Assert.Equal(firstVariantDevice.OperationSystemInfo, firstResult.Data.OperationSystemInfo);
         Assert.Equal(firstVariantDevice.OperationSystemType, firstResult.Data.OperationSystemType);
         Assert.Equal(firstVariantDevice.UserName, firstResult.Data.UserName);
+        Assert.Equal(firstVariantDevice.LastUpdate.ToUnixTimeSeconds(), firstResult.Data.LastUpdate.ToUnixTimeSeconds());
 
         Assert.Equal(secondVariantDevice.Id, secondResult.Data!.Id);
         Assert.Equal(secondVariantDevice.AppVersion, secondResult.Data.AppVersion);
         Assert.Equal(secondVariantDevice.OperationSystemInfo, secondResult.Data.OperationSystemInfo);
         Assert.Equal(secondVariantDevice.OperationSystemType, secondResult.Data.OperationSystemType);
         Assert.Equal(secondVariantDevice.UserName, secondResult.Data.UserName);
+        Assert.Equal(secondVariantDevice.LastUpdate.ToUnixTimeSeconds(), secondResult.Data.LastUpdate.ToUnixTimeSeconds());
     }
 
     /// <summary>
