@@ -1,5 +1,3 @@
-using System.Collections.Concurrent;
-using System.Net.Http.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -46,7 +44,7 @@ public class AppFactory : WebApplicationFactory<Monitoring.Api.Program>, IAsyncL
 
         using var client = CreateClient();
 
-        await client.PostAsJsonAsync<object>("/Migrations/MigrateUp", null, CancellationToken.None);
+        await client.PostAsync("/Migrations/MigrateUp", null);
     }
 
     /// <inheritdoc/>

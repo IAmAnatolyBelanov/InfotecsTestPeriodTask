@@ -15,7 +15,7 @@ public class DeviceService : IDeviceService
     /// Конструктор класса <see cref="DeviceService"/>.
     /// </summary>
     /// <param name="sessionFactory"><see cref="ISessionFactory"/>.</param>
-    /// <param name="deviceRepository"><see cref="IDeviceRepository"/></param>
+    /// <param name="deviceRepository"><see cref="IDeviceRepository"/>.</param>
     public DeviceService(ISessionFactory sessionFactory, IDeviceRepository deviceRepository)
     {
         _sessionFactory = sessionFactory;

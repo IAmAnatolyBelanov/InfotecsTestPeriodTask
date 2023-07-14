@@ -1,14 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Monitoring.Contracts.DeviceEvents;
 
+/// <summary>
+/// Список событий по конкретному девайсу.
+/// </summary>
 public class EventCollection
 {
+    /// <summary>
+    /// Id девайса.
+    /// </summary>
     public Guid DeviceId { get; set; }
 
-    public IReadOnlyList<DeviceEventDtoLight> Events { get; set; }
+    /// <summary>
+    /// Список событий.
+    /// </summary>
+    public IReadOnlyList<DeviceEventDtoLight> Events { get; set; } = Array.Empty<DeviceEventDtoLight>();
 }
