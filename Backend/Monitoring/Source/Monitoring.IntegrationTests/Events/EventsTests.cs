@@ -17,10 +17,7 @@ public class EventsTests : IClassFixture<AppFactory>
     /// Конструктор класса <see cref="EventsTests"/>.
     /// </summary>
     /// <param name="factory"><see cref="AppFactory"/>.</param>
-    public EventsTests(AppFactory factory)
-    {
-        _factory = factory;
-    }
+    public EventsTests(AppFactory factory) => _factory = factory;
 
     /// <summary>
     /// При попытке добавить событие о девайсе, который ещё не зарегистрирован в системе, должен вернуть ошибку.

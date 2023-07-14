@@ -3,7 +3,7 @@ using Monitoring.Api.Infrastructure;
 using Monitoring.Contracts.DeviceInfo;
 using Monitoring.Dal.Models;
 
-namespace Monitoring.IntegrationTests.Events;
+namespace Monitoring.IntegrationTests.Devices;
 
 /// <summary>
 /// Тесты для проверки работы с <see cref="DeviceInfo"/>.
@@ -16,10 +16,7 @@ public class DevicesTests : IClassFixture<AppFactory>
     /// Конструктор класса <see cref="DevicesTests"/>.
     /// </summary>
     /// <param name="appFactory"><see cref="AppFactory"/>.</param>
-    public DevicesTests(AppFactory appFactory)
-    {
-        _factory = appFactory;
-    }
+    public DevicesTests(AppFactory appFactory) => _factory = appFactory;
 
     /// <summary>
     /// Должен успешно зарегистрировать девайс.
