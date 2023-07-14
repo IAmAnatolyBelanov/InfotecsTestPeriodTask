@@ -17,7 +17,7 @@ public class InitialMigration : Migration
             .WithColumn("operation_system_type").AsInt32().NotNullable()
             .WithColumn("operation_system_info").AsString().NotNullable()
             .WithColumn("app_version").AsString().NotNullable()
-            .WithColumn("last_update").AsDateTimeOffset().NotNullable().WithDefaultValue("NOW()");
+            .WithColumn("last_update").AsDateTimeOffset().NotNullable();
     }
 
     /// <inheritdoc/>
