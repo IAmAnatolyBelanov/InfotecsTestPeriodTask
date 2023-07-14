@@ -27,7 +27,7 @@ namespace Monitoring.Api
 
             builder.Services.SetupDbConnection(builder.Configuration);
 
-            builder.Services.RegisterFluentMigrator();
+            builder.Services.AddFluentMigrator();
 
             builder.RegisterLogger();
 

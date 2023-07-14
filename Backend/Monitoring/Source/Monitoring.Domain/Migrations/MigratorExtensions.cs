@@ -6,15 +6,15 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Monitoring.Domain.Migrations;
 
 /// <summary>
-/// Регистратор мигратора.
+/// Расширения для мигратора.
 /// </summary>
-public static class MigratorRegister
+public static class MigratorExtensions
 {
     /// <summary>
     /// Регистрирует мигратор.
     /// </summary>
     /// <param name="services"><see cref="IServiceCollection"/>.</param>
-    public static void RegisterFluentMigrator(this IServiceCollection services)
+    public static void AddFluentMigrator(this IServiceCollection services)
     {
         services.AddFluentMigratorCore()
             .ConfigureRunner(rb => rb

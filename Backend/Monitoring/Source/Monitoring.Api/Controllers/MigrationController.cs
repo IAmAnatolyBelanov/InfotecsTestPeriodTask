@@ -8,7 +8,7 @@ namespace Monitoring.Api.Controllers;
 /// Контроллер для работы с миграциями.
 /// </summary>
 [ApiController]
-[Route("Migrations")]
+[Route("migrations")]
 public class MigrationController
 {
     private readonly IMigrator _migrator;
@@ -17,16 +17,13 @@ public class MigrationController
     /// Конструктор класса <see cref="MigrationController"/>.
     /// </summary>
     /// <param name="migrator"><see cref="IMigrator"/>.</param>
-    public MigrationController(IMigrator migrator)
-    {
-        _migrator = migrator;
-    }
+    public MigrationController(IMigrator migrator) => _migrator = migrator;
 
     /// <summary>
     /// Накатывает все найденные и ещё не накаченные миграции.
     /// </summary>
     /// <returns>Пустой <see cref="BaseResponse{T}"/> в случае успешного выполнения миграций, либо ошибки в случае их возникновения.</returns>
-    [HttpPost("MigrateUp")]
+    [HttpPost("migrateUp")]
     public BaseResponse<object> MigrateUp()
     {
         _migrator.MigrateUp();
