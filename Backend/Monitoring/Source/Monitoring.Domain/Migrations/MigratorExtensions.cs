@@ -24,4 +24,17 @@ public static class MigratorExtensions
 
         services.AddTransient<IMigrator, Migrator>();
     }
+
+    /// <summary>
+    /// Запускает миграции.
+    /// </summary>
+    /// <param name="services"><see cref="IServiceProvider"/>.</param>
+    public static void RunMigrations(this IServiceProvider services)
+    {
+        using (var scope = services.CreateScope())
+        {
+            scope.ServiceProvider.GetRequiredService<IMigrator>()
+                .MigrateUp();
+        }
+    }
 }

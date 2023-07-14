@@ -62,6 +62,8 @@ namespace Monitoring.Api
 
             app.MapControllers();
 
+            app.Services.RunMigrations();
+
             app.Run();
         }
     }
