@@ -1,8 +1,8 @@
-using System.Text.Json.Serialization;
 using Monitoring.Api.Infrastructure;
 using Monitoring.Dal;
-using Monitoring.Domain.DeviceBizRules;
+using Monitoring.Domain.DeviceServices;
 using Monitoring.Domain.Mappers;
+using Monitoring.Domain.Migrations;
 using Monitoring.Shared.DateTimeProviders;
 
 namespace Monitoring.Api
@@ -20,25 +20,24 @@ namespace Monitoring.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Configuration
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json")
+                .AddEnvironmentVariables();
+
+            builder.Services.SetupDbConnection(builder.Configuration);
+
+            builder.Services.AddFluentMigrator();
+
             builder.RegisterLogger();
 
-            builder.Services.AddTransient<IDeviceService, DeviceService>();
+            builder.Services.AddSingleton<IDeviceService, DeviceService>();
 
             builder.Services.AddSingleton<IClock, Clock>();
 
-            builder.Services.AddDbContext<MonitoringContext>();
-            builder.Services.AddScoped<IMonitoringContext, MonitoringContext>();
             builder.Services.AddSingleton<IDeviceInfoMapper, DeviceInfoMapper>();
 
-            builder.Services.AddControllers();
-
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+            builder.Services.RegisterControllers();
 
             builder.Services.AddCors();
 
@@ -62,6 +61,8 @@ namespace Monitoring.Api
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.Services.RunMigrations();
 
             app.Run();
         }
