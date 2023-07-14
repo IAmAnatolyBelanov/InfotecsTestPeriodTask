@@ -48,8 +48,5 @@ public class AppFactory : WebApplicationFactory<Monitoring.Api.Program>, IAsyncL
     }
 
     /// <inheritdoc/>
-    public new async Task DisposeAsync()
-    {
-        await _postgreSqlContainer.StopAsync();
-    }
+    public new async Task DisposeAsync() => await _postgreSqlContainer.StopAsync();
 }
