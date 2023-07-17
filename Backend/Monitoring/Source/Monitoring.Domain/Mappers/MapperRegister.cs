@@ -19,9 +19,9 @@ public class MapperRegister : IRegister
         config.NewConfig<DeviceInfo, DeviceInfoDto>();
 
         config.NewConfig<DeviceEventDto, DeviceEvent>()
-            .Map(dst => dst.Date, src => src.Date.ToUniversalTime());
+            .Map(dst => dst.DateTime, src => src.DateTime.ToUniversalTime());
 
-        config.NewConfig<DeviceEventDtoLight, DeviceEvent>()
-            .Map(dst => dst.Date, src => src.Date.ToUniversalTime());
+        config.NewConfig<DeviceEventLightDto, DeviceEvent>()
+            .Map(dst => dst.DateTime, src => src.DateTime.ToUniversalTime());
     }
 }

@@ -28,7 +28,7 @@ public class EventsTests : IClassFixture<AppFactory>
     {
         var deviceEvent = new DeviceEventDto
         {
-            Date = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
+            DateTime = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
             DeviceId = Guid.Parse("00000000-0000-0000-0001-000000000001"),
             Name = "00000000-0000-0000-0001-000000000001",
         };
@@ -65,7 +65,7 @@ public class EventsTests : IClassFixture<AppFactory>
         {
             DeviceId = device.Id,
             Name = "00000000-0000-0000-0002-000000000001",
-            Date = new DateTimeOffset(2023, 07, 12, 18, 15, 0, TimeSpan.FromHours(3)),
+            DateTime = new DateTimeOffset(2023, 07, 12, 18, 15, 0, TimeSpan.FromHours(3)),
         };
 
         var response = await AddEvent(client, deviceEvent);
@@ -101,19 +101,19 @@ public class EventsTests : IClassFixture<AppFactory>
             {
                 DeviceId = device.Id,
                 Name = "00000000-0000-0000-0003-000000000002",
-                Date = new DateTimeOffset(2023, 07, 13, 10, 10, 0, TimeSpan.FromHours(3)),
+                DateTime = new DateTimeOffset(2023, 07, 13, 10, 10, 0, TimeSpan.FromHours(3)),
             },
             new DeviceEventDto
             {
                 DeviceId = device.Id,
                 Name = "00000000-0000-0000-0003-000000000003",
-                Date = new DateTimeOffset(2023, 07, 13, 10, 10, 1, TimeSpan.FromHours(3)),
+                DateTime = new DateTimeOffset(2023, 07, 13, 10, 10, 1, TimeSpan.FromHours(3)),
             },
             new DeviceEventDto
             {
                 DeviceId = device.Id,
                 Name = "00000000-0000-0000-0003-000000000004",
-                Date = new DateTimeOffset(2023, 07, 13, 10, 10, 2, TimeSpan.FromHours(3)),
+                DateTime = new DateTimeOffset(2023, 07, 13, 10, 10, 2, TimeSpan.FromHours(3)),
             }
         };
 
@@ -125,7 +125,7 @@ public class EventsTests : IClassFixture<AppFactory>
         Assert.NotNull(result.Data);
         Assert.Equal(device.Id, result.Data!.DeviceId);
         Assert.Equal(events.Length, result.Data.Events.Count);
-        Assert.True(events.All(src => result.Data.Events.Any(dst => src.Name == dst.Name && src.Date == dst.Date)));
+        Assert.True(events.All(src => result.Data.Events.Any(dst => src.Name == dst.Name && src.DateTime == dst.DateTime)));
     }
 
     /// <summary>
@@ -158,13 +158,13 @@ public class EventsTests : IClassFixture<AppFactory>
         {
             new DeviceEventDto
             {
-                Date = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
+                DateTime = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
                 DeviceId = Guid.Parse("00000000-0000-0000-0005-000000000001"),
                 Name = "00000000-0000-0000-0005-000000000001",
             },
             new DeviceEventDto
             {
-                Date = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
+                DateTime = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
                 DeviceId = Guid.Parse("00000000-0000-0000-0005-000000000002"),
                 Name = "00000000-0000-0000-0005-000000000002",
             },
@@ -218,12 +218,12 @@ public class EventsTests : IClassFixture<AppFactory>
         return response;
     }
 
-    private async Task<BaseResponse<EventCollection>> GetEventsByDevice(HttpClient client, Guid deviceId)
+    private async Task<BaseResponse<EventCollectionDto>> GetEventsByDevice(HttpClient client, Guid deviceId)
     {
         using var responseMessage = await client.GetAsync($"/events/by-device-id?deviceId={deviceId}");
         var responseContent = await responseMessage.Content.ReadAsStringAsync();
 
-        var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<EventCollection>>(responseContent)!;
+        var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<EventCollectionDto>>(responseContent)!;
 
         return response;
     }

@@ -3,7 +3,7 @@ namespace Monitoring.Contracts.DeviceEvents;
 /// <summary>
 /// Облегчённая версия <see cref="DeviceEventDto"/>. Не содержит <see cref="DeviceEventDto.DeviceId"/>.
 /// </summary>
-public class DeviceEventDtoLight
+public class DeviceEventLightDto
 {
     /// <summary>
     /// Наименование события.
@@ -13,5 +13,5 @@ public class DeviceEventDtoLight
     /// <summary>
     /// Дата события.
     /// </summary>
-    public DateTimeOffset Date { get; set; }
+    public DateTimeOffset DateTime { get; set; }
 }

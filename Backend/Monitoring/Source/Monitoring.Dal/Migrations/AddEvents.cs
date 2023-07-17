@@ -15,7 +15,7 @@ public class AddEvents : Migration
             .WithColumn("id").AsGuid().PrimaryKey()
             .WithColumn("device_id").AsGuid().NotNullable().ForeignKey("devices", "id")
             .WithColumn("name").AsString(50).NotNullable()
-            .WithColumn("date").AsDateTimeOffset().NotNullable();
+            .WithColumn("date_time").AsDateTimeOffset().NotNullable();
 
         Create.Index()
             .OnTable("events")

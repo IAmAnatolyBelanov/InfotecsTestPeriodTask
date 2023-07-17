@@ -17,7 +17,7 @@ COPY {DbName}
     (id,
     device_id,
     name,
-    date)
+    date_time)
 FROM STDIN (FORMAT BINARY);";
 
         await session.ImportAsync(Query, deviceEvents, (importer, value) =>
@@ -25,7 +25,7 @@ FROM STDIN (FORMAT BINARY);";
             importer.Write(value.Id);
             importer.Write(value.DeviceId);
             importer.Write(value.Name);
-            importer.Write(value.Date);
+            importer.Write(value.DateTime);
         }, cancellationToken);
     }
 
@@ -42,13 +42,13 @@ SELECT
     id,
     device_id,
     name,
-    date
+    date_time
 FROM
     {DbName}
 WHERE
     device_id = @{nameof(parameters.Id)}
 ORDER BY
-    date DESC,
+    date_time DESC,
     id;";
 
         var result = await session.QueryAsync<DeviceEvent>(Query, parameters, cancellationToken);
@@ -65,7 +65,7 @@ SELECT
     id,
     device_id,
     name,
-    date
+    date_time
 FROM
     {DbName}
 WHERE

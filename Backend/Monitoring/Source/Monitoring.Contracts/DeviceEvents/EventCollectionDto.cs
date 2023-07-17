@@ -3,7 +3,7 @@ namespace Monitoring.Contracts.DeviceEvents;
 /// <summary>
 /// Список событий по конкретному девайсу.
 /// </summary>
-public class EventCollection
+public class EventCollectionDto
 {
     /// <summary>
     /// Id девайса.
@@ -13,5 +13,5 @@ public class EventCollection
     /// <summary>
     /// Список событий.
     /// </summary>
-    public IReadOnlyList<DeviceEventDtoLight> Events { get; set; } = Array.Empty<DeviceEventDtoLight>();
+    public IReadOnlyList<DeviceEventLightDto> Events { get; set; } = Array.Empty<DeviceEventLightDto>();
 }

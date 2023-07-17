@@ -69,10 +69,10 @@ public class EventController
     /// <returns>Список событий указанного девайса.</returns>
     /// <remarks>Если девайса не существует, список будет пустым.</remarks>
     [HttpGet("by-device-id")]
-    public async Task<BaseResponse<EventCollection>> GetEventsByDevice(Guid deviceId, CancellationToken cancellationToken)
+    public async Task<BaseResponse<EventCollectionDto>> GetEventsByDevice(Guid deviceId, CancellationToken cancellationToken)
     {
         var events = await _deviceEventService.GetEventsByDevice(deviceId, cancellationToken);
-        var result = new EventCollection
+        var result = new EventCollectionDto
         {
             DeviceId = deviceId,
             Events = events.Select(_deviceEventLightMapper.MapToDto).ToArray(),

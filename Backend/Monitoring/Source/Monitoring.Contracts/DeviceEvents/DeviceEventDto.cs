@@ -1,7 +1,7 @@
 namespace Monitoring.Contracts.DeviceEvents;
 
 /// <summary>
-/// Dto класса DeviceEvent.
+/// Dto для класса событий девайса.
 /// </summary>
 public class DeviceEventDto
 {
@@ -18,5 +18,5 @@ public class DeviceEventDto
     /// <summary>
     /// Дата события.
     /// </summary>
-    public DateTimeOffset Date { get; set; }
+    public DateTimeOffset DateTime { get; set; }
 }

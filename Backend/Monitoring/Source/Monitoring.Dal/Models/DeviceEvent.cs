@@ -18,10 +18,10 @@ public class DeviceEvent
     /// <summary>
     /// Наименование события.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 
     /// <summary>
     /// Дата.
     /// </summary>
-    public DateTimeOffset Date { get; set; }
+    public DateTimeOffset DateTime { get; set; }
 }
