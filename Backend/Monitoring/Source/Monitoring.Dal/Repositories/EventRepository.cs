@@ -10,21 +10,23 @@ public class EventRepository : IEventRepository
     private const string DbName = "public.events";
 
     /// <inheritdoc/>
-    public async Task InsertEvent(ISession session, DeviceEvent deviceEvent, CancellationToken cancellationToken)
+    public async Task AddEvents(ISession session, IReadOnlyCollection<DeviceEvent> deviceEvents, CancellationToken cancellationToken)
     {
         const string Query = $@"
-INSERT INTO {DbName}
+COPY {DbName}
     (id,
     device_id,
     name,
     date)
-VALUES
-    (@{nameof(deviceEvent.Id)},
-    @{nameof(deviceEvent.DeviceId)},
-    @{nameof(deviceEvent.Name)},
-    @{nameof(deviceEvent.Date)});";
+FROM STDIN (FORMAT BINARY);";
 
-        await session.ExecuteAsync(Query, deviceEvent, cancellationToken);
+        await session.ImportAsync(Query, deviceEvents, (importer, value) =>
+        {
+            importer.Write(value.Id);
+            importer.Write(value.DeviceId);
+            importer.Write(value.Name);
+            importer.Write(value.Date);
+        }, cancellationToken);
     }
 
     /// <inheritdoc/>

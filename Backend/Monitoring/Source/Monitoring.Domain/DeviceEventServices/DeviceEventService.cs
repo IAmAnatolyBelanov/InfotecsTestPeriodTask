@@ -26,17 +26,18 @@ public class DeviceEventService : IDeviceEventService
     }
 
     /// <inheritdoc/>
-    public async Task<Guid> AddEvent(DeviceEvent deviceEvent, CancellationToken cancellationToken)
+    public async Task AddEvents(IReadOnlyCollection<DeviceEvent> deviceEvents, CancellationToken cancellationToken)
     {
-        deviceEvent.Id = _guidProvider.NewGuid();
+        foreach (var deviceEvent in deviceEvents)
+        {
+            deviceEvent.Id = _guidProvider.NewGuid();
+        }
 
         await using (var session = _sessionFactory.CreateSession(beginTransaction: true))
         {
-            await _eventRepository.InsertEvent(session, deviceEvent, cancellationToken);
+            await _eventRepository.AddEvents(session, deviceEvents, cancellationToken);
             await session.CommitAsync(cancellationToken);
         }
-
-        return deviceEvent.Id;
     }
 
     /// <inheritdoc/>

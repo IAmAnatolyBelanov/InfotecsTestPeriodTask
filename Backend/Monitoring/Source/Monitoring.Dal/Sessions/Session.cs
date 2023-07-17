@@ -72,6 +72,21 @@ public class Session : ISession
     }
 
     /// <inheritdoc/>
+    public async Task ImportAsync<T>(string commandText, IReadOnlyCollection<T> values, Action<NpgsqlBinaryImporter, T> map, CancellationToken cancellationToken)
+    {
+        await using (var importer = await _connection.BeginBinaryImportAsync(commandText, cancellationToken))
+        {
+            foreach (var value in values)
+            {
+                await importer.StartRowAsync(cancellationToken);
+                map(importer, value);
+            }
+
+            await importer.CompleteAsync(cancellationToken);
+        }
+    }
+
+    /// <inheritdoc/>
     public void Dispose()
     {
         if (_transaction != null)

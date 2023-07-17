@@ -8,12 +8,12 @@ namespace Monitoring.Domain.DeviceEventServices;
 public interface IDeviceEventService
 {
     /// <summary>
-    /// Добавляет событие в БД.
+    /// Добавляет события.
     /// </summary>
-    /// <param name="deviceEvent">Событие.</param>
+    /// <param name="deviceEvents">События.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
-    /// <returns>Id добавленного события.</returns>
-    Task<Guid> AddEvent(DeviceEvent deviceEvent, CancellationToken cancellationToken);
+    /// <returns><see cref="Task"/>.</returns>
+    Task AddEvents(IReadOnlyCollection<DeviceEvent> deviceEvents, CancellationToken cancellationToken);
 
     /// <summary>
     /// Возвращает список событий по запрошенному девайсу.

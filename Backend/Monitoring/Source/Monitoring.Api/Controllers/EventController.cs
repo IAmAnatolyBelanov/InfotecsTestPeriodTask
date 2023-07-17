@@ -34,7 +34,7 @@ public class EventController
     }
 
     /// <summary>
-    /// Добавляет событие в БД.
+    /// Добавляет событие.
     /// </summary>
     /// <param name="deviceEvent">Событие.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
@@ -42,9 +42,23 @@ public class EventController
     [HttpPut]
     public async Task<BaseResponse<Guid>> AddEvent(DeviceEventDto deviceEvent, CancellationToken cancellationToken)
     {
-        var @event = _deviceEventMapper.MapFromDto(deviceEvent);
-        var result = await _deviceEventService.AddEvent(@event, cancellationToken);
-        return result.ToResponse();
+        var events = new[] { _deviceEventMapper.MapFromDto(deviceEvent) };
+        await _deviceEventService.AddEvents(events, cancellationToken);
+        return events[0].Id.ToResponse();
+    }
+
+    /// <summary>
+    /// Добавляет события.
+    /// </summary>
+    /// <param name="deviceEvents">События.</param>
+    /// <param name="cancellationToken">Токен для отмены запроса.</param>
+    /// <returns>Пустой <see cref="BaseResponse{T}"/> в случае успешного добавления событий, либо ошибки в случае их возникновения.</returns>
+    [HttpPut("bulk")]
+    public async Task<BaseResponse<object>> AddEvents(IReadOnlyList<DeviceEventDto> deviceEvents, CancellationToken cancellationToken)
+    {
+        var events = deviceEvents.Select(_deviceEventMapper.MapFromDto).ToArray();
+        await _deviceEventService.AddEvents(events, cancellationToken);
+        return BaseResponseExtensions.EmptySuccess();
     }
 
     /// <summary>

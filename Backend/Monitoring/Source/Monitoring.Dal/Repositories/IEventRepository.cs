@@ -29,11 +29,11 @@ public interface IEventRepository
     Task<IReadOnlyList<DeviceEvent>> GetEventsByDevice(ISession session, Guid deviceId, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Добавляет событие в БД.
+    /// Добавляет события в БД.
     /// </summary>
     /// <param name="session"><see cref="ISession"/>.</param>
-    /// <param name="deviceEvent">Событие.</param>
+    /// <param name="deviceEvents">События.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns><see cref="Task"/>.</returns>
-    Task InsertEvent(ISession session, DeviceEvent deviceEvent, CancellationToken cancellationToken);
+    Task AddEvents(ISession session, IReadOnlyCollection<DeviceEvent> deviceEvents, CancellationToken cancellationToken);
 }
