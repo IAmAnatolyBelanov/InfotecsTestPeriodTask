@@ -157,12 +157,9 @@ public class DevicesTests : IClassFixture<AppFactory>
 
         var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<object>>(responseContent)!;
 
-        if (!responseMessage.IsSuccessStatusCode && string.IsNullOrWhiteSpace(response.Error))
-        {
-            throw new HttpRequestException($"Response status is {responseMessage.StatusCode}" +
-                $" - {responseMessage.ReasonPhrase}," +
+        Assert.False(!responseMessage.IsSuccessStatusCode && string.IsNullOrWhiteSpace(response.Error),
+            $"Response status is {responseMessage.StatusCode} - {responseMessage.ReasonPhrase}," +
                 $" but field 'Error' does not contains info about exception.");
-        }
 
         return response;
     }
