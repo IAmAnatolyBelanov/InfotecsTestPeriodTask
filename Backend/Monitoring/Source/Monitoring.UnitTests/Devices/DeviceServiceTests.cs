@@ -30,13 +30,14 @@ public class DeviceServiceTests
     [Fact]
     public async Task GetStatistics_NotRegisteredDevice_ReturnsEmptyResult()
     {
+        var id = Guid.Parse("00000000-0000-0000-0001-000000000001");
+
         var deviceRepository = new Mock<IDeviceRepository>();
-        deviceRepository.Setup(x => x.GetDevice(It.IsAny<ISession>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+        deviceRepository.Setup(x => x.GetDevice(It.IsAny<ISession>(), id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(default(DeviceInfo));
 
         var deviceService = new DeviceService(_sessionFactory.Object, deviceRepository.Object);
 
-        var id = Guid.Parse("00000000-0000-0000-0001-000000000001");
         var result = await deviceService.GetStatistics(id, CancellationToken.None);
 
         Assert.NotNull(result);
@@ -63,7 +64,7 @@ public class DeviceServiceTests
         };
 
         var deviceRepository = new Mock<IDeviceRepository>();
-        deviceRepository.Setup(x => x.GetDevice(It.IsAny<ISession>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+        deviceRepository.Setup(x => x.GetDevice(It.IsAny<ISession>(), id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(device);
 
         var deviceService = new DeviceService(_sessionFactory.Object, deviceRepository.Object);
