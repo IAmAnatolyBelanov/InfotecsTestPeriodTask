@@ -117,10 +117,7 @@ public class EventsTests : IClassFixture<AppFactory>
             }
         };
 
-        foreach (var deviceEvent in events)
-        {
-            await AddEvent(client, deviceEvent);
-        }
+        await AddEvents(client, events);
 
         var result = await GetEventsByDevice(client, device.Id);
 
@@ -151,6 +148,37 @@ public class EventsTests : IClassFixture<AppFactory>
     }
 
     /// <summary>
+    /// При попытке добавить событие о девайсе, который ещё не зарегистрирован в системе, должен вернуть ошибку.
+    /// </summary>
+    /// <returns><see cref="Task"/>.</returns>
+    [Fact]
+    public async Task AddEvents_WithoutRegisteredDevice_ReturnsError()
+    {
+        var deviceEvents = new DeviceEventDto[]
+        {
+            new DeviceEventDto
+            {
+                Date = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
+                DeviceId = Guid.Parse("00000000-0000-0000-0005-000000000001"),
+                Name = "00000000-0000-0000-0005-000000000001",
+            },
+            new DeviceEventDto
+            {
+                Date = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
+                DeviceId = Guid.Parse("00000000-0000-0000-0005-000000000002"),
+                Name = "00000000-0000-0000-0005-000000000002",
+            },
+        };
+
+        var client = _factory.CreateClient();
+
+        var response = await AddEvents(client, deviceEvents);
+
+        Assert.Null(response.Data);
+        Assert.NotNull(response.Error);
+    }
+
+    /// <summary>
     /// Регистрирует девайс.
     /// </summary>
     /// <param name="client"><see cref="HttpClient"/>.</param>
@@ -176,6 +204,16 @@ public class EventsTests : IClassFixture<AppFactory>
         var responseContent = await responseMessage.Content.ReadAsStringAsync();
 
         var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<Guid?>>(responseContent)!;
+
+        return response;
+    }
+
+    private async Task<BaseResponse<object>> AddEvents(HttpClient client, IReadOnlyCollection<DeviceEventDto> deviceEvents)
+    {
+        using var responseMessage = await client.PutAsJsonAsync("/events/bulk", deviceEvents);
+        var responseContent = await responseMessage.Content.ReadAsStringAsync();
+
+        var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<object>>(responseContent)!;
 
         return response;
     }
