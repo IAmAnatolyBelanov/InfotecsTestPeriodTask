@@ -17,10 +17,10 @@ COPY ["Source/Monitoring.Dal/Monitoring.Dal.csproj", "Source/Monitoring.Dal/"]
 RUN dotnet restore "Source/Monitoring.Api/Monitoring.Api.csproj"
 COPY . .
 WORKDIR "/src/Source/Monitoring.Api"
-RUN dotnet build "Monitoring.Api.csproj" -c Release -o /app/build
+RUN dotnet build "Monitoring.Api.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Monitoring.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Monitoring.Api.csproj" -c Debug -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
