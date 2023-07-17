@@ -23,7 +23,7 @@ public class DevicesTests : IClassFixture<AppFactory>
     /// </summary>
     /// <returns><see cref="Task"/>.</returns>
     [Fact]
-    public async Task RegisterDevice_Correct_Success()
+    public async Task RegisterDevice_PossibleDevice_Success()
     {
         var device = new DeviceInfoDto
         {
@@ -47,7 +47,7 @@ public class DevicesTests : IClassFixture<AppFactory>
     /// </summary>
     /// <returns><see cref="Task"/>.</returns>
     [Fact]
-    public async Task GetDevice_Correct_Success()
+    public async Task GetDevice_RegisteredDevice_Success()
     {
         var device = new DeviceInfoDto
         {

@@ -46,7 +46,7 @@ public class EventsTests : IClassFixture<AppFactory>
     /// </summary>
     /// <returns><see cref="Task"/>.</returns>
     [Fact]
-    public async Task AddEvent_Correct_Success()
+    public async Task AddEvent_PossibleEventForRegisteredDevice_Success()
     {
         var device = new DeviceInfoDto
         {
@@ -80,7 +80,7 @@ public class EventsTests : IClassFixture<AppFactory>
     /// </summary>
     /// <returns><see cref="Task"/>.</returns>
     [Fact]
-    public async Task GetEventsByDevice_Correct_Success()
+    public async Task GetEventsByDevice_RegisteredDeviceAndAddedEvents_Success()
     {
         var device = new DeviceInfoDto
         {
