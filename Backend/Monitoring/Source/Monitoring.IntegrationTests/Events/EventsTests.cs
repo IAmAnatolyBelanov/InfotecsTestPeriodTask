@@ -4,6 +4,7 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using Mapster;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Monitoring.Api.Infrastructure;
 using Monitoring.Contracts.DeviceEvents;
 using Monitoring.Contracts.DeviceInfo;
@@ -69,7 +70,7 @@ public class EventsTests : IClassFixture<AppFactory>
         {
             result.Error.Should().BeNull();
             result.Data.Should().NotBeNull();
-            result.Data.Value.Should().NotBeEmpty();
+            result.Data!.Value.Should().NotBeEmpty();
         }
     }
 
@@ -108,7 +109,7 @@ public class EventsTests : IClassFixture<AppFactory>
 
         using (new AssertionScope())
         {
-            result.Data.DeviceId.Should().Be(device.Id);
+            result.Data!.DeviceId.Should().Be(device.Id);
             result.Data.Events.Should().HaveSameCount(events);
             foreach (var @event in result.Data.Events)
             {
@@ -125,16 +126,25 @@ public class EventsTests : IClassFixture<AppFactory>
     [Fact]
     public async Task GetEventsByDevice_WithoutRegisteredDevice_ReturnsEmptyCollectionOfEvents()
     {
-        var deviceId = Guid.Parse("00000000-0000-0000-0004-000000000001");
+        var fixture = new Fixture();
+
+        var deviceId = fixture.Create<Guid>();
 
         var client = _factory.CreateClient();
 
         var result = await GetEventsByDevice(client, deviceId);
 
-        Assert.Null(result.Error);
-        Assert.NotNull(result.Data);
-        Assert.Equal(deviceId, result.Data!.DeviceId);
-        Assert.Equal(0, result.Data.Events.Count);
+        using (new AssertionScope())
+        {
+            result.Error.Should().BeNull();
+            result.Data.Should().NotBeNull();
+        }
+
+        using (new AssertionScope())
+        {
+            result.Data!.DeviceId.Should().Be(deviceId);
+            result.Data.Events.Should().BeEmpty();
+        }
     }
 
     /// <summary>
@@ -144,28 +154,24 @@ public class EventsTests : IClassFixture<AppFactory>
     [Fact]
     public async Task AddEvents_WithoutRegisteredDevice_ReturnsError()
     {
-        var deviceEvents = new DeviceEventDto[]
+        var fixture = new Fixture();
+
+        var deviceEvents = new List<DeviceEventDto>
         {
-            new DeviceEventDto
-            {
-                DateTime = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
-                DeviceId = Guid.Parse("00000000-0000-0000-0005-000000000001"),
-                Name = "00000000-0000-0000-0005-000000000001",
-            },
-            new DeviceEventDto
-            {
-                DateTime = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
-                DeviceId = Guid.Parse("00000000-0000-0000-0005-000000000002"),
-                Name = "00000000-0000-0000-0005-000000000002",
-            },
+            fixture.Create<DeviceEventDto>(),
+            fixture.Create<DeviceEventDto>(),
+            fixture.Create<DeviceEventDto>(),
         };
 
         var client = _factory.CreateClient();
 
-        var response = await AddEvents(client, deviceEvents);
+        var result = await AddEvents(client, deviceEvents);
 
-        Assert.Null(response.Data);
-        Assert.NotNull(response.Error);
+        using (new AssertionScope())
+        {
+            result.Error.Should().NotBeNull();
+            result.Data.Should().BeNull();
+        }
     }
 
     /// <summary>
