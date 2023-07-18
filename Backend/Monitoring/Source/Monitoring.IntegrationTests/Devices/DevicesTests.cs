@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using AutoFixture;
+using AutoFixture.Xunit2;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Monitoring.Api.Infrastructure;
@@ -24,13 +25,12 @@ public class DevicesTests : IClassFixture<AppFactory>
     /// <summary>
     /// Должен успешно зарегистрировать девайс.
     /// </summary>
+    /// <param name="device">Девайс.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task RegisterDevice_PossibleDevice_Success()
+    [Theory]
+    [AutoData]
+    public async Task RegisterDevice_PossibleDevice_Success(DeviceInfoDto device)
     {
-        var fixture = new Fixture();
-        var device = fixture.Create<DeviceInfoDto>();
-
         var client = _factory.CreateClient();
 
         var (httpResponse, result) = await RegisterDevice(client, device);
@@ -47,13 +47,12 @@ public class DevicesTests : IClassFixture<AppFactory>
     /// <summary>
     /// Должен успешно получить информацию о зарегистрированном девайсе.
     /// </summary>
+    /// <param name="device">Девайс.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task GetDevice_RegisteredDevice_Success()
+    [Theory]
+    [AutoData]
+    public async Task GetDevice_RegisteredDevice_Success(DeviceInfoDto device)
     {
-        var fixture = new Fixture();
-        var device = fixture.Create<DeviceInfoDto>();
-
         var client = _factory.CreateClient();
 
         await RegisterDevice(client, device);
@@ -76,17 +75,15 @@ public class DevicesTests : IClassFixture<AppFactory>
     /// <summary>
     /// Должен успешно обновить информацию о зарегистрированном девайсе.
     /// </summary>
+    /// <param name="deviceId">Id девайса.</param>
+    /// <param name="firstVariantDevice">Первичная информация о девайсе.</param>
+    /// <param name="secondVariantDevice">Обновлённая информация о девайсе.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task RegisterDevice_UpdateExistingDevice_Success()
+    [Theory]
+    [AutoData]
+    public async Task RegisterDevice_UpdateExistingDevice_Success(Guid deviceId, DeviceInfoDto firstVariantDevice, DeviceInfoDto secondVariantDevice)
     {
-        var fixture = new Fixture();
-        var deviceId = fixture.Create<Guid>();
-
-        var firstVariantDevice = fixture.Create<DeviceInfoDto>();
         firstVariantDevice.Id = deviceId;
-
-        var secondVariantDevice = fixture.Create<DeviceInfoDto>();
         secondVariantDevice.Id = deviceId;
 
         var client = _factory.CreateClient();
@@ -121,13 +118,12 @@ public class DevicesTests : IClassFixture<AppFactory>
     /// <summary>
     /// Должен получить пустой ответ при запросе не зарегистрированного девайса.
     /// </summary>
+    /// <param name="deviceId">Id несуществующего девайса.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task GetDevice_NotRegistered_Success()
+    [Theory]
+    [AutoData]
+    public async Task GetDevice_NotRegistered_Success(Guid deviceId)
     {
-        var fixture = new Fixture();
-        var deviceId = fixture.Create<Guid>();
-
         var client = _factory.CreateClient();
 
         var result = await GetDevice(client, deviceId);

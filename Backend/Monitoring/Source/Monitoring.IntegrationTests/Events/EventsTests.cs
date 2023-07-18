@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using AutoFixture;
+using AutoFixture.Xunit2;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Monitoring.Api.Infrastructure;
@@ -25,13 +26,12 @@ public class EventsTests : IClassFixture<AppFactory>
     /// <summary>
     /// При попытке добавить событие о девайсе, который ещё не зарегистрирован в системе, должен вернуть ошибку.
     /// </summary>
+    /// <param name="deviceEvent">Событие, добавление которого должно оборваться с ошибкой.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task AddEvent_WithoutRegisteredDevice_ReturnsError()
+    [Theory]
+    [AutoData]
+    public async Task AddEvent_WithoutRegisteredDevice_ReturnsError(DeviceEventDto deviceEvent)
     {
-        var fixture = new Fixture();
-        var deviceEvent = fixture.Create<DeviceEventDto>();
-
         var client = _factory.CreateClient();
 
         var result = await AddEvent(client, deviceEvent);
@@ -46,20 +46,18 @@ public class EventsTests : IClassFixture<AppFactory>
     /// <summary>
     /// Должен успешно добавить информацию о событии.
     /// </summary>
+    /// <param name="device">Девайс, для которого будет добавлено событие.</param>
+    /// <param name="deviceEvent">Событие.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task AddEvent_PossibleEventForRegisteredDevice_Success()
+    [Theory]
+    [AutoData]
+    public async Task AddEvent_PossibleEventForRegisteredDevice_Success(DeviceInfoDto device, DeviceEventDto deviceEvent)
     {
-        var fixture = new Fixture();
-
-        var device = fixture.Create<DeviceInfoDto>();
+        deviceEvent.DeviceId = device.Id;
 
         var client = _factory.CreateClient();
 
         await RegisterDevice(client, device);
-
-        var deviceEvent = fixture.Create<DeviceEventDto>();
-        deviceEvent.DeviceId = device.Id;
 
         var result = await AddEvent(client, deviceEvent);
 
@@ -74,24 +72,18 @@ public class EventsTests : IClassFixture<AppFactory>
     /// <summary>
     /// Должен успешно получить список событий по девайсу.
     /// </summary>
+    /// <param name="device">Девайс, который будет зарегистрирован.</param>
+    /// <param name="eventsGenerator"><see cref="Generator{T}"/> для <see cref="DeviceEventDto"/>.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task GetEventsByDevice_RegisteredDeviceAndAddedEvents_Success()
+    [Theory]
+    [AutoData]
+    public async Task GetEventsByDevice_RegisteredDeviceAndAddedEvents_Success(DeviceInfoDto device, Generator<DeviceEventDto> eventsGenerator)
     {
-        var fixture = new Fixture();
-
-        var device = fixture.Create<DeviceInfoDto>();
-
         var client = _factory.CreateClient();
 
         await RegisterDevice(client, device);
 
-        var events = new List<DeviceEventDto>
-        {
-            fixture.Create<DeviceEventDto>(),
-            fixture.Create<DeviceEventDto>(),
-            fixture.Create<DeviceEventDto>(),
-        };
+        var events = eventsGenerator.Take(10).ToList();
         events.ForEach(x => x.DeviceId = device.Id);
 
         await AddEvents(client, events);
@@ -116,17 +108,16 @@ public class EventsTests : IClassFixture<AppFactory>
         }
     }
 
+
     /// <summary>
     /// При попытке получить информацию о девайсе, который не зарегистрирован в системе, должен получить пустой список событий.
     /// </summary>
+    /// <param name="deviceId">Id девайса.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task GetEventsByDevice_WithoutRegisteredDevice_ReturnsEmptyCollectionOfEvents()
+    [Theory]
+    [AutoData]
+    public async Task GetEventsByDevice_WithoutRegisteredDevice_ReturnsEmptyCollectionOfEvents(Guid deviceId)
     {
-        var fixture = new Fixture();
-
-        var deviceId = fixture.Create<Guid>();
-
         var client = _factory.CreateClient();
 
         var result = await GetEventsByDevice(client, deviceId);
@@ -147,18 +138,15 @@ public class EventsTests : IClassFixture<AppFactory>
     /// <summary>
     /// При попытке добавить события о девайсе, который ещё не зарегистрирован в системе, должен вернуть ошибку.
     /// </summary>
+    /// <param name="eventsGenerator"><see cref="Generator{T}"/> для <see cref="DeviceEventDto"/>.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task AddEvents_WithoutRegisteredDevice_ReturnsError()
+    [Theory]
+    [AutoData]
+    public async Task AddEvents_WithoutRegisteredDevice_ReturnsError(Generator<DeviceEventDto> eventsGenerator)
     {
         var fixture = new Fixture();
 
-        var deviceEvents = new List<DeviceEventDto>
-        {
-            fixture.Create<DeviceEventDto>(),
-            fixture.Create<DeviceEventDto>(),
-            fixture.Create<DeviceEventDto>(),
-        };
+        var deviceEvents = eventsGenerator.Take(10).ToArray();
 
         var client = _factory.CreateClient();
 
