@@ -1,7 +1,13 @@
 using System.Net.Http.Json;
+using AutoFixture;
+using FluentAssertions;
+using FluentAssertions.Execution;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Monitoring.Api.Infrastructure;
 using Monitoring.Contracts.DeviceInfo;
 using Monitoring.Dal.Models;
+using Org.BouncyCastle.Asn1.Pkcs;
 
 namespace Monitoring.IntegrationTests.Devices;
 
@@ -25,23 +31,20 @@ public class DevicesTests : IClassFixture<AppFactory>
     [Fact]
     public async Task RegisterDevice_PossibleDevice_Success()
     {
-        var device = new DeviceInfoDto
-        {
-            Id = Guid.Parse("00000000-0000-0000-0001-000000000001"),
-            AppVersion = "00000000-0000-0000-0001-000000000001",
-            OperationSystemInfo = "Windows 9",
-            OperationSystemType = Shared.OperationSystem.OperationSystemType.Windows,
-            UserName = "00000000-0000-0000-0001-000000000001",
-        };
+        var fixture = new Fixture();
+        var device = fixture.Create<DeviceInfoDto>();
 
         var client = _factory.CreateClient();
 
         var (httpResponse, result) = await RegisterDevice(client, device);
 
-        Assert.True(httpResponse.IsSuccessStatusCode);
+        using (new AssertionScope())
+        {
+            httpResponse.Should().BeSuccessful();
 
-        Assert.Null(result.Data);
-        Assert.Null(result.Error);
+            result.Error.Should().BeNull();
+            result.Data.Should().BeNull();
+        }
     }
 
     /// <summary>
@@ -51,15 +54,8 @@ public class DevicesTests : IClassFixture<AppFactory>
     [Fact]
     public async Task GetDevice_RegisteredDevice_Success()
     {
-        var device = new DeviceInfoDto
-        {
-            Id = Guid.Parse("00000000-0000-0000-0002-000000000001"),
-            AppVersion = "00000000-0000-0000-0002-000000000001",
-            OperationSystemInfo = "Windows 9",
-            OperationSystemType = Shared.OperationSystem.OperationSystemType.Windows,
-            UserName = "00000000-0000-0000-0002-000000000001",
-            LastUpdate = DateTimeOffset.UtcNow,
-        };
+        var fixture = new Fixture();
+        var device = fixture.Create<DeviceInfoDto>();
 
         var client = _factory.CreateClient();
 
@@ -67,15 +63,17 @@ public class DevicesTests : IClassFixture<AppFactory>
 
         var result = await GetDevice(client, device.Id);
 
-        Assert.Null(result.Error);
-        Assert.NotNull(result.Data);
+        using (new AssertionScope())
+        {
+            result.Error.Should().BeNull();
+            result.Data.Should().NotBeNull();
+        }
 
-        Assert.Equal(device.Id, result.Data!.Id);
-        Assert.Equal(device.AppVersion, result.Data.AppVersion);
-        Assert.Equal(device.OperationSystemInfo, result.Data.OperationSystemInfo);
-        Assert.Equal(device.OperationSystemType, result.Data.OperationSystemType);
-        Assert.Equal(device.UserName, result.Data.UserName);
-        Assert.Equal(device.LastUpdate.ToUnixTimeSeconds(), result.Data.LastUpdate.ToUnixTimeSeconds());
+        using (new AssertionScope())
+        {
+            result.Data.Should().BeEquivalentTo(device, options => options.Excluding(x => x.LastUpdate));
+            result.Data.LastUpdate.ToUnixTimeSeconds().Should().Be(device.LastUpdate.ToUnixTimeSeconds());
+        }
     }
 
     /// <summary>
@@ -85,27 +83,14 @@ public class DevicesTests : IClassFixture<AppFactory>
     [Fact]
     public async Task RegisterDevice_UpdateExistingDevice_Success()
     {
-        var deviceId = Guid.Parse("00000000-0000-0000-0003-000000000001");
+        var fixture = new Fixture();
+        var deviceId = fixture.Create<Guid>();
 
-        var firstVariantDevice = new DeviceInfoDto
-        {
-            Id = deviceId,
-            AppVersion = "00000000-0000-0000-0003-000000000002",
-            OperationSystemInfo = "Windows 9",
-            OperationSystemType = Shared.OperationSystem.OperationSystemType.Windows,
-            UserName = "00000000-0000-0000-0003-000000000002",
-            LastUpdate = DateTimeOffset.UtcNow,
-        };
+        var firstVariantDevice = fixture.Create<DeviceInfoDto>();
+        firstVariantDevice.Id = deviceId;
 
-        var secondVariantDevice = new DeviceInfoDto
-        {
-            Id = deviceId,
-            AppVersion = "00000000-0000-0000-0003-000000000003",
-            OperationSystemInfo = "MacOs Home Edition",
-            OperationSystemType = Shared.OperationSystem.OperationSystemType.MacOs,
-            UserName = "00000000-0000-0000-0003-000000000003",
-            LastUpdate = DateTimeOffset.UtcNow,
-        };
+        var secondVariantDevice = fixture.Create<DeviceInfoDto>();
+        secondVariantDevice.Id = deviceId;
 
         var client = _factory.CreateClient();
 
@@ -115,24 +100,25 @@ public class DevicesTests : IClassFixture<AppFactory>
         await RegisterDevice(client, secondVariantDevice);
         var secondResult = await GetDevice(client, secondVariantDevice.Id);
 
-        Assert.Null(firstResult.Error);
-        Assert.NotNull(firstResult.Data);
-        Assert.Null(secondResult.Error);
-        Assert.NotNull(secondResult.Data);
+        using (new AssertionScope())
+        {
+            firstResult.Error.Should().BeNull();
+            firstResult.Data.Should().NotBeNull();
+            secondResult.Error.Should().BeNull();
+            secondResult.Data.Should().NotBeNull();
+        }
 
-        Assert.Equal(firstVariantDevice.Id, firstResult.Data!.Id);
-        Assert.Equal(firstVariantDevice.AppVersion, firstResult.Data.AppVersion);
-        Assert.Equal(firstVariantDevice.OperationSystemInfo, firstResult.Data.OperationSystemInfo);
-        Assert.Equal(firstVariantDevice.OperationSystemType, firstResult.Data.OperationSystemType);
-        Assert.Equal(firstVariantDevice.UserName, firstResult.Data.UserName);
-        Assert.Equal(firstVariantDevice.LastUpdate.ToUnixTimeSeconds(), firstResult.Data.LastUpdate.ToUnixTimeSeconds());
+        using (new AssertionScope())
+        {
+            firstResult.Data.Should().BeEquivalentTo(firstVariantDevice, options => options.Excluding(x => x.LastUpdate));
+            firstResult.Data.LastUpdate.ToUnixTimeSeconds().Should().Be(firstVariantDevice.LastUpdate.ToUnixTimeSeconds());
+        }
 
-        Assert.Equal(secondVariantDevice.Id, secondResult.Data!.Id);
-        Assert.Equal(secondVariantDevice.AppVersion, secondResult.Data.AppVersion);
-        Assert.Equal(secondVariantDevice.OperationSystemInfo, secondResult.Data.OperationSystemInfo);
-        Assert.Equal(secondVariantDevice.OperationSystemType, secondResult.Data.OperationSystemType);
-        Assert.Equal(secondVariantDevice.UserName, secondResult.Data.UserName);
-        Assert.Equal(secondVariantDevice.LastUpdate.ToUnixTimeSeconds(), secondResult.Data.LastUpdate.ToUnixTimeSeconds());
+        using (new AssertionScope())
+        {
+            secondResult.Data.Should().BeEquivalentTo(secondVariantDevice, options => options.Excluding(x => x.LastUpdate));
+            secondResult.Data.LastUpdate.ToUnixTimeSeconds().Should().Be(secondVariantDevice.LastUpdate.ToUnixTimeSeconds());
+        }
     }
 
     /// <summary>
@@ -142,14 +128,18 @@ public class DevicesTests : IClassFixture<AppFactory>
     [Fact]
     public async Task GetDevice_NotRegistered_Success()
     {
-        var deviceId = Guid.Parse("00000000-0000-0000-0004-000000000001");
+        var fixture = new Fixture();
+        var deviceId = fixture.Create<Guid>();
 
         var client = _factory.CreateClient();
 
         var result = await GetDevice(client, deviceId);
 
-        Assert.Null(result.Error);
-        Assert.Null(result.Data);
+        using (new AssertionScope())
+        {
+            result.Error.Should().BeNull();
+            result.Data.Should().BeNull();
+        }
     }
 
     private async Task<(HttpResponseMessage HttpResponse, BaseResponse<object> BaseResponse)> RegisterDevice(HttpClient client, DeviceInfoDto device)

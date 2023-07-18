@@ -1,5 +1,6 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using FluentAssertions;
 using Monitoring.Dal.Models;
 using Monitoring.Dal.Repositories;
 using Monitoring.Dal.Sessions;
@@ -34,9 +35,9 @@ public class DeviceServiceTests
 
         var result = await deviceService.GetStatistics(id, CancellationToken.None);
 
-        Assert.NotNull(result);
-        Assert.Equal(id, result.DeviceId);
-        Assert.Null(result.LastUpdate);
+        result.Should().NotBeNull();
+        result.DeviceId.Should().Be(id);
+        result.LastUpdate.Should().BeNull();
     }
 
     /// <summary>
@@ -60,8 +61,8 @@ public class DeviceServiceTests
 
         var result = await deviceService.GetStatistics(device.Id, CancellationToken.None);
 
-        Assert.NotNull(result);
-        Assert.Equal(device.Id, result.DeviceId);
-        Assert.Equal(device.LastUpdate, result.LastUpdate);
+        result.Should().NotBeNull();
+        result.DeviceId.Should().Be(device.Id);
+        result.LastUpdate.Should().Be(device.LastUpdate);
     }
 }

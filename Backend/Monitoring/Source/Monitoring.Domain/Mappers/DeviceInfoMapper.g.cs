@@ -40,7 +40,7 @@ namespace Monitoring.Domain.Mappers
                 OperationSystemType = p4.OperationSystemType,
                 OperationSystemInfo = p4.OperationSystemInfo,
                 AppVersion = p4.AppVersion,
-                LastUpdate = p4.LastUpdate
+                LastUpdate = p4.LastUpdate.ToUniversalTime()
             };
         }
         public Monitoring.Dal.Models.DeviceInfo MapFromDto(Monitoring.Contracts.DeviceInfo.DeviceInfoDto p5, Monitoring.Dal.Models.DeviceInfo p6)
@@ -56,7 +56,7 @@ namespace Monitoring.Domain.Mappers
             result.OperationSystemType = p5.OperationSystemType;
             result.OperationSystemInfo = p5.OperationSystemInfo;
             result.AppVersion = p5.AppVersion;
-            result.LastUpdate = p5.LastUpdate;
+            result.LastUpdate = p5.LastUpdate.ToUniversalTime();
             return result;
             
         }

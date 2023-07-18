@@ -16,7 +16,8 @@ public class MapperRegister : IRegister
     /// <param name="config">Конфигурация.</param>
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<DeviceInfo, DeviceInfoDto>();
+        config.NewConfig<DeviceInfoDto, DeviceInfo>()
+            .Map(dst => dst.LastUpdate, src => src.LastUpdate.ToUniversalTime());
 
         config.NewConfig<DeviceEventDto, DeviceEvent>()
             .Map(dst => dst.DateTime, src => src.DateTime.ToUniversalTime());

@@ -1,4 +1,9 @@
 using System.Net.Http.Json;
+using AutoFixture;
+using FluentAssertions;
+using FluentAssertions.Execution;
+using Mapster;
+using Microsoft.AspNetCore.Http;
 using Monitoring.Api.Infrastructure;
 using Monitoring.Contracts.DeviceEvents;
 using Monitoring.Contracts.DeviceInfo;
@@ -26,19 +31,18 @@ public class EventsTests : IClassFixture<AppFactory>
     [Fact]
     public async Task AddEvent_WithoutRegisteredDevice_ReturnsError()
     {
-        var deviceEvent = new DeviceEventDto
-        {
-            DateTime = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
-            DeviceId = Guid.Parse("00000000-0000-0000-0001-000000000001"),
-            Name = "00000000-0000-0000-0001-000000000001",
-        };
+        var fixture = new Fixture();
+        var deviceEvent = fixture.Create<DeviceEventDto>();
 
         var client = _factory.CreateClient();
 
-        var response = await AddEvent(client, deviceEvent);
+        var result = await AddEvent(client, deviceEvent);
 
-        Assert.Null(response.Data);
-        Assert.NotNull(response.Error);
+        using (new AssertionScope())
+        {
+            result.Error.Should().NotBeNullOrWhiteSpace();
+            result.Data.Should().BeNull();
+        }
     }
 
     /// <summary>
@@ -48,31 +52,25 @@ public class EventsTests : IClassFixture<AppFactory>
     [Fact]
     public async Task AddEvent_PossibleEventForRegisteredDevice_Success()
     {
-        var device = new DeviceInfoDto
-        {
-            Id = Guid.Parse("00000000-0000-0000-0002-000000000001"),
-            AppVersion = "00000000-0000-0000-0002-000000000001",
-            OperationSystemInfo = "Windows 9",
-            OperationSystemType = Shared.OperationSystem.OperationSystemType.Windows,
-            UserName = "00000000-0000-0000-0002-000000000001",
-        };
+        var fixture = new Fixture();
+
+        var device = fixture.Create<DeviceInfoDto>();
 
         var client = _factory.CreateClient();
 
         await RegisterDevice(client, device);
 
-        var deviceEvent = new DeviceEventDto
+        var deviceEvent = fixture.Create<DeviceEventDto>();
+        deviceEvent.DeviceId = device.Id;
+        
+        var result = await AddEvent(client, deviceEvent);
+
+        using (new AssertionScope())
         {
-            DeviceId = device.Id,
-            Name = "00000000-0000-0000-0002-000000000001",
-            DateTime = new DateTimeOffset(2023, 07, 12, 18, 15, 0, TimeSpan.FromHours(3)),
-        };
-
-        var response = await AddEvent(client, deviceEvent);
-
-        Assert.Null(response.Error);
-        Assert.NotNull(response.Data);
-        Assert.NotEqual(Guid.Empty, response.Data);
+            result.Error.Should().BeNull();
+            result.Data.Should().NotBeNull();
+            result.Data.Value.Should().NotBeEmpty();
+        }
     }
 
     /// <summary>
@@ -82,50 +80,42 @@ public class EventsTests : IClassFixture<AppFactory>
     [Fact]
     public async Task GetEventsByDevice_RegisteredDeviceAndAddedEvents_Success()
     {
-        var device = new DeviceInfoDto
-        {
-            Id = Guid.Parse("00000000-0000-0000-0003-000000000001"),
-            AppVersion = "00000000-0000-0000-0003-000000000001",
-            OperationSystemInfo = "Windows 9",
-            OperationSystemType = Shared.OperationSystem.OperationSystemType.Windows,
-            UserName = "00000000-0000-0000-0003-000000000001",
-        };
+        var fixture = new Fixture();
+
+        var device = fixture.Create<DeviceInfoDto>();
 
         var client = _factory.CreateClient();
 
         await RegisterDevice(client, device);
 
-        var events = new DeviceEventDto[]
+        var events = new List<DeviceEventDto>
         {
-            new DeviceEventDto
-            {
-                DeviceId = device.Id,
-                Name = "00000000-0000-0000-0003-000000000002",
-                DateTime = new DateTimeOffset(2023, 07, 13, 10, 10, 0, TimeSpan.FromHours(3)),
-            },
-            new DeviceEventDto
-            {
-                DeviceId = device.Id,
-                Name = "00000000-0000-0000-0003-000000000003",
-                DateTime = new DateTimeOffset(2023, 07, 13, 10, 10, 1, TimeSpan.FromHours(3)),
-            },
-            new DeviceEventDto
-            {
-                DeviceId = device.Id,
-                Name = "00000000-0000-0000-0003-000000000004",
-                DateTime = new DateTimeOffset(2023, 07, 13, 10, 10, 2, TimeSpan.FromHours(3)),
-            }
+            fixture.Create<DeviceEventDto>(),
+            fixture.Create<DeviceEventDto>(),
+            fixture.Create<DeviceEventDto>(),
         };
+        events.ForEach(x => x.DeviceId = device.Id);
 
         await AddEvents(client, events);
 
         var result = await GetEventsByDevice(client, device.Id);
 
-        Assert.Null(result.Error);
-        Assert.NotNull(result.Data);
-        Assert.Equal(device.Id, result.Data!.DeviceId);
-        Assert.Equal(events.Length, result.Data.Events.Count);
-        Assert.True(events.All(src => result.Data.Events.Any(dst => src.Name == dst.Name && src.DateTime == dst.DateTime)));
+        using (new AssertionScope())
+        {
+            result.Error.Should().BeNull();
+            result.Data.Should().NotBeNull();
+        }
+
+        using (new AssertionScope())
+        {
+            result.Data.DeviceId.Should().Be(device.Id);
+            result.Data.Events.Should().HaveSameCount(events);
+            foreach (var @event in result.Data.Events)
+            {
+                events.Should().ContainEquivalentOf(@event, options => options.Excluding(x => x.DateTime))
+                    .And.Contain(x => @event.DateTime.ToUnixTimeSeconds() == x.DateTime.ToUnixTimeSeconds());
+            }
+        }
     }
 
     /// <summary>
