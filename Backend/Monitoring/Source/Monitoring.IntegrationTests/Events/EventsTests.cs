@@ -144,8 +144,6 @@ public class EventsTests : IClassFixture<AppFactory>
     [AutoData]
     public async Task AddEvents_WithoutRegisteredDevice_ReturnsError(Generator<DeviceEventDto> eventsGenerator)
     {
-        var fixture = new Fixture();
-
         var deviceEvents = eventsGenerator.Take(10).ToArray();
 
         var client = _factory.CreateClient();
