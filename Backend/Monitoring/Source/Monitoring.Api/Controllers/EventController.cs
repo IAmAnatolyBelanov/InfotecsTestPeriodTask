@@ -3,6 +3,7 @@ using Monitoring.Api.Infrastructure;
 using Monitoring.Contracts.DeviceEvents;
 using Monitoring.Domain.DeviceEventServices;
 using Monitoring.Domain.Mappers;
+using Monitoring.Shared.GuidProviders;
 
 namespace Monitoring.Api.Controllers;
 
@@ -16,6 +17,7 @@ public class EventController
     private readonly IDeviceEventService _deviceEventService;
     private readonly IDeviceEventLightMapper _deviceEventLightMapper;
     private readonly IDeviceEventMapper _deviceEventMapper;
+    private readonly IGuidProvider _guidProvider;
 
     /// <summary>
     /// Конструктор класса <see cref="EventController"/>.
@@ -23,14 +25,17 @@ public class EventController
     /// <param name="deviceEventService"><see cref="IDeviceEventService"/>.</param>
     /// <param name="deviceEventLightMapper"><see cref="IDeviceEventLightMapper"/>.</param>
     /// <param name="deviceEventMapper"><see cref="IDeviceEventMapper"/>.</param>
+    /// <param name="guidProvider"><see cref="IGuidProvider"/>.</param>
     public EventController(
         IDeviceEventService deviceEventService,
         IDeviceEventLightMapper deviceEventLightMapper,
-        IDeviceEventMapper deviceEventMapper)
+        IDeviceEventMapper deviceEventMapper,
+        IGuidProvider guidProvider)
     {
         _deviceEventService = deviceEventService;
         _deviceEventLightMapper = deviceEventLightMapper;
         _deviceEventMapper = deviceEventMapper;
+        _guidProvider = guidProvider;
     }
 
     /// <summary>
@@ -43,6 +48,7 @@ public class EventController
     public async Task<BaseResponse<Guid>> AddEvent(DeviceEventDto deviceEvent, CancellationToken cancellationToken)
     {
         var events = new[] { _deviceEventMapper.MapFromDto(deviceEvent) };
+        events[0].Id = _guidProvider.NewGuid();
         await _deviceEventService.AddEvents(events, cancellationToken);
         return events[0].Id.ToResponse();
     }
@@ -57,6 +63,12 @@ public class EventController
     public async Task<BaseResponse<object>> AddEvents(IReadOnlyList<DeviceEventDto> deviceEvents, CancellationToken cancellationToken)
     {
         var events = deviceEvents.Select(_deviceEventMapper.MapFromDto).ToArray();
+
+        for (var i = 0; i < events.Length; i++)
+        {
+            events[i].Id = _guidProvider.NewGuid();
+        }
+
         await _deviceEventService.AddEvents(events, cancellationToken);
         return BaseResponseExtensions.EmptySuccess();
     }
