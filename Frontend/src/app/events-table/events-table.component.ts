@@ -21,7 +21,14 @@ export class EventsTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.deviceId = params.get('deviceId')!;
+      var deviceId = params.get('deviceId');
+
+      if (deviceId == undefined || deviceId == null)
+      {
+        throw new Error('deviceId is unknown');
+      }
+
+      this.deviceId = deviceId;
       this.getEvents();
     });
   }
