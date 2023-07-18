@@ -2,9 +2,6 @@ using System.Net.Http.Json;
 using AutoFixture;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using Mapster;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Monitoring.Api.Infrastructure;
 using Monitoring.Contracts.DeviceEvents;
 using Monitoring.Contracts.DeviceInfo;
@@ -63,7 +60,7 @@ public class EventsTests : IClassFixture<AppFactory>
 
         var deviceEvent = fixture.Create<DeviceEventDto>();
         deviceEvent.DeviceId = device.Id;
-        
+
         var result = await AddEvent(client, deviceEvent);
 
         using (new AssertionScope())

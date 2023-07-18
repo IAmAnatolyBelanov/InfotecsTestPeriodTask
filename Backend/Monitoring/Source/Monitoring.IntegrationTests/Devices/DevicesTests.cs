@@ -2,12 +2,9 @@ using System.Net.Http.Json;
 using AutoFixture;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Monitoring.Api.Infrastructure;
 using Monitoring.Contracts.DeviceInfo;
 using Monitoring.Dal.Models;
-using Org.BouncyCastle.Asn1.Pkcs;
 
 namespace Monitoring.IntegrationTests.Devices;
 
