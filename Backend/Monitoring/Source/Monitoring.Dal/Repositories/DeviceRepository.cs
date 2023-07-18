@@ -21,6 +21,7 @@ public class DeviceRepository : IDeviceRepository
             device.OperationSystemType,
             device.OperationSystemInfo,
             device.AppVersion,
+            device.LastUpdate,
         };
 
         const string Query = $@"
@@ -37,13 +38,13 @@ VALUES
     @{nameof(parameters.OperationSystemType)},
     @{nameof(parameters.OperationSystemInfo)},
     @{nameof(parameters.AppVersion)},
-    NOW())
+    @{nameof(parameters.LastUpdate)})
 ON CONFLICT (id) DO UPDATE SET
     user_name = @{nameof(parameters.UserName)},
     operation_system_type = @{nameof(parameters.OperationSystemType)},
     operation_system_info = @{nameof(parameters.OperationSystemInfo)},
     app_version = @{nameof(parameters.AppVersion)},
-    last_update = NOW();";
+    last_update = @{nameof(parameters.LastUpdate)};";
 
         await session.ExecuteAsync(Query, parameters, cancellationToken);
     }

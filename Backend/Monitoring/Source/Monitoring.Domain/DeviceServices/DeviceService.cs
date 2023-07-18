@@ -15,11 +15,21 @@ public class DeviceService : IDeviceService
     /// Конструктор класса <see cref="DeviceService"/>.
     /// </summary>
     /// <param name="sessionFactory"><see cref="ISessionFactory"/>.</param>
-    /// <param name="deviceRepository"><see cref="IDeviceRepository"/></param>
+    /// <param name="deviceRepository"><see cref="IDeviceRepository"/>.</param>
     public DeviceService(ISessionFactory sessionFactory, IDeviceRepository deviceRepository)
     {
         _sessionFactory = sessionFactory;
         _deviceRepository = deviceRepository;
+    }
+
+    /// <inheritdoc/>
+    public async Task<DeviceInfo?> Get(Guid id, CancellationToken cancellationToken)
+    {
+        await using (var session = _sessionFactory.CreateSession())
+        {
+            var result = await _deviceRepository.GetDevice(session, id, cancellationToken);
+            return result;
+        }
     }
 
     /// <inheritdoc/>

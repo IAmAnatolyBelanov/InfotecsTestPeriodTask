@@ -1,16 +1,18 @@
 using Monitoring.Api.Infrastructure;
 using Monitoring.Dal;
+using Monitoring.Domain.DeviceEventServices;
 using Monitoring.Domain.DeviceServices;
 using Monitoring.Domain.Mappers;
 using Monitoring.Domain.Migrations;
 using Monitoring.Shared.DateTimeProviders;
+using Monitoring.Shared.GuidProviders;
 
 namespace Monitoring.Api
 {
     /// <summary>
     /// Входная точка приложения.
     /// </summary>
-    internal class Program
+    public class Program
     {
         /// <summary>
         /// Запускает сервис.
@@ -32,10 +34,14 @@ namespace Monitoring.Api
             builder.RegisterLogger();
 
             builder.Services.AddSingleton<IDeviceService, DeviceService>();
+            builder.Services.AddSingleton<IDeviceEventService, DeviceEventService>();
 
             builder.Services.AddSingleton<IClock, Clock>();
+            builder.Services.AddSingleton<IGuidProvider, GuidProvider>();
 
             builder.Services.AddSingleton<IDeviceInfoMapper, DeviceInfoMapper>();
+            builder.Services.AddSingleton<IDeviceEventMapper, DeviceEventMapper>();
+            builder.Services.AddSingleton<IDeviceEventLightMapper, DeviceEventLightMapper>();
 
             builder.Services.RegisterControllers();
 

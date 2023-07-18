@@ -8,7 +8,7 @@ namespace Monitoring.Api.Controllers;
 /// Контроллер для работы с миграциями.
 /// </summary>
 [ApiController]
-[Route("migrations")]
+[Route("api/migrations")]
 public class MigrationController
 {
     private readonly IMigrator _migrator;
