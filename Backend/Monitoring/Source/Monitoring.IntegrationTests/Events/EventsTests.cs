@@ -187,7 +187,7 @@ public class EventsTests : IClassFixture<AppFactory>
     /// <remarks>Так как это класс тестов <see cref="DeviceEvent"/>, то предполагается, что регистрация девайсов уже протестирована и работает корректно.</remarks>
     private async Task RegisterDevice(HttpClient client, DeviceInfoDto device)
     {
-        using var responseMessage = await client.PostAsJsonAsync("/devices/register-device", device);
+        using var responseMessage = await client.PostAsJsonAsync("/api/devices/register-device", device);
         var responseContent = await responseMessage.Content.ReadAsStringAsync();
 
         var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<object>>(responseContent)!;
@@ -200,7 +200,7 @@ public class EventsTests : IClassFixture<AppFactory>
 
     private async Task<BaseResponse<Guid?>> AddEvent(HttpClient client, DeviceEventDto deviceEvent)
     {
-        using var responseMessage = await client.PutAsJsonAsync("/events", deviceEvent);
+        using var responseMessage = await client.PutAsJsonAsync("/api/events", deviceEvent);
         var responseContent = await responseMessage.Content.ReadAsStringAsync();
 
         var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<Guid?>>(responseContent)!;
@@ -210,7 +210,7 @@ public class EventsTests : IClassFixture<AppFactory>
 
     private async Task<BaseResponse<object>> AddEvents(HttpClient client, IReadOnlyCollection<DeviceEventDto> deviceEvents)
     {
-        using var responseMessage = await client.PutAsJsonAsync("/events/bulk", deviceEvents);
+        using var responseMessage = await client.PutAsJsonAsync("/api/events/bulk", deviceEvents);
         var responseContent = await responseMessage.Content.ReadAsStringAsync();
 
         var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<object>>(responseContent)!;
@@ -220,7 +220,7 @@ public class EventsTests : IClassFixture<AppFactory>
 
     private async Task<BaseResponse<EventCollectionDto>> GetEventsByDevice(HttpClient client, Guid deviceId)
     {
-        using var responseMessage = await client.GetAsync($"/events/by-device-id?deviceId={deviceId}");
+        using var responseMessage = await client.GetAsync($"/api/events/by-device?deviceId={deviceId}");
         var responseContent = await responseMessage.Content.ReadAsStringAsync();
 
         var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<EventCollectionDto>>(responseContent)!;

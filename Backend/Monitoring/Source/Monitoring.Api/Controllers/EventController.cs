@@ -10,7 +10,7 @@ namespace Monitoring.Api.Controllers;
 /// Контроллер для работы с событиями.
 /// </summary>
 [ApiController]
-[Route("events")]
+[Route("api/events")]
 public class EventController
 {
     private readonly IDeviceEventService _deviceEventService;
@@ -68,7 +68,7 @@ public class EventController
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Список событий указанного девайса.</returns>
     /// <remarks>Если девайса не существует, список будет пустым.</remarks>
-    [HttpGet("by-device-id")]
+    [HttpGet("by-device")]
     public async Task<BaseResponse<EventCollectionDto>> GetEventsByDevice(Guid deviceId, CancellationToken cancellationToken)
     {
         var events = await _deviceEventService.GetEventsByDevice(deviceId, cancellationToken);

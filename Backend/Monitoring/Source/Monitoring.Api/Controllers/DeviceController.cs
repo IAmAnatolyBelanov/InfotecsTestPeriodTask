@@ -11,7 +11,7 @@ namespace Monitoring.Api.Controllers;
 /// Контроллер для работы с девайсами.
 /// </summary>
 [ApiController]
-[Route("devices")]
+[Route("api/devices")]
 public class DeviceController : ControllerBase
 {
     private readonly IDeviceService _deviceService;
@@ -72,7 +72,7 @@ public class DeviceController : ControllerBase
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Информацию о девайсе.</returns>
     /// <remarks>Если девайса не существует, вернёт null.</remarks>
-    [HttpGet("{id?}")]
+    [HttpGet("{id}")]
     public async Task<BaseResponse<DeviceInfoDto>> GetDevice(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Start to get info about device {id}.");

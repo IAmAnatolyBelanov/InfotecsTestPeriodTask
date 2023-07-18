@@ -36,7 +36,9 @@ public class DevicesTests : IClassFixture<AppFactory>
 
         var client = _factory.CreateClient();
 
-        var result = await RegisterDevice(client, device);
+        var (httpResponse, result) = await RegisterDevice(client, device);
+
+        Assert.True(httpResponse.IsSuccessStatusCode);
 
         Assert.Null(result.Data);
         Assert.Null(result.Error);
@@ -150,23 +152,19 @@ public class DevicesTests : IClassFixture<AppFactory>
         Assert.Null(result.Data);
     }
 
-    private async Task<BaseResponse<object>> RegisterDevice(HttpClient client, DeviceInfoDto device)
+    private async Task<(HttpResponseMessage HttpResponse, BaseResponse<object> BaseResponse)> RegisterDevice(HttpClient client, DeviceInfoDto device)
     {
-        using var responseMessage = await client.PostAsJsonAsync("/devices/register-device", device);
+        using var responseMessage = await client.PostAsJsonAsync("/api/devices/register-device", device);
         var responseContent = await responseMessage.Content.ReadAsStringAsync();
 
         var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<object>>(responseContent)!;
 
-        Assert.False(!responseMessage.IsSuccessStatusCode && string.IsNullOrWhiteSpace(response.Error),
-            $"Response status is {responseMessage.StatusCode} - {responseMessage.ReasonPhrase}," +
-                $" but field 'Error' does not contains info about exception.");
-
-        return response;
+        return (responseMessage, response);
     }
 
     private async Task<BaseResponse<DeviceInfoDto>> GetDevice(HttpClient client, Guid deviceId)
     {
-        using var responseMessage = await client.GetAsync($"/devices/{deviceId}");
+        using var responseMessage = await client.GetAsync($"/api/devices/{deviceId}");
         var responseContent = await responseMessage.Content.ReadAsStringAsync();
 
         var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<DeviceInfoDto>>(responseContent)!;
