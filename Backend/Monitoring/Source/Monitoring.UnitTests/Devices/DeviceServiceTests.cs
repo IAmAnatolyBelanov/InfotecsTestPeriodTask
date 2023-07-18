@@ -1,3 +1,7 @@
+using AutoFixture;
+using AutoFixture.AutoMoq;
+using AutoFixture.Xunit2;
+using FluentAssertions;
 using Monitoring.Dal.Models;
 using Monitoring.Dal.Repositories;
 using Monitoring.Dal.Sessions;
@@ -11,68 +15,55 @@ namespace Monitoring.UnitTests.Devices;
 /// </summary>
 public class DeviceServiceTests
 {
-    private readonly Mock<ISessionFactory> _sessionFactory;
-
-    /// <summary>
-    /// Конструктор класса <see cref="DeviceServiceTests"/>.
-    /// </summary>
-    public DeviceServiceTests()
-    {
-        _sessionFactory = new Mock<ISessionFactory>();
-        _sessionFactory.Setup(x => x.CreateSession(It.IsAny<bool>()))
-            .Returns(new Mock<ISession>().Object);
-    }
-
     /// <summary>
     /// Должен получить пустую статистику по не зарегистрированному девайсу.
     /// </summary>
+    /// <param name="id">Id несуществующего девайса.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task GetStatistics_NotRegisteredDevice_ReturnsEmptyResult()
+    [Theory]
+    [AutoData]
+    public async Task GetStatistics_NotRegisteredDevice_ReturnsEmptyResult(Guid id)
     {
-        var id = Guid.Parse("00000000-0000-0000-0001-000000000001");
+        var fixture = new Fixture();
+        fixture.Customize(new AutoMoqCustomization());
 
         var deviceRepository = new Mock<IDeviceRepository>();
         deviceRepository.Setup(x => x.GetDevice(It.IsAny<ISession>(), id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(default(DeviceInfo));
+        fixture.Inject(deviceRepository.Object);
 
-        var deviceService = new DeviceService(_sessionFactory.Object, deviceRepository.Object);
+        var deviceService = fixture.Create<DeviceService>();
 
         var result = await deviceService.GetStatistics(id, CancellationToken.None);
 
-        Assert.NotNull(result);
-        Assert.Equal(id, result.DeviceId);
-        Assert.Null(result.LastUpdate);
+        result.Should().NotBeNull();
+        result.DeviceId.Should().Be(id);
+        result.LastUpdate.Should().BeNull();
     }
 
     /// <summary>
     /// Должен успешно получить статистику по девайсу.
     /// </summary>
+    /// <param name="device">Девайс.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task GetStatistics_Correct_Success()
+    [Theory]
+    [AutoData]
+    public async Task GetStatistics_Correct_Success(DeviceInfo device)
     {
-        var id = Guid.Parse("00000000-0000-0000-0002-000000000001");
-        var device = new DeviceInfo
-        {
-            Id = id,
-            AppVersion = "00000000-0000-0000-0002-000000000002",
-            LastUpdate = new DateTimeOffset(2023, 07, 12, 11, 10, 0, TimeSpan.FromHours(3)),
-            OperationSystemInfo = "00000000-0000-0000-0002-000000000002",
-            OperationSystemType = Shared.OperationSystem.OperationSystemType.Android,
-            UserName = "00000000-0000-0000-0002-000000000002",
-        };
+        var fixture = new Fixture();
+        fixture.Customize(new AutoMoqCustomization());
 
         var deviceRepository = new Mock<IDeviceRepository>();
-        deviceRepository.Setup(x => x.GetDevice(It.IsAny<ISession>(), id, It.IsAny<CancellationToken>()))
+        deviceRepository.Setup(x => x.GetDevice(It.IsAny<ISession>(), device.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(device);
+        fixture.Inject(deviceRepository.Object);
 
-        var deviceService = new DeviceService(_sessionFactory.Object, deviceRepository.Object);
+        var deviceService = fixture.Create<DeviceService>();
 
-        var result = await deviceService.GetStatistics(id, CancellationToken.None);
+        var result = await deviceService.GetStatistics(device.Id, CancellationToken.None);
 
-        Assert.NotNull(result);
-        Assert.Equal(id, result.DeviceId);
-        Assert.Equal(device.LastUpdate, result.LastUpdate);
+        result.Should().NotBeNull();
+        result.DeviceId.Should().Be(device.Id);
+        result.LastUpdate.Should().Be(device.LastUpdate);
     }
 }

@@ -1,4 +1,8 @@
 using System.Net.Http.Json;
+using AutoFixture;
+using AutoFixture.Xunit2;
+using FluentAssertions;
+using FluentAssertions.Execution;
 using Monitoring.Api.Infrastructure;
 using Monitoring.Contracts.DeviceEvents;
 using Monitoring.Contracts.DeviceInfo;
@@ -22,160 +26,137 @@ public class EventsTests : IClassFixture<AppFactory>
     /// <summary>
     /// При попытке добавить событие о девайсе, который ещё не зарегистрирован в системе, должен вернуть ошибку.
     /// </summary>
+    /// <param name="deviceEvent">Событие, добавление которого должно оборваться с ошибкой.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task AddEvent_WithoutRegisteredDevice_ReturnsError()
+    [Theory]
+    [AutoData]
+    public async Task AddEvent_WithoutRegisteredDevice_ReturnsError(DeviceEventDto deviceEvent)
     {
-        var deviceEvent = new DeviceEventDto
-        {
-            DateTime = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
-            DeviceId = Guid.Parse("00000000-0000-0000-0001-000000000001"),
-            Name = "00000000-0000-0000-0001-000000000001",
-        };
-
         var client = _factory.CreateClient();
 
-        var response = await AddEvent(client, deviceEvent);
+        var result = await AddEvent(client, deviceEvent);
 
-        Assert.Null(response.Data);
-        Assert.NotNull(response.Error);
+        using (new AssertionScope())
+        {
+            result.Error.Should().NotBeNullOrWhiteSpace();
+            result.Data.Should().BeNull();
+        }
     }
 
     /// <summary>
     /// Должен успешно добавить информацию о событии.
     /// </summary>
+    /// <param name="device">Девайс, для которого будет добавлено событие.</param>
+    /// <param name="deviceEvent">Событие.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task AddEvent_PossibleEventForRegisteredDevice_Success()
+    [Theory]
+    [AutoData]
+    public async Task AddEvent_PossibleEventForRegisteredDevice_Success(DeviceInfoDto device, DeviceEventDto deviceEvent)
     {
-        var device = new DeviceInfoDto
-        {
-            Id = Guid.Parse("00000000-0000-0000-0002-000000000001"),
-            AppVersion = "00000000-0000-0000-0002-000000000001",
-            OperationSystemInfo = "Windows 9",
-            OperationSystemType = Shared.OperationSystem.OperationSystemType.Windows,
-            UserName = "00000000-0000-0000-0002-000000000001",
-        };
+        deviceEvent.DeviceId = device.Id;
 
         var client = _factory.CreateClient();
 
         await RegisterDevice(client, device);
 
-        var deviceEvent = new DeviceEventDto
+        var result = await AddEvent(client, deviceEvent);
+
+        using (new AssertionScope())
         {
-            DeviceId = device.Id,
-            Name = "00000000-0000-0000-0002-000000000001",
-            DateTime = new DateTimeOffset(2023, 07, 12, 18, 15, 0, TimeSpan.FromHours(3)),
-        };
-
-        var response = await AddEvent(client, deviceEvent);
-
-        Assert.Null(response.Error);
-        Assert.NotNull(response.Data);
-        Assert.NotEqual(Guid.Empty, response.Data);
+            result.Error.Should().BeNull();
+            result.Data.Should().NotBeNull();
+            result.Data!.Value.Should().NotBeEmpty();
+        }
     }
 
     /// <summary>
     /// Должен успешно получить список событий по девайсу.
     /// </summary>
+    /// <param name="device">Девайс, который будет зарегистрирован.</param>
+    /// <param name="eventsGenerator"><see cref="Generator{T}"/> для <see cref="DeviceEventDto"/>.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task GetEventsByDevice_RegisteredDeviceAndAddedEvents_Success()
+    [Theory]
+    [AutoData]
+    public async Task GetEventsByDevice_RegisteredDeviceAndAddedEvents_Success(DeviceInfoDto device, Generator<DeviceEventDto> eventsGenerator)
     {
-        var device = new DeviceInfoDto
-        {
-            Id = Guid.Parse("00000000-0000-0000-0003-000000000001"),
-            AppVersion = "00000000-0000-0000-0003-000000000001",
-            OperationSystemInfo = "Windows 9",
-            OperationSystemType = Shared.OperationSystem.OperationSystemType.Windows,
-            UserName = "00000000-0000-0000-0003-000000000001",
-        };
-
         var client = _factory.CreateClient();
 
         await RegisterDevice(client, device);
 
-        var events = new DeviceEventDto[]
-        {
-            new DeviceEventDto
-            {
-                DeviceId = device.Id,
-                Name = "00000000-0000-0000-0003-000000000002",
-                DateTime = new DateTimeOffset(2023, 07, 13, 10, 10, 0, TimeSpan.FromHours(3)),
-            },
-            new DeviceEventDto
-            {
-                DeviceId = device.Id,
-                Name = "00000000-0000-0000-0003-000000000003",
-                DateTime = new DateTimeOffset(2023, 07, 13, 10, 10, 1, TimeSpan.FromHours(3)),
-            },
-            new DeviceEventDto
-            {
-                DeviceId = device.Id,
-                Name = "00000000-0000-0000-0003-000000000004",
-                DateTime = new DateTimeOffset(2023, 07, 13, 10, 10, 2, TimeSpan.FromHours(3)),
-            }
-        };
+        var events = eventsGenerator.Take(10).ToList();
+        events.ForEach(x => x.DeviceId = device.Id);
 
         await AddEvents(client, events);
 
         var result = await GetEventsByDevice(client, device.Id);
 
-        Assert.Null(result.Error);
-        Assert.NotNull(result.Data);
-        Assert.Equal(device.Id, result.Data!.DeviceId);
-        Assert.Equal(events.Length, result.Data.Events.Count);
-        Assert.True(events.All(src => result.Data.Events.Any(dst => src.Name == dst.Name && src.DateTime == dst.DateTime)));
+        using (new AssertionScope())
+        {
+            result.Error.Should().BeNull();
+            result.Data.Should().NotBeNull();
+        }
+
+        using (new AssertionScope())
+        {
+            result.Data!.DeviceId.Should().Be(device.Id);
+            result.Data.Events.Should().HaveSameCount(events);
+            foreach (var @event in result.Data.Events)
+            {
+                events.Should().ContainEquivalentOf(@event, options => options.Excluding(x => x.DateTime))
+                    .And.Contain(x => @event.DateTime.ToUnixTimeSeconds() == x.DateTime.ToUnixTimeSeconds());
+            }
+        }
     }
+
 
     /// <summary>
     /// При попытке получить информацию о девайсе, который не зарегистрирован в системе, должен получить пустой список событий.
     /// </summary>
+    /// <param name="deviceId">Id девайса.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task GetEventsByDevice_WithoutRegisteredDevice_ReturnsEmptyCollectionOfEvents()
+    [Theory]
+    [AutoData]
+    public async Task GetEventsByDevice_WithoutRegisteredDevice_ReturnsEmptyCollectionOfEvents(Guid deviceId)
     {
-        var deviceId = Guid.Parse("00000000-0000-0000-0004-000000000001");
-
         var client = _factory.CreateClient();
 
         var result = await GetEventsByDevice(client, deviceId);
 
-        Assert.Null(result.Error);
-        Assert.NotNull(result.Data);
-        Assert.Equal(deviceId, result.Data!.DeviceId);
-        Assert.Equal(0, result.Data.Events.Count);
+        using (new AssertionScope())
+        {
+            result.Error.Should().BeNull();
+            result.Data.Should().NotBeNull();
+        }
+
+        using (new AssertionScope())
+        {
+            result.Data!.DeviceId.Should().Be(deviceId);
+            result.Data.Events.Should().BeEmpty();
+        }
     }
 
     /// <summary>
     /// При попытке добавить события о девайсе, который ещё не зарегистрирован в системе, должен вернуть ошибку.
     /// </summary>
+    /// <param name="eventsGenerator"><see cref="Generator{T}"/> для <see cref="DeviceEventDto"/>.</param>
     /// <returns><see cref="Task"/>.</returns>
-    [Fact]
-    public async Task AddEvents_WithoutRegisteredDevice_ReturnsError()
+    [Theory]
+    [AutoData]
+    public async Task AddEvents_WithoutRegisteredDevice_ReturnsError(Generator<DeviceEventDto> eventsGenerator)
     {
-        var deviceEvents = new DeviceEventDto[]
-        {
-            new DeviceEventDto
-            {
-                DateTime = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
-                DeviceId = Guid.Parse("00000000-0000-0000-0005-000000000001"),
-                Name = "00000000-0000-0000-0005-000000000001",
-            },
-            new DeviceEventDto
-            {
-                DateTime = new DateTimeOffset(2023, 07, 12, 17, 30, 0, TimeSpan.FromHours(3)),
-                DeviceId = Guid.Parse("00000000-0000-0000-0005-000000000002"),
-                Name = "00000000-0000-0000-0005-000000000002",
-            },
-        };
+        var fixture = new Fixture();
+
+        var deviceEvents = eventsGenerator.Take(10).ToArray();
 
         var client = _factory.CreateClient();
 
-        var response = await AddEvents(client, deviceEvents);
+        var result = await AddEvents(client, deviceEvents);
 
-        Assert.Null(response.Data);
-        Assert.NotNull(response.Error);
+        using (new AssertionScope())
+        {
+            result.Error.Should().NotBeNull();
+            result.Data.Should().BeNull();
+        }
     }
 
     /// <summary>
