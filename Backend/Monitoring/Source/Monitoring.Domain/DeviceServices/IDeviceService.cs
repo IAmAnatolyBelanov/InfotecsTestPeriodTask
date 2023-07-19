@@ -31,7 +31,7 @@ public interface IDeviceService
     /// <param name="events">События.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns><see cref="Task"/>.</returns>
-    Task AddOrUpdateDevice(DeviceInfo device, IReadOnlyList<DeviceEvent> events, CancellationToken cancellationToken);
+    Task AddOrUpdateDevice(DeviceInfo device, IReadOnlyList<DeviceEvent>? events, CancellationToken cancellationToken);
 
     /// <summary>
     /// Возвращает <see cref="DeviceInfo"/> с запрошенным Id.

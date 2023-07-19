@@ -65,7 +65,7 @@ public class DeviceService : IDeviceService
     }
 
     /// <inheritdoc/>
-    public async Task AddOrUpdateDevice(DeviceInfo device, IReadOnlyList<DeviceEvent> events, CancellationToken cancellationToken)
+    public async Task AddOrUpdateDevice(DeviceInfo device, IReadOnlyList<DeviceEvent>? events, CancellationToken cancellationToken)
     {
         await using (var session = _sessionFactory.CreateSession(beginTransaction: true))
         {
@@ -73,7 +73,7 @@ public class DeviceService : IDeviceService
 
             if (events.HasSome())
             {
-                await _deviceEventService.AddEvents(session, events, cancellationToken);
+                await _deviceEventService.AddEvents(session, events!, cancellationToken);
             }
 
             await session.CommitAsync(cancellationToken);
