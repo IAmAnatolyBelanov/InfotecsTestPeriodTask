@@ -11,7 +11,7 @@ export class EventService {
   constructor(private http: HttpClient) { }
 
   getEventsByDeviceId(deviceId: string): Observable<EventCollection> {
-    const url = `http://localhost:44500/api/events/by-device-id`;
+    const url = `http://localhost:44500/api/events/by-device`;
     const params = { deviceId };
 
     return this.http.get<BaseResponse<EventCollection>>(url, { params })
