@@ -1,4 +1,5 @@
 using Monitoring.Dal.Models;
+using Monitoring.Dal.Sessions;
 
 namespace Monitoring.Domain.DeviceEventServices;
 
@@ -14,6 +15,15 @@ public interface IDeviceEventService
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns><see cref="Task"/>.</returns>
     Task AddEvents(IReadOnlyCollection<DeviceEvent> deviceEvents, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Добавляет события.
+    /// </summary>
+    /// <param name="session">Сессия.</param>
+    /// <param name="deviceEvents">События.</param>
+    /// <param name="cancellationToken">Токен для отмены запроса.</param>
+    /// <returns><see cref="Task"/>.</returns>
+    Task AddEvents(ISession session, IReadOnlyCollection<DeviceEvent> deviceEvents, CancellationToken cancellationToken);
 
     /// <summary>
     /// Возвращает список событий по запрошенному девайсу.

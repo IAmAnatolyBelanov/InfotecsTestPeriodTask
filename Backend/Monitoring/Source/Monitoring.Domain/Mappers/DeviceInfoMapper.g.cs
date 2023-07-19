@@ -2,9 +2,9 @@ namespace Monitoring.Domain.Mappers
 {
     public partial class DeviceInfoMapper : Monitoring.Domain.Mappers.IDeviceInfoMapper
     {
-        public Monitoring.Contracts.DeviceInfo.DeviceInfoDto MapToDto(Monitoring.Dal.Models.DeviceInfo p1)
+        public Monitoring.Contracts.Dtos.DeviceInfo.DeviceInfoDto MapToDto(Monitoring.Dal.Models.DeviceInfo p1)
         {
-            return p1 == null ? null : new Monitoring.Contracts.DeviceInfo.DeviceInfoDto()
+            return p1 == null ? null : new Monitoring.Contracts.Dtos.DeviceInfo.DeviceInfoDto()
             {
                 Id = p1.Id,
                 UserName = p1.UserName,
@@ -14,13 +14,13 @@ namespace Monitoring.Domain.Mappers
                 LastUpdate = p1.LastUpdate
             };
         }
-        public Monitoring.Contracts.DeviceInfo.DeviceInfoDto MapToDto(Monitoring.Dal.Models.DeviceInfo p2, Monitoring.Contracts.DeviceInfo.DeviceInfoDto p3)
+        public Monitoring.Contracts.Dtos.DeviceInfo.DeviceInfoDto MapToDto(Monitoring.Dal.Models.DeviceInfo p2, Monitoring.Contracts.Dtos.DeviceInfo.DeviceInfoDto p3)
         {
             if (p2 == null)
             {
                 return null;
             }
-            Monitoring.Contracts.DeviceInfo.DeviceInfoDto result = p3 ?? new Monitoring.Contracts.DeviceInfo.DeviceInfoDto();
+            Monitoring.Contracts.Dtos.DeviceInfo.DeviceInfoDto result = p3 ?? new Monitoring.Contracts.Dtos.DeviceInfo.DeviceInfoDto();
             
             result.Id = p2.Id;
             result.UserName = p2.UserName;
@@ -31,7 +31,7 @@ namespace Monitoring.Domain.Mappers
             return result;
             
         }
-        public Monitoring.Dal.Models.DeviceInfo MapFromDto(Monitoring.Contracts.DeviceInfo.DeviceInfoDto p4)
+        public Monitoring.Dal.Models.DeviceInfo MapFromDto(Monitoring.Contracts.Dtos.DeviceInfo.DeviceInfoDto p4)
         {
             return p4 == null ? null : new Monitoring.Dal.Models.DeviceInfo()
             {
@@ -43,7 +43,7 @@ namespace Monitoring.Domain.Mappers
                 LastUpdate = p4.LastUpdate.ToUniversalTime()
             };
         }
-        public Monitoring.Dal.Models.DeviceInfo MapFromDto(Monitoring.Contracts.DeviceInfo.DeviceInfoDto p5, Monitoring.Dal.Models.DeviceInfo p6)
+        public Monitoring.Dal.Models.DeviceInfo MapFromDto(Monitoring.Contracts.Dtos.DeviceInfo.DeviceInfoDto p5, Monitoring.Dal.Models.DeviceInfo p6)
         {
             if (p5 == null)
             {

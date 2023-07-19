@@ -1,5 +1,5 @@
 using Mapster;
-using Monitoring.Contracts.DeviceEvents;
+using Monitoring.Contracts.Dtos.DeviceEvents;
 using Monitoring.Dal.Models;
 
 namespace Monitoring.Domain.Mappers;

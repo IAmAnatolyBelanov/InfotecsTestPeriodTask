@@ -25,17 +25,17 @@ public interface IDeviceService
     Task<DeviceStatistics> GetStatistics(Guid deviceId, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Добавляет или обновляет информацию о девайсе.
+    /// Добавляет или обновляет информацию о девайсе. Если переданы события, добавляет их тоже.
     /// </summary>
     /// <param name="device">Информация о девайсе.</param>
+    /// <param name="events">События.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns><see cref="Task"/>.</returns>
-    Task AddOrUpdateDevice(DeviceInfo device, CancellationToken cancellationToken);
+    Task AddOrUpdateDevice(DeviceInfo device, IReadOnlyList<DeviceEvent> events, CancellationToken cancellationToken);
 
     /// <summary>
     /// Возвращает <see cref="DeviceInfo"/> с запрошенным Id.
     /// </summary>
-    /// <param name="session">Сессия.</param>
     /// <param name="id">Id девайса.</param>
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns><see cref="DeviceInfo"/> с запрошенным Id.</returns>

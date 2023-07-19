@@ -1,4 +1,4 @@
-namespace Monitoring.Contracts.DeviceEvents;
+namespace Monitoring.Contracts.Dtos.DeviceEvents;
 
 /// <summary>
 /// Список событий по конкретному девайсу.

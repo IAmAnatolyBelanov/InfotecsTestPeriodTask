@@ -1,6 +1,6 @@
 using Mapster;
-using Monitoring.Contracts.DeviceEvents;
-using Monitoring.Contracts.DeviceInfo;
+using Monitoring.Contracts.Dtos.DeviceEvents;
+using Monitoring.Contracts.Dtos.DeviceInfo;
 using Monitoring.Dal.Models;
 
 namespace Monitoring.Domain.Mappers;

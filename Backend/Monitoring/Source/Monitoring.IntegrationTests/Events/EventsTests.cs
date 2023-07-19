@@ -4,8 +4,9 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Monitoring.Api.Infrastructure;
-using Monitoring.Contracts.DeviceEvents;
-using Monitoring.Contracts.DeviceInfo;
+using Monitoring.Contracts.Dtos.DeviceEvents;
+using Monitoring.Contracts.Dtos.DeviceInfo;
+using Monitoring.Contracts.Queries.Device;
 using Monitoring.Dal.Models;
 
 namespace Monitoring.IntegrationTests.Events;
@@ -100,14 +101,9 @@ public class EventsTests : IClassFixture<AppFactory>
         {
             result.Data!.DeviceId.Should().Be(device.Id);
             result.Data.Events.Should().HaveSameCount(events);
-            foreach (var @event in result.Data.Events)
-            {
-                events.Should().ContainEquivalentOf(@event, options => options.Excluding(x => x.DateTime))
-                    .And.Contain(x => @event.DateTime.ToUnixTimeSeconds() == x.DateTime.ToUnixTimeSeconds());
-            }
+            EventsAreEquivalent(events, result.Data.Events);
         }
     }
-
 
     /// <summary>
     /// При попытке получить информацию о девайсе, который не зарегистрирован в системе, должен получить пустой список событий.
@@ -158,6 +154,31 @@ public class EventsTests : IClassFixture<AppFactory>
     }
 
     /// <summary>
+    /// Должен успешно получить список событий по девайсу, который будет зарегистрирован одновременно с событиями.
+    /// </summary>
+    /// <param name="device">Девайс.</param>
+    /// <param name="eventsGenerator"><see cref="Generator{T}"/>.</param>
+    /// <returns><see cref="Task"/>.</returns>
+    [Theory]
+    [AutoData]
+    public async Task GetEventsByDevice_RegisterDeviceInOneTransactionWithEvents_Success(DeviceInfoDto device, Generator<DeviceEventLightDto> eventsGenerator)
+    {
+        var client = _factory.CreateClient();
+
+        var events = eventsGenerator.Take(10).ToArray();
+
+        await RegisterDeviceWithEvents(client, device, events);
+
+        var result = await GetEventsByDevice(client, device.Id);
+
+        result.Error.Should().BeNull();
+        result.Data.Should().NotBeNull();
+        result.Data!.DeviceId.Should().Be(device.Id);
+        result.Data.Events.Should().HaveSameCount(events);
+        EventsAreEquivalent(events, result.Data.Events);
+    }
+
+    /// <summary>
     /// Регистрирует девайс.
     /// </summary>
     /// <param name="client"><see cref="HttpClient"/>.</param>
@@ -175,6 +196,20 @@ public class EventsTests : IClassFixture<AppFactory>
         {
             throw new ArgumentException("Can not register device. " + response.Error);
         }
+    }
+
+    private async Task<BaseResponse<string>> RegisterDeviceWithEvents(
+        HttpClient client,
+        DeviceInfoDto device,
+        IReadOnlyList<DeviceEventLightDto>? events)
+    {
+        var query = new RegisterDeviceQuery { Device = device, Events = events };
+        using var responseMessage = await client.PutAsJsonAsync("/api/devices", query);
+        var responseContent = await responseMessage.Content.ReadAsStringAsync();
+
+        var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<string>>(responseContent)!;
+
+        return response;
     }
 
     private async Task<BaseResponse<Guid?>> AddEvent(HttpClient client, DeviceEventDto deviceEvent)
@@ -205,5 +240,23 @@ public class EventsTests : IClassFixture<AppFactory>
         var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<EventCollectionDto>>(responseContent)!;
 
         return response;
+    }
+
+    private void EventsAreEquivalent(IReadOnlyCollection<DeviceEventDto> originalEvents, IReadOnlyCollection<DeviceEventLightDto> resultEvents)
+    {
+        foreach (var @event in resultEvents)
+        {
+            originalEvents.Should().ContainEquivalentOf(@event, options => options.Excluding(x => x.DateTime))
+                .And.Contain(x => @event.DateTime.ToUnixTimeSeconds() == x.DateTime.ToUnixTimeSeconds());
+        }
+    }
+
+    private void EventsAreEquivalent(IReadOnlyCollection<DeviceEventLightDto> originalEvents, IReadOnlyCollection<DeviceEventLightDto> resultEvents)
+    {
+        foreach (var @event in resultEvents)
+        {
+            originalEvents.Should().ContainEquivalentOf(@event, options => options.Excluding(x => x.DateTime))
+                .And.Contain(x => @event.DateTime.ToUnixTimeSeconds() == x.DateTime.ToUnixTimeSeconds());
+        }
     }
 }

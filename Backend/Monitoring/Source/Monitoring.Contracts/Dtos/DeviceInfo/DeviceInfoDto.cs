@@ -1,6 +1,6 @@
 using Monitoring.Shared.OperationSystem;
 
-namespace Monitoring.Contracts.DeviceInfo;
+namespace Monitoring.Contracts.Dtos.DeviceInfo;
 
 /// <summary>
 /// Dto информации о девайсе.

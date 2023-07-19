@@ -1,9 +1,13 @@
+using Microsoft.AspNetCore.Mvc;
 using Monitoring.Api.Infrastructure;
-using Monitoring.Contracts.DeviceInfo;
+using Monitoring.Contracts.Dtos.DeviceInfo;
+using Monitoring.Contracts.Queries.Device;
+using Monitoring.Dal.Models;
 using Monitoring.Domain.DeviceServices;
 using Monitoring.Domain.Mappers;
+using Monitoring.Shared.Extensions;
+using Monitoring.Shared.GuidProviders;
 using Monitoring.Shared.Paginations;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Monitoring.Api.Controllers;
 
@@ -17,18 +21,29 @@ public class DeviceController : ControllerBase
     private readonly IDeviceService _deviceService;
     private readonly ILogger<DeviceController> _logger;
     private readonly IDeviceInfoMapper _deviceInfoMapper;
+    private readonly IDeviceEventLightMapper _deviceEventMapper;
+    private readonly IGuidProvider _guidProvider;
 
     /// <summary>
     /// Конструктор класса <see cref="DeviceController"/>.
     /// </summary>
-    /// <param name="deviceService">Бизнес-логика работы с девайсами.</param>
-    /// <param name="logger">Логгер.</param>
-    /// <param name="deviceInfoMapper">Маппер для DeviceInfo.</param>
-    public DeviceController(IDeviceService deviceService, ILogger<DeviceController> logger, IDeviceInfoMapper deviceInfoMapper)
+    /// <param name="deviceService"><see cref="IDeviceService"/>.</param>
+    /// <param name="logger"><see cref="ILogger{TCategoryName}"/>.</param>
+    /// <param name="deviceInfoMapper"><see cref="IDeviceInfoMapper"/>.</param>
+    /// <param name="deviceEventMapper"><see cref="IDeviceEventLightMapper"/>.</param>
+    /// <param name="guidProvider"><see cref="IGuidProvider"/>.</param>
+    public DeviceController(
+        IDeviceService deviceService,
+        ILogger<DeviceController> logger,
+        IDeviceInfoMapper deviceInfoMapper,
+        IDeviceEventLightMapper deviceEventMapper,
+        IGuidProvider guidProvider)
     {
         _deviceService = deviceService;
         _logger = logger;
         _deviceInfoMapper = deviceInfoMapper;
+        _deviceEventMapper = deviceEventMapper;
+        _guidProvider = guidProvider;
     }
 
     /// <summary>
@@ -38,12 +53,13 @@ public class DeviceController : ControllerBase
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Пустой ответ в случае успешной регистрации, или информацию об ошибке в случае её возникновения.</returns>
     [HttpPost("register-device")]
+    [Obsolete($"Use {nameof(RegisterDeviceWithEvents)} instead.")]
     public async Task<BaseResponse<object>> RegisterDevice(DeviceInfoDto device, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Start to register device {device.Id}.");
-        var internalDevice = _deviceInfoMapper.MapFromDto(device);
+        var query = new RegisterDeviceQuery { Device = device };
 
-        await _deviceService.AddOrUpdateDevice(internalDevice, cancellationToken);
+        await RegisterDeviceWithEvents(query, cancellationToken);
 
         return BaseResponseExtensions.EmptySuccess();
     }
@@ -55,7 +71,7 @@ public class DeviceController : ControllerBase
     /// <param name="cancellationToken">Токен для отмены запроса.</param>
     /// <returns>Массив данных о девайсах или информацию об ошибке в случае её возникновения.</returns>
     [HttpGet]
-    public async Task<BaseResponse<IReadOnlyList<DeviceInfoDto>>> GetAll([FromQuery]Pagination pagination, CancellationToken cancellationToken)
+    public async Task<BaseResponse<IReadOnlyList<DeviceInfoDto>>> GetAll([FromQuery] Pagination pagination, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Start to get info about all devices.");
         var result = await _deviceService.GetAll(pagination, cancellationToken);
@@ -95,5 +111,33 @@ public class DeviceController : ControllerBase
         _logger.LogInformation($"Start to get statistics about device {deviceId}.");
         var result = await _deviceService.GetStatistics(deviceId, cancellationToken);
         return result.ToResponse();
+    }
+
+    /// <summary>
+    /// Регистрирует девайс в системе и сохраняет события.
+    /// </summary>
+    /// <param name="query">Девайс и его события, что нужно зарегистрировать в системе.</param>
+    /// <param name="cancellationToken">Токен для отмены запроса.</param>
+    /// <returns>'Ok' в случае успеха, или информацию об ошибке в случае её возникновения.</returns>
+    [HttpPut]
+    public async Task<BaseResponse<string>> RegisterDeviceWithEvents(RegisterDeviceQuery query, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation($"Start to register device {query.Device.Id} and {query.Events?.Count ?? 0} events.");
+
+        var internalDevice = _deviceInfoMapper.MapFromDto(query.Device);
+        var internalEvents = query.Events.HasSome()
+            ? query.Events!.Select(_deviceEventMapper.MapFromDto).ToArray()
+            : Array.Empty<DeviceEvent>();
+
+        for (var i = 0; i < internalEvents.Length; i++)
+        {
+            var @event = internalEvents[i];
+            @event.DeviceId = internalDevice.Id;
+            @event.Id = _guidProvider.NewGuid();
+        }
+
+        await _deviceService.AddOrUpdateDevice(internalDevice, internalEvents, cancellationToken);
+
+        return "Ok".ToResponse();
     }
 }
