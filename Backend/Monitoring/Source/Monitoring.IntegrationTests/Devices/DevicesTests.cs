@@ -137,6 +137,11 @@ public class DevicesTests : IClassFixture<AppFactory>
         }
     }
 
+    /// <summary>
+    /// Должен успешно зарегистрировать девайс без событий.
+    /// </summary>
+    /// <param name="device">Девайс.</param>
+    /// <returns><see cref="Task"/>.</returns>
     [Theory]
     [AutoData]
     public async Task RegisterDeviceWithEvents_WithoutEvents_Success(DeviceInfoDto device)
@@ -149,6 +154,12 @@ public class DevicesTests : IClassFixture<AppFactory>
         result.Data.Should().Be("Ok");
     }
 
+    /// <summary>
+    /// Должен успешно зарегистрировать девайс одновременно с событиями.
+    /// </summary>
+    /// <param name="device">Девайс.</param>
+    /// <param name="eventsGenerator">События.</param>
+    /// <returns><see cref="Task"/>.</returns>
     [Theory]
     [AutoData]
     public async Task RegisterDeviceWithEvents_WithEvents_Success(DeviceInfoDto device, Generator<DeviceEventLightDto> eventsGenerator)
