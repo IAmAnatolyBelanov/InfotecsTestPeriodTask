@@ -29,7 +29,14 @@
       <mat-header-cell *matHeaderCellDef>App Version</mat-header-cell>
       <mat-cell *matCellDef="let item">{{ item.appVersion }}</mat-cell>
     </ng-container>
-  
+
+    <ng-container matColumnDef="viewEvents">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let item">
+        <button mat-button color="primary" (click)="viewEvents(item.id)">View Events</button>
+      </mat-cell>
+    </ng-container>
+
     <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: columns;"></mat-row>
   </mat-table>
