@@ -12,7 +12,7 @@ export class DeviceService {
   constructor(private http: HttpClient) { }
 
   getAllDevices(): Observable<Device[]> {
-    const url = 'http://localhost:44500/devices';
+    const url = 'http://localhost:44500/api/devices';
 
     const params = new HttpParams()
       .set('PageIndex', '0')
