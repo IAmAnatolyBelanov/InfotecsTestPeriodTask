@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Device } from './models/device';
 import { BaseResponse } from './models/base-response';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +38,6 @@ export class DeviceService {
     hub.start().catch(err => console.error(err));
 
     hub.on('updateListOfDevices', (devices: Device[]) => {
-      console.log(devices);
       this.devicesSubject.next(devices);
     });
 
