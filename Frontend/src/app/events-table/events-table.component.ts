@@ -40,7 +40,7 @@ export class EventsTableComponent implements OnInit, OnDestroy {
       this.getEvents();
     }
     else{
-      this.ngOnDestroy();
+      this.eventService.unsubscribe();
     }
   }
 
