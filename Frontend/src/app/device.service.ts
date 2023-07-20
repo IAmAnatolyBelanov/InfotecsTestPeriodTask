@@ -1,24 +1,49 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Device } from './models/device';
 import { map } from 'rxjs/operators';
 import { BaseResponse } from './models/base-response';
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DeviceService {
-  constructor(private http: HttpClient) { }
+  private hubConnection: HubConnection;
+  private devices: Device[] = [];
 
-  getAllDevices(): Observable<Device[]> {
+  private devicesSubject: BehaviorSubject<Device[]> = new BehaviorSubject<Device[]>([]);
+  public p_devices$: Observable<Device[]> = this.devicesSubject.asObservable();
+
+  constructor(private http: HttpClient) {
+    this.fetchDevices();
+    this.hubConnection = this.initHubConnection();
+  }
+
+  private fetchDevices(): void {
     const url = 'http://localhost:44500/api/devices';
 
     const params = new HttpParams()
       .set('PageIndex', '0')
       .set('PageSize', '100');
 
-    return this.http.get<BaseResponse<Device[]>>(url, { params })
-      .pipe(map(response => response.data));
+    this.http.get<BaseResponse<Device[]>>(url, { params })
+      .subscribe(data => this.devicesSubject.next(data.data));
+  }
+
+  private initHubConnection(): HubConnection {
+    var hub = new HubConnectionBuilder()
+      .withUrl('http://localhost:44500/api/device-hub')
+      .build();
+
+    hub.start().catch(err => console.error(err));
+
+    hub.on('updateListOfDevices', (devices: Device[]) => {
+      console.log(devices);
+      this.devicesSubject.next(devices);
+    });
+
+    return hub;
   }
 }
