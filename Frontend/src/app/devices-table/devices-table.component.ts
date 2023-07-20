@@ -21,7 +21,7 @@ export class DevicesTableComponent implements OnInit {
   }
 
   getData(): void {
-    this.deviceService.getAllDevices().subscribe(response => {
+    this.deviceService.devices.subscribe(response => {
       this.data = response;
     });
   }

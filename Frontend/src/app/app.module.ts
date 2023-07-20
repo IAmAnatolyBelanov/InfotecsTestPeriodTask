@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { DevicesTableComponent } from './devices-table/devices-table.component';
@@ -24,7 +25,8 @@ const routes: Routes = [
     HttpClientModule,
     MatTableModule,
     RouterModule.forRoot(routes),
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   declarations: [
     AppComponent,
