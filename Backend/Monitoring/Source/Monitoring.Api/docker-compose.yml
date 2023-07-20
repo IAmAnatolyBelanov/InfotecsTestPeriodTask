@@ -1,0 +1,21 @@
+version: "test"
+services:
+    server:
+        image: monitoring.api:tests-local
+        ports:
+            - 11000:80
+            - 11001:443
+        environment:
+            ASPNETCORE_ENVIRONMENT: 'Development'
+            DbConnections:DbConnectionString : "User ID=postgres;Password=mysecretpassword;Host=db;Port=5432;Database=testperiod;Pooling=true;"
+        depends_on:
+            - db
+    db:
+        image: postgres:15.3
+        ports:
+            - 10000:5432
+        environment:
+            POSTGRES_PASSWORD: 'mysecretpassword'
+            POSTGRES_DB: 'testperiod'
+            POSTGRES_USER: 'postgres'
+
