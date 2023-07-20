@@ -1,15 +1,10 @@
-namespace Monitoring.Contracts.DeviceEvents;
+namespace Monitoring.Contracts.Dtos.DeviceEvents;
 
 /// <summary>
-/// Dto для класса событий девайса.
+/// Облегчённая версия <see cref="DeviceEventDto"/>. Не содержит <see cref="DeviceEventDto.DeviceId"/>.
 /// </summary>
-public class DeviceEventDto
+public class DeviceEventLightDto
 {
-    /// <summary>
-    /// Id девайса.
-    /// </summary>
-    public Guid DeviceId { get; set; }
-
     /// <summary>
     /// Наименование события.
     /// </summary>

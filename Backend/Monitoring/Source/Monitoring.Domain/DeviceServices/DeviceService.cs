@@ -1,6 +1,8 @@
 using Monitoring.Dal.Models;
 using Monitoring.Dal.Repositories;
 using Monitoring.Dal.Sessions;
+using Monitoring.Domain.DeviceEventServices;
+using Monitoring.Shared.Extensions;
 using Monitoring.Shared.Paginations;
 
 namespace Monitoring.Domain.DeviceServices;
@@ -10,16 +12,19 @@ public class DeviceService : IDeviceService
 {
     private readonly ISessionFactory _sessionFactory;
     private readonly IDeviceRepository _deviceRepository;
+    private readonly IDeviceEventService _deviceEventService;
 
     /// <summary>
     /// Конструктор класса <see cref="DeviceService"/>.
     /// </summary>
     /// <param name="sessionFactory"><see cref="ISessionFactory"/>.</param>
     /// <param name="deviceRepository"><see cref="IDeviceRepository"/>.</param>
-    public DeviceService(ISessionFactory sessionFactory, IDeviceRepository deviceRepository)
+    /// <param name="deviceEventService"><see cref="IDeviceEventService"/>.</param>
+    public DeviceService(ISessionFactory sessionFactory, IDeviceRepository deviceRepository, IDeviceEventService deviceEventService)
     {
         _sessionFactory = sessionFactory;
         _deviceRepository = deviceRepository;
+        _deviceEventService = deviceEventService;
     }
 
     /// <inheritdoc/>
@@ -60,11 +65,17 @@ public class DeviceService : IDeviceService
     }
 
     /// <inheritdoc/>
-    public async Task AddOrUpdateDevice(DeviceInfo device, CancellationToken cancellationToken)
+    public async Task AddOrUpdateDevice(DeviceInfo device, IReadOnlyList<DeviceEvent>? events, CancellationToken cancellationToken)
     {
-        await using(var session = _sessionFactory.CreateSession(beginTransaction: true))
+        await using (var session = _sessionFactory.CreateSession(beginTransaction: true))
         {
             await _deviceRepository.InsertOrUpdateDevice(session, device, cancellationToken);
+
+            if (events.HasSome())
+            {
+                await _deviceEventService.AddEvents(session, events!, cancellationToken);
+            }
+
             await session.CommitAsync(cancellationToken);
         }
     }

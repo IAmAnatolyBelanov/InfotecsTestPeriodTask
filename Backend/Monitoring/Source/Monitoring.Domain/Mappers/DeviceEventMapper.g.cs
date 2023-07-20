@@ -2,22 +2,22 @@ namespace Monitoring.Domain.Mappers
 {
     public partial class DeviceEventMapper : Monitoring.Domain.Mappers.IDeviceEventMapper
     {
-        public Monitoring.Contracts.DeviceEvents.DeviceEventDto MapToDto(Monitoring.Dal.Models.DeviceEvent p1)
+        public Monitoring.Contracts.Dtos.DeviceEvents.DeviceEventDto MapToDto(Monitoring.Dal.Models.DeviceEvent p1)
         {
-            return p1 == null ? null : new Monitoring.Contracts.DeviceEvents.DeviceEventDto()
+            return p1 == null ? null : new Monitoring.Contracts.Dtos.DeviceEvents.DeviceEventDto()
             {
                 DeviceId = p1.DeviceId,
                 Name = p1.Name,
                 DateTime = p1.DateTime
             };
         }
-        public Monitoring.Contracts.DeviceEvents.DeviceEventDto MapToDto(Monitoring.Dal.Models.DeviceEvent p2, Monitoring.Contracts.DeviceEvents.DeviceEventDto p3)
+        public Monitoring.Contracts.Dtos.DeviceEvents.DeviceEventDto MapToDto(Monitoring.Dal.Models.DeviceEvent p2, Monitoring.Contracts.Dtos.DeviceEvents.DeviceEventDto p3)
         {
             if (p2 == null)
             {
                 return null;
             }
-            Monitoring.Contracts.DeviceEvents.DeviceEventDto result = p3 ?? new Monitoring.Contracts.DeviceEvents.DeviceEventDto();
+            Monitoring.Contracts.Dtos.DeviceEvents.DeviceEventDto result = p3 ?? new Monitoring.Contracts.Dtos.DeviceEvents.DeviceEventDto();
             
             result.DeviceId = p2.DeviceId;
             result.Name = p2.Name;
@@ -25,7 +25,7 @@ namespace Monitoring.Domain.Mappers
             return result;
             
         }
-        public Monitoring.Dal.Models.DeviceEvent MapFromDto(Monitoring.Contracts.DeviceEvents.DeviceEventDto p4)
+        public Monitoring.Dal.Models.DeviceEvent MapFromDto(Monitoring.Contracts.Dtos.DeviceEvents.DeviceEventDto p4)
         {
             return p4 == null ? null : new Monitoring.Dal.Models.DeviceEvent()
             {
@@ -34,7 +34,7 @@ namespace Monitoring.Domain.Mappers
                 DateTime = p4.DateTime.ToUniversalTime()
             };
         }
-        public Monitoring.Dal.Models.DeviceEvent MapFromDto(Monitoring.Contracts.DeviceEvents.DeviceEventDto p5, Monitoring.Dal.Models.DeviceEvent p6)
+        public Monitoring.Dal.Models.DeviceEvent MapFromDto(Monitoring.Contracts.Dtos.DeviceEvents.DeviceEventDto p5, Monitoring.Dal.Models.DeviceEvent p6)
         {
             if (p5 == null)
             {

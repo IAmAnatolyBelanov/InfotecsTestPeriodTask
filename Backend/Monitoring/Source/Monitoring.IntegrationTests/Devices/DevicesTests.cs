@@ -4,8 +4,11 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Monitoring.Api.Infrastructure;
-using Monitoring.Contracts.DeviceInfo;
+using Monitoring.Contracts.Dtos.DeviceEvents;
+using Monitoring.Contracts.Dtos.DeviceInfo;
+using Monitoring.Contracts.Queries.Device;
 using Monitoring.Dal.Models;
+using Monitoring.Shared.Constants;
 
 namespace Monitoring.IntegrationTests.Devices;
 
@@ -135,6 +138,43 @@ public class DevicesTests : IClassFixture<AppFactory>
         }
     }
 
+    /// <summary>
+    /// Должен успешно зарегистрировать девайс без событий.
+    /// </summary>
+    /// <param name="device">Девайс.</param>
+    /// <returns><see cref="Task"/>.</returns>
+    [Theory]
+    [AutoData]
+    public async Task RegisterDeviceWithEvents_WithoutEvents_Success(DeviceInfoDto device)
+    {
+        var client = _factory.CreateClient();
+
+        var result = await RegisterDeviceWithEvents(client, device, events: null);
+
+        result.Error.Should().BeNull();
+        result.Data.Should().Be(HttpConstants.HttpEmptySuccessMessage);
+    }
+
+    /// <summary>
+    /// Должен успешно зарегистрировать девайс одновременно с событиями.
+    /// </summary>
+    /// <param name="device">Девайс.</param>
+    /// <param name="eventsGenerator">События.</param>
+    /// <returns><see cref="Task"/>.</returns>
+    [Theory]
+    [AutoData]
+    public async Task RegisterDeviceWithEvents_WithEvents_Success(DeviceInfoDto device, Generator<DeviceEventLightDto> eventsGenerator)
+    {
+        var client = _factory.CreateClient();
+
+        var events = eventsGenerator.Take(10).ToArray();
+
+        var result = await RegisterDeviceWithEvents(client, device, events);
+
+        result.Error.Should().BeNull();
+        result.Data.Should().Be(HttpConstants.HttpEmptySuccessMessage);
+    }
+
     private async Task<(HttpResponseMessage HttpResponse, BaseResponse<object> BaseResponse)> RegisterDevice(HttpClient client, DeviceInfoDto device)
     {
         using var responseMessage = await client.PostAsJsonAsync("/api/devices/register-device", device);
@@ -143,6 +183,20 @@ public class DevicesTests : IClassFixture<AppFactory>
         var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<object>>(responseContent)!;
 
         return (responseMessage, response);
+    }
+
+    private async Task<BaseResponse<string>> RegisterDeviceWithEvents(
+        HttpClient client,
+        DeviceInfoDto device,
+        IReadOnlyList<DeviceEventLightDto>? events)
+    {
+        var query = new RegisterDeviceQuery { Device = device, Events = events };
+        using var responseMessage = await client.PutAsJsonAsync("/api/devices", query);
+        var responseContent = await responseMessage.Content.ReadAsStringAsync();
+
+        var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BaseResponse<string>>(responseContent)!;
+
+        return response;
     }
 
     private async Task<BaseResponse<DeviceInfoDto>> GetDevice(HttpClient client, Guid deviceId)

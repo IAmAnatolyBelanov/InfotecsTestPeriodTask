@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Monitoring.Api.Infrastructure;
-using Monitoring.Contracts.DeviceEvents;
+using Monitoring.Contracts.Dtos.DeviceEvents;
 using Monitoring.Domain.DeviceEventServices;
 using Monitoring.Domain.Mappers;
 using Monitoring.Shared.GuidProviders;

@@ -27,9 +27,15 @@ public class DeviceEventService : IDeviceEventService
     {
         await using (var session = _sessionFactory.CreateSession(beginTransaction: true))
         {
-            await _eventRepository.AddEvents(session, deviceEvents, cancellationToken);
+            await AddEvents(session, deviceEvents, cancellationToken);
             await session.CommitAsync(cancellationToken);
         }
+    }
+
+    /// <inheritdoc/>
+    public async Task AddEvents(ISession session, IReadOnlyCollection<DeviceEvent> deviceEvents, CancellationToken cancellationToken)
+    {
+        await _eventRepository.AddEvents(session, deviceEvents, cancellationToken);
     }
 
     /// <inheritdoc/>
