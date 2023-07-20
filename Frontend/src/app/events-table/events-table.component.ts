@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EventCollection } from '../models/events/event-collection';
 import { EventService } from '../event.service';
 import { ActivatedRoute } from '@angular/router';
@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./events-table.component.css']
 })
 
-export class EventsTableComponent implements OnInit {
+export class EventsTableComponent implements OnInit, OnDestroy {
   deviceId: string = '';
   eventCollection: EventCollection = { deviceId: '', events: [] };
   columns: string[] = ['name', 'date'];
@@ -22,8 +22,7 @@ export class EventsTableComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       var deviceId = params.get('deviceId');
-      if (deviceId)
-      {
+      if (deviceId) {
         this.deviceId = deviceId;
         this.getEvents();
       }
@@ -31,8 +30,11 @@ export class EventsTableComponent implements OnInit {
   }
 
   getEvents(): void {
-    this.eventService.getEventsByDeviceId(this.deviceId).subscribe(response => {
-      this.eventCollection = response;
-    });
+    this.eventService.subscribeByDevice(this.deviceId);
+    this.eventService.events.subscribe(data => this.eventCollection = data);
+  }
+
+  ngOnDestroy(): void {
+    this.eventService.unsubscribe();
   }
 }

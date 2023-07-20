@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Device } from './models/device';
-import { map } from 'rxjs/operators';
 import { BaseResponse } from './models/base-response';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -11,10 +10,9 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 })
 export class DeviceService {
   private hubConnection: HubConnection;
-  private devices: Device[] = [];
 
   private devicesSubject: BehaviorSubject<Device[]> = new BehaviorSubject<Device[]>([]);
-  public p_devices$: Observable<Device[]> = this.devicesSubject.asObservable();
+  public devices: Observable<Device[]> = this.devicesSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.fetchDevices();
