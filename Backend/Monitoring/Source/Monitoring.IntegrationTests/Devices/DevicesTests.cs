@@ -8,6 +8,7 @@ using Monitoring.Contracts.Dtos.DeviceEvents;
 using Monitoring.Contracts.Dtos.DeviceInfo;
 using Monitoring.Contracts.Queries.Device;
 using Monitoring.Dal.Models;
+using Monitoring.Shared.Constants;
 
 namespace Monitoring.IntegrationTests.Devices;
 
@@ -151,7 +152,7 @@ public class DevicesTests : IClassFixture<AppFactory>
         var result = await RegisterDeviceWithEvents(client, device, events: null);
 
         result.Error.Should().BeNull();
-        result.Data.Should().Be("Ok");
+        result.Data.Should().Be(HttpConstants.HttpEmptySuccessMessage);
     }
 
     /// <summary>
@@ -171,7 +172,7 @@ public class DevicesTests : IClassFixture<AppFactory>
         var result = await RegisterDeviceWithEvents(client, device, events);
 
         result.Error.Should().BeNull();
-        result.Data.Should().Be("Ok");
+        result.Data.Should().Be(HttpConstants.HttpEmptySuccessMessage);
     }
 
     private async Task<(HttpResponseMessage HttpResponse, BaseResponse<object> BaseResponse)> RegisterDevice(HttpClient client, DeviceInfoDto device)

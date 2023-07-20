@@ -5,6 +5,7 @@ using Monitoring.Contracts.Queries.Device;
 using Monitoring.Dal.Models;
 using Monitoring.Domain.DeviceServices;
 using Monitoring.Domain.Mappers;
+using Monitoring.Shared.Constants;
 using Monitoring.Shared.Extensions;
 using Monitoring.Shared.GuidProviders;
 using Monitoring.Shared.Paginations;
@@ -138,6 +139,6 @@ public class DeviceController : ControllerBase
 
         await _deviceService.AddOrUpdateDevice(internalDevice, internalEvents, cancellationToken);
 
-        return "Ok".ToResponse();
+        return HttpConstants.HttpEmptySuccessMessage.ToResponse();
     }
 }
