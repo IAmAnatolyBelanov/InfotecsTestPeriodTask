@@ -2,6 +2,10 @@
     <h2>Device ID: {{ eventCollection.deviceId }}</h2>
 </div>
 
+<div>
+    <a>Автоматически обновлять данные: </a> <input type="checkbox" [(ngModel)]="checkingEvents" (change)="onCheckingEventsChange()">
+</div>
+
 <mat-table [dataSource]="eventCollection.events">
     <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>

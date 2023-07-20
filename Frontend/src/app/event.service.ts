@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscription, takeUntil, timer } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, timer } from 'rxjs';
 import { BaseResponse } from './models/base-response';
 import { EventCollection } from './models/events/event-collection';
 
@@ -12,7 +12,6 @@ export class EventService implements OnDestroy {
   public events: Observable<EventCollection> = this.eventsSubject.asObservable();
 
   private subscription: Subscription | null = null;
-  private destroy: Subject<boolean> = new Subject<boolean>();
 
   constructor(private http: HttpClient) { }
 
@@ -21,20 +20,17 @@ export class EventService implements OnDestroy {
     const params = { deviceId };
 
     this.subscription?.unsubscribe();
-    this.destroy.next(false);
 
-    this.subscription = timer(0, 30000)
-      .pipe(takeUntil(this.destroy))
+    this.subscription = timer(0, 3000)
       .subscribe(x => this.http.get<BaseResponse<EventCollection>>(url, { params })
         .subscribe(data => this.eventsSubject.next(data.data)));
   }
 
   unsubscribe(): void{
-    this.destroy.next(true);
+    this.subscription?.unsubscribe();
   }
 
   ngOnDestroy(): void {
-    this.destroy.next(true);
     this.subscription?.unsubscribe();
   }
 }

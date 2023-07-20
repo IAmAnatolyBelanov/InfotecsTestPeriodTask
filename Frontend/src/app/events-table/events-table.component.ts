@@ -13,6 +13,7 @@ export class EventsTableComponent implements OnInit, OnDestroy {
   deviceId: string = '';
   eventCollection: EventCollection = { deviceId: '', events: [] };
   columns: string[] = ['name', 'date'];
+  public checkingEvents: boolean = true;
 
   constructor(
     private eventService: EventService,
@@ -32,6 +33,15 @@ export class EventsTableComponent implements OnInit, OnDestroy {
   getEvents(): void {
     this.eventService.subscribeByDevice(this.deviceId);
     this.eventService.events.subscribe(data => this.eventCollection = data);
+  }
+
+  onCheckingEventsChange(): void{
+    if (this.checkingEvents) {
+      this.getEvents();
+    }
+    else{
+      this.ngOnDestroy();
+    }
   }
 
   ngOnDestroy(): void {
